@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
 
@@ -9,10 +9,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-  <meta name="author" content="John Doe">
+  <meta name="author" content="baymax0101">
 
 
 
+
+  <meta name="keywords" content="编程技术">
 
 
 <title>Y分钟速成MYSQL | Hexo</title>
@@ -180,7 +182,8 @@
 
 
 
-<meta name="generator" content="Hexo 8.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
 <body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
   <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
   <div class="max-auto">
@@ -210,8 +213,11 @@
             </a>
           
         
-        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+        <a class="w-5 h-5 hidden sm:flex" title="RSS" href="/rss2.xml">
           <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5 hidden sm:flex" title="Search" id="search-btn">
+          <iconify-icon width="20" icon="ri:search-line"></iconify-icon>
         </a>
         <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
           <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
@@ -274,7 +280,7 @@
         <section class="flex items-center gap-3 text-sm">
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2026-03-25</time>
+            <time>2026-03-27</time>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
@@ -286,6 +292,12 @@
             <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
             <span>2.7k words</span>
           </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>/<a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/">MySQL</a>
+            </span>
           
         </section>
       </div>
@@ -357,6 +369,24 @@
   <!-- tag -->
   <div class="mt-12 pt-6 border-t border-gray-200">
     
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/MySQL/">MySQL</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/SQL/">SQL</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/%E9%80%9F%E6%9F%A5%E8%A1%A8/">速查表</a>
+        </span>
+      
+    
   </div>
   <!-- prev and next -->
   <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
@@ -370,8 +400,8 @@
     </div>
     <div>
       
-        <a href="/2026/03/25/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E4%BA%9B%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8%E5%A4%9A%E7%A7%8D%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
-          为什么有些项目使用多种编程语言
+        <a href="/2026/03/25/s/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          s
           <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
         </a>
       
@@ -587,6 +617,85 @@
   
 
 
+  <div id="search-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
+  <div class="max-w-2xl mx-auto mt-20 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4">
+    <div class="flex items-center border-b dark:border-gray-700 pb-2">
+      <iconify-icon width="20" icon="ri:search-line" class="text-gray-500"></iconify-icon>
+      <input type="text" id="search-input" placeholder="Search..." 
+        class="flex-1 ml-2 bg-transparent outline-none text-lg dark:text-white"
+        autocomplete="off">
+      <button id="search-close" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+        <iconify-icon width="20" icon="ri:close-line"></iconify-icon>
+      </button>
+    </div>
+    <div id="search-results" class="mt-4 max-h-96 overflow-y-auto">
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var modal = document.getElementById('search-modal');
+  var btn = document.getElementById('search-btn');
+  var closeBtn = document.getElementById('search-close');
+  var input = document.getElementById('search-input');
+  var results = document.getElementById('search-results');
+  var searchData = null;
+
+  btn && btn.addEventListener('click', function() {
+    modal.classList.remove('hidden');
+    input.focus();
+    if (!searchData) {
+      fetch('/search.xml')
+        .then(function(response) { return response.text(); })
+        .then(function(xml) {
+          var parser = new DOMParser();
+          var doc = parser.parseFromString(xml, 'text/xml');
+          var posts = doc.querySelectorAll('entry');
+          searchData = [];
+          posts.forEach(function(post) {
+            searchData.push({
+              title: post.querySelector('title')?.textContent || '',
+              url: post.querySelector('link')?.getAttribute('href') || '',
+              content: post.querySelector('content')?.textContent || ''
+            });
+          });
+        });
+    }
+  });
+
+  closeBtn && closeBtn.addEventListener('click', function() {
+    modal.classList.add('hidden');
+  });
+
+  modal && modal.addEventListener('click', function(e) {
+    if (e.target === modal) {
+      modal.classList.add('hidden');
+    }
+  });
+
+  input && input.addEventListener('input', function() {
+    var query = this.value.toLowerCase();
+    results.innerHTML = '';
+    if (query.length < 2 || !searchData) return;
+    
+    var html = '';
+    var root = '/';
+    searchData.forEach(function(post) {
+      if (post.title.toLowerCase().includes(query) || post.content.toLowerCase().includes(query)) {
+        var url = post.url;
+        if (!url.startsWith('http')) {
+          url = root + url.replace(/^\//, '');
+        }
+        html += '<a href="' + url + '" class="block py-2 hover:text-main dark:hover:text-main">';
+        html += '<div class="font-medium">' + post.title + '</div>';
+        html += '</a>';
+      }
+    });
+    results.innerHTML = html || '<div class="text-gray-500">No results found</div>';
+  });
+})();
+</script>
   <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
 </body>
 
