@@ -1,0 +1,3257 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Y分钟速成Oracle, 编程技术">
+    <meta name="description" content="
+Oracle速成大纲
+
+数据类型
+数据库基础
+表操作
+约束
+基础查询
+Oracle函数
+表关联查询
+PL&amp;#x2F;SQL基础
+异常处理
+存储过程与函数
+触发器
+游标
+事务与锁
+其他对象
+
+
+
+数据类型
+核心概念: Oracle 有丰富的">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>Y分钟速成Oracle | Hexo</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+        <link rel="stylesheet" type="text/css" href="/css/reward.css">
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 8.1.1"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">Hexo</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Hexo</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/blinkfox/hexo-theme-matery" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/blinkfox/hexo-theme-matery" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Y分钟速成Oracle</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                                <span class="chip bg-color">数据库</span>
+                            </a>
+                        
+                            <a href="/tags/SQL/">
+                                <span class="chip bg-color">SQL</span>
+                            </a>
+                        
+                            <a href="/tags/%E9%80%9F%E6%9F%A5%E8%A1%A8/">
+                                <span class="chip bg-color">速查表</span>
+                            </a>
+                        
+                            <a href="/tags/Oracle/">
+                                <span class="chip bg-color">Oracle</span>
+                            </a>
+                        
+                            <a href="/tags/PL-SQL/">
+                                <span class="chip bg-color">PL/SQL</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="post-category">
+                                数据库
+                            </a>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Oracle/" class="post-category">
+                                Oracle
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2026-03-26
+                </div>
+                
+
+                
+
+                
+
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <blockquote>
+<p><strong>Oracle速成大纲</strong></p>
+<ul>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">数据类型</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80">数据库基础</a></li>
+<li><a href="#%E8%A1%A8%E6%93%8D%E4%BD%9C">表操作</a></li>
+<li><a href="#%E7%BA%A6%E6%9D%9F">约束</a></li>
+<li><a href="#%E5%9F%BA%E7%A1%80%E6%9F%A5%E8%AF%A2">基础查询</a></li>
+<li><a href="#Oracle%E5%87%BD%E6%95%B0">Oracle函数</a></li>
+<li><a href="#%E8%A1%A8%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2">表关联查询</a></li>
+<li><a href="#PLSQL%E5%9F%BA%E7%A1%80">PL&#x2F;SQL基础</a></li>
+<li><a href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86">异常处理</a></li>
+<li><a href="#%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E4%B8%8E%E5%87%BD%E6%95%B0">存储过程与函数</a></li>
+<li><a href="#%E8%A7%A6%E5%8F%91%E5%99%A8">触发器</a></li>
+<li><a href="#%E6%B8%B8%E6%A0%87">游标</a></li>
+<li><a href="#%E4%BA%8B%E5%8A%A1%E4%B8%8E%E9%94%81">事务与锁</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96%E5%AF%B9%E8%B1%A1">其他对象</a></li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><blockquote>
+<p><strong>核心概念</strong>: Oracle 有丰富的数据类型，包括数值、字符串、日期等，每种类型有不同的存储方式和使用场景。</p>
+</blockquote>
+<h3 id="数值类型"><a href="#数值类型" class="headerlink" title="数值类型"></a>数值类型</h3><pre><code class="language-sql">-- NUMBER: 数值类型
+id NUMBER(5)          -- 5位整数，范围 -99999 到 99999
+height NUMBER(3,2)   -- 共3位，2位小数（如 12.34）
+price NUMBER         -- 变长数值
+balance NUMBER(10,2) -- 金额类型
+</code></pre>
+<h3 id="字符串类型"><a href="#字符串类型" class="headerlink" title="字符串类型"></a>字符串类型</h3><blockquote>
+<p><strong>核心概念</strong>: 字符串分定长（CHAR）和不定长（VARCHAR2），建议用 VARCHAR2。</p>
+</blockquote>
+<pre><code class="language-sql">-- VARCHAR2: 可变长度字符串（推荐使用）
+name VARCHAR2(50)        -- 最大50字符
+description VARCHAR2(2000)
+
+-- CHAR: 定长字符串（不足部分用空格填充）
+gender CHAR(1)           -- 固定1个字符
+code CHAR(10)            -- 固定10个字符
+
+-- CLOB: 大型文本（最大4GB，推荐使用）
+article CLOB            -- 大文本
+resume CLOB
+
+-- 不推荐使用 LONG（Oracle 早期类型，有诸多限制）
+long_col LONG           -- 最大2GB，不能建索引，不能作为WHERE条件
+</code></pre>
+<h3 id="字符串函数"><a href="#字符串函数" class="headerlink" title="字符串函数"></a>字符串函数</h3><blockquote>
+<p><strong>核心概念</strong>: 处理文本数据，包括连接、截取、替换、格式化等。</p>
+</blockquote>
+<pre><code class="language-sql">-- CONCAT: 连接两个字符串
+SELECT CONCAT(&#39;Hello&#39;, &#39;World&#39;) FROM DUAL;  -- HelloWorld
+
+-- || : 字符串连接（多个）
+SELECT &#39;Hello&#39; || &#39; &#39; || &#39;World&#39; FROM DUAL;  -- Hello World
+
+-- LENGTH: 返回字符串长度
+SELECT LENGTH(&#39;hello&#39;) FROM DUAL;  -- 5
+SELECT LENGTH(&#39;你好&#39;) FROM DUAL;   -- 2（字符数）
+
+-- LENGTHB: 返回字节长度
+SELECT LENGTHB(&#39;你好&#39;) FROM DUAL;  -- 4（UTF8一个汉字占3字节）
+
+-- UPPER/LOWER/INITCAP: 大小写转换
+SELECT UPPER(&#39;hello&#39;) FROM DUAL;         -- HELLO
+SELECT LOWER(&#39;HELLO&#39;) FROM DUAL;         -- hello
+SELECT INITCAP(&#39;hello world&#39;) FROM DUAL; -- Hello World
+
+-- TRIM/LTRIM/RTRIM: 去除空格或指定字符
+SELECT TRIM(&#39;  hello  &#39;) FROM DUAL;      -- hello
+SELECT TRIM(&#39;A&#39; FROM &#39;AABCCAA&#39;) FROM DUAL; -- B BCC
+SELECT LTRIM(&#39;xxhelloxx&#39;, &#39;x&#39;) FROM DUAL; -- helloxx
+SELECT RTRIM(&#39;xxhelloxx&#39;, &#39;x&#39;) FROM DUAL; -- xxhello
+
+-- LPAD/RPAD: 左/右填充
+SELECT LPAD(&#39;ABC&#39;, 10, &#39;*&#39;) FROM DUAL;  -- *******ABC
+SELECT RPAD(&#39;ABC&#39;, 10, &#39;*&#39;) FROM DUAL;  -- ABC*******
+
+-- SUBSTR: 截取子字符串
+SELECT SUBSTR(&#39;Hello World&#39;, 1, 5) FROM DUAL;  -- Hello（从1开始）
+SELECT SUBSTR(&#39;Hello World&#39;, 7) FROM DUAL;     -- World
+SELECT SUBSTR(&#39;Hello World&#39;, -5) FROM DUAL;    -- World（从右边）
+
+-- INSTR: 查找子串位置
+SELECT INSTR(&#39;Hello World&#39;, &#39;o&#39;) FROM DUAL;          -- 5
+SELECT INSTR(&#39;Hello World&#39;, &#39;o&#39;, 6) FROM DUAL;        -- 8（从第6位开始）
+SELECT INSTR(&#39;Hello World&#39;, &#39;o&#39;, 1, 2) FROM DUAL;     -- 8（第2次出现）
+
+-- REPLACE: 替换字符串
+SELECT REPLACE(&#39;Hello World&#39;, &#39;World&#39;, &#39;Oracle&#39;) FROM DUAL; -- Hello Oracle
+
+-- TRANSLATE: 字符逐个映射
+SELECT TRANSLATE(&#39;A1B2&#39;, &#39;12&#39;, &#39;XY&#39;) FROM DUAL;  -- AXBY
+
+-- ASCII/CHR: ASCII码与字符转换
+SELECT ASCII(&#39;A&#39;) FROM DUAL;   -- 65
+SELECT CHR(65) FROM DUAL;      -- A
+</code></pre>
+<h3 id="日期类型"><a href="#日期类型" class="headerlink" title="日期类型"></a>日期类型</h3><blockquote>
+<p><strong>核心概念</strong>: DATE 是 Oracle 最常用的日期类型，存储精确到秒；TIMESTAMP 更精确。</p>
+</blockquote>
+<pre><code class="language-sql">-- DATE: 日期时间（精确到秒）
+birth DATE              -- 格式: DD-MON-YY，如 25-3月-24
+
+-- TIMESTAMP: 时间戳（精确到毫秒）
+create_time TIMESTAMP   -- 格式: 25-MAR-24 10.30.45.123456 AM
+
+-- TIMESTAMP WITH TIME ZONE: 带时区
+update_time TIMESTAMP WITH TIME ZONE
+
+-- TIMESTAMP WITH LOCAL TIME ZONE: 本地时区
+local_time TIMESTAMP WITH LOCAL TIME ZONE
+
+-- 日期类型示例
+INSERT INTO employees (hire_date) VALUES (TO_DATE(&#39;2024-01-01&#39;, &#39;YYYY-MM-DD&#39;));
+INSERT INTO employees (hire_date) VALUES (TO_DATE(&#39;2024-01-01 10:30:00&#39;, &#39;YYYY-MM-DD HH24:MI:SS&#39;));
+
+-- SYSDATE / SYSTIMESTAMP: 系统当前时间
+SELECT SYSDATE FROM DUAL;        -- 当前日期时间
+SELECT SYSTIMESTAMP FROM DUAL;   -- 带毫秒和时区
+</code></pre>
+<hr>
+<h2 id="数据库基础"><a href="#数据库基础" class="headerlink" title="数据库基础"></a>数据库基础</h2><blockquote>
+<p><strong>核心概念</strong>: Oracle 是一个商业级关系数据库，用表空间(Tablespace)存放数据，用户管理权限。</p>
+</blockquote>
+<pre><code class="language-sql">-- 注释用两个连字符，PL/SQL块用 / 结束
+
+-- 创建表空间（存放数据的仓库）
+CREATE TABLESPACE mytablespace 
+DATAFILE &#39;mytablespace.dbf&#39; SIZE 100M 
+AUTOEXTEND ON NEXT 10M MAXSIZE UNLIMITED;
+
+-- 删除表空间
+DROP TABLESPACE mytablespace INCLUDING CONTENTS AND DATAFILES;
+
+-- 创建用户（Oracle中用户即 schema）
+CREATE USER identified BY password 
+DEFAULT TABLESPACE mytablespace
+TEMPORARY TABLESPACE temp;
+
+-- 授权（Oracle开发必备权限）
+GRANT CONNECT, RESOURCE TO myuser;
+GRANT DBA TO myuser;  -- 管理员权限
+
+-- 登录
+-- CONNECT myuser/password
+
+-- 列出当前用户下的表
+SELECT table_name FROM user_tables;
+
+-- 列出当前用户可访问的表
+SELECT owner, table_name FROM all_tables WHERE owner = &#39;OTHER_USER&#39;;
+</code></pre>
+<hr>
+<h2 id="表操作"><a href="#表操作" class="headerlink" title="表操作"></a>表操作</h2><p>DDL:数据定义语言，包括<code>CREATE</code>  <code>ALTER</code> <code>DROP</code> <code>TURNCATE</code></p>
+<p>DML:数据操作语言，包括<code>INSERT</code>  <code>UPDATE</code>  <code>DELETE</code></p>
+<blockquote>
+<p><strong>核心概念</strong>: 创建、修改、删除表，以及数据的增删改查。Oracle 用 VARCHAR2 而非 VARCHAR。</p>
+</blockquote>
+<pre><code class="language-sql">-- 创建表（Oracle 用 VARCHAR2）
+CREATE TABLE employees (
+    emp_id NUMBER(10) PRIMARY KEY,
+    emp_name VARCHAR2(100) NOT NULL,
+    email VARCHAR2(100) UNIQUE,
+    hire_date DATE DEFAULT SYSDATE,
+    salary NUMBER(10, 2),
+    dept_id NUMBER(10)
+);
+
+-- 修改表结构
+-- 修改表名
+RENAME TBALE employees TO emp;
+-- 添加列,只能添加到末尾
+ALTER TABLE employees ADD (phone VARCHAR2(20));
+
+-- 修改列
+ALTER TABLE employees MODIFY (emp_name VARCHAR2(200));
+
+-- 修改列名
+ALTER TABLE employees RENAME COLUMN emp_name TO name;
+
+-- 删除列
+ALTER TABLE employees DROP COLUMN phone;
+
+-- 删除表
+DROP TABLE employees PURGE;  -- PURGE 彻底删除，不放回收站
+
+-- 插入数据(指定列)，可以不用指定所有列，但是非空约束的字段必须赋值
+INSERT INTO employees (emp_id, emp_name, email, salary, dept_id)
+VALUES (1, &#39;张三&#39;, &#39;zhangsan@example.com&#39;, 8000, 10);
+
+-- 默认格式
+INSERT INTO emplpoyees VALUES (2,&#39;赵四&#39;,&#39;zhaosi@gamil.com&#39;,7000,10);
+-- 批量插入
+INSERT INTO employees (emp_id, emp_name, salary)
+VALUES 
+    (2, &#39;李四&#39;, 7000),
+    (3, &#39;王五&#39;, 9000),
+    (4, &#39;赵六&#39;, 8500);
+
+-- 更新数据，需要搭配WHERE使用
+UPDATE employees SET salary = 10000 WHERE emp_id = 1;
+
+-- 删除数据，from可写可不写，不加where会删掉整张表
+DELETE FROM employees WHERE emp_id = 1;
+
+-- 清空表（更快，类似 delete），无法回滚
+TRUNCATE TABLE employees;
+
+-- 以上操作只是在自己的视图中完成，并没有同步到数据库，同步需要TCL（事务控制语言）
+-- 提交（Oracle 默认不自动提交）
+COMMIT;
+-- 回滚,前提是还没有进行commit操作
+ROLLBACK;
+</code></pre>
+<hr>
+<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><blockquote>
+<p><strong>核心概念</strong>: 约束是数据库中保证数据完整性的规则，就像”规则检查器”，不符合条件的数据无法插入或更新。</p>
+</blockquote>
+<h3 id="约束类型"><a href="#约束类型" class="headerlink" title="约束类型"></a>约束类型</h3><pre><code class="language-sql">-- 约束类型说明
+-- NOT NULL    : 非空约束，字段必须有值
+-- UNIQUE      : 唯一约束，字段值不能重复
+-- PRIMARY KEY : 主键约束，非空且唯一，标识每条记录
+-- FOREIGN KEY : 外键约束，引用其他表的数据
+-- CHECK       : 检查约束，限制字段取值范围
+
+-- 1. 创建表时添加约束
+
+-- 方式一：列级约束（直接在列定义后面）
+CREATE TABLE employees (
+    emp_id NUMBER(10) PRIMARY KEY,                    -- 主键
+    emp_name VARCHAR2(100) NOT NULL,                   -- 非空
+    email VARCHAR2(100) UNIQUE,                        -- 唯一
+    phone VARCHAR2(20) NOT NULL,                      -- 非空
+    salary NUMBER(10, 2) CHECK (salary &gt; 0),           -- 检查约束
+    dept_id NUMBER(10) REFERENCES departments(dept_id) -- 外键
+);
+
+-- 方式二：表级约束（在所有列定义后单独定义）
+CREATE TABLE employees (
+    emp_id NUMBER(10),
+    emp_name VARCHAR2(100) NOT NULL,
+    email VARCHAR2(100),
+    salary NUMBER(10, 2),
+    dept_id NUMBER(10),
+    -- 主键约束（表级）
+    CONSTRAINT pk_emp PRIMARY KEY (emp_id),
+    -- 唯一约束
+    CONSTRAINT uk_email UNIQUE (email),
+    -- 检查约束
+    CONSTRAINT ck_salary CHECK (salary &gt; 0),
+    -- 外键约束
+    CONSTRAINT fk_dept FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
+);
+
+-- 复合主键（多个列共同作为主键）
+CREATE TABLE order_items (
+    order_id NUMBER(10),
+    product_id NUMBER(10),
+    quantity NUMBER(5),
+    CONSTRAINT pk_order_item PRIMARY KEY (order_id, product_id)
+);
+
+-- 2. 修改表添加约束
+
+-- 添加主键
+ALTER TABLE employees ADD CONSTRAINT pk_emp PRIMARY KEY (emp_id);
+
+-- 添加唯一约束
+ALTER TABLE employees ADD CONSTRAINT uk_email UNIQUE (email);
+
+-- 添加非空约束（使用 MODIFY）
+ALTER TABLE employees MODIFY (emp_name NOT NULL);
+
+-- 添加外键约束
+ALTER TABLE employees ADD CONSTRAINT fk_dept 
+    FOREIGN KEY (dept_id) REFERENCES departments(dept_id);
+
+-- 添加检查约束
+ALTER TABLE employees ADD CONSTRAINT ck_salary 
+    CHECK (salary &gt; 0 AND salary &lt; 100000);
+
+-- 3. 约束操作
+
+-- 查看表的约束
+SELECT constraint_name, constraint_type, status
+FROM user_constraints 
+WHERE table_name = &#39;EMPLOYEES&#39;;
+
+-- 查看约束对应的列
+SELECT constraint_name, column_name
+FROM user_cons_columns
+WHERE table_name = &#39;EMPLOYEES&#39;;
+
+-- 禁用约束（数据导入时常用）
+ALTER TABLE employees DISABLE CONSTRAINT pk_emp;
+ALTER TABLE employees DISABLE CONSTRAINT fk_dept;
+
+-- 启用约束
+ALTER TABLE employees ENABLE CONSTRAINT pk_emp;
+ALTER TABLE employees ENABLE CONSTRAINT fk_dept;
+
+-- 删除约束
+ALTER TABLE employees DROP CONSTRAINT pk_emp;
+ALTER TABLE employees DROP PRIMARY KEY;  -- 删除主键（简写）
+
+-- 延迟约束（事务提交时才检查）
+-- 创建时指定
+CREATE TABLE orders (
+    order_id NUMBER(10) PRIMARY KEY,
+    amount NUMBER(10, 2),
+    CONSTRAINT ck_amount CHECK (amount &gt; 0) DEFERRABLE INITIALLY DEFERRED
+);
+
+-- 运行时修改
+SET CONSTRAINT ck_amount DEFERRED;  -- 延迟检查
+SET CONSTRAINT ck_amount IMMEDIATE; -- 立即检查
+</code></pre>
+<h3 id="约束示例"><a href="#约束示例" class="headerlink" title="约束示例"></a>约束示例</h3><pre><code class="language-sql">-- 示例表：员工表 employees
+CREATE TABLE employees (
+    emp_id NUMBER(10) CONSTRAINT pk_emp PRIMARY KEY,
+    emp_name VARCHAR2(100) CONSTRAINT nn_emp_name NOT NULL,
+    email VARCHAR2(100) CONSTRAINT uk_email UNIQUE,
+    phone VARCHAR2(20),
+    salary NUMBER(10, 2) CONSTRAINT ck_salary CHECK (salary &gt;= 0),
+    commission_pct NUMBER(5, 2),
+    hire_date DATE DEFAULT SYSDATE,
+    manager_id NUMBER(10),
+    dept_id NUMBER(10) CONSTRAINT fk_dept REFERENCES departments(dept_id),
+    CONSTRAINT ck_commission CHECK (commission_pct &gt;= 0 AND commission_pct &lt;= 1)
+);
+
+-- 示例表：部门表 departments
+CREATE TABLE departments (
+    dept_id NUMBER(10) CONSTRAINT pk_dept PRIMARY KEY,
+    dept_name VARCHAR2(100) CONSTRAINT nn_dept_name NOT NULL,
+    manager_id NUMBER(10),
+    location_id NUMBER(10)
+);
+
+-- 示例表：职位表 jobs
+CREATE TABLE jobs (
+    job_id VARCHAR2(10) CONSTRAINT pk_job PRIMARY KEY,
+    job_title VARCHAR2(100) CONSTRAINT nn_job_title NOT NULL,
+    min_salary NUMBER(10, 2),
+    max_salary NUMBER(10, 2),
+    CONSTRAINT ck_salary_range CHECK (min_salary &lt; max_salary)
+);
+
+-- 自引用外键（员工管理关系）
+ALTER TABLE employees ADD CONSTRAINT fk_manager 
+    FOREIGN KEY (manager_id) REFERENCES employees(emp_id);
+
+-- ON DELETE 级联（删除部门时级联删除员工）
+ALTER TABLE employees 
+ADD CONSTRAINT fk_dept_cascade 
+FOREIGN KEY (dept_id) REFERENCES departments(dept_id) ON DELETE CASCADE;
+
+-- ON DELETE SET NULL（删除部门时员工部门设为NULL）
+ALTER TABLE employees 
+ADD CONSTRAINT fk_dept_setnull 
+FOREIGN KEY (dept_id) REFERENCES departments(dept_id) ON DELETE SET NULL;
+
+-- 约束组合示例
+-- 联合唯一约束（同一部门不能有同名员工）
+CREATE TABLE employees (
+    dept_id NUMBER(10),
+    emp_name VARCHAR2(100),
+    CONSTRAINT uk_dept_emp UNIQUE (dept_id, emp_name)
+);
+
+-- 复杂检查约束
+ALTER TABLE employees ADD CONSTRAINT ck_emp_info 
+CHECK (
+    (salary &gt; 0 AND commission_pct IS NOT NULL) OR 
+    (salary &gt; 0 AND commission_pct IS NULL) OR
+    (salary IS NULL)
+);
+
+-- 约束验证
+-- ENABLE NOVALIDATE: 允许旧数据不符合，但新数据必须符合
+ALTER TABLE employees ENABLE NOVALIDATE CONSTRAINT ck_salary;
+</code></pre>
+<h3 id="约束相关查询"><a href="#约束相关查询" class="headerlink" title="约束相关查询"></a>约束相关查询</h3><pre><code class="language-sql">-- 查询当前用户所有约束
+SELECT constraint_name, constraint_type, table_name, status
+FROM user_constraints
+ORDER BY table_name;
+
+-- 约束类型说明
+-- C = CHECK
+-- P = PRIMARY KEY
+-- R = FOREIGN KEY
+-- U = UNIQUE
+
+-- 查询约束对应的列
+SELECT a.constraint_name, a.column_name, b.constraint_type
+FROM user_cons_columns a
+JOIN user_constraints b ON a.constraint_name = b.constraint_name
+WHERE a.table_name = &#39;EMPLOYEES&#39;
+ORDER BY a.position;
+
+-- 查询外键引用关系
+SELECT a.table_name AS 子表,
+       a.constraint_name AS 外键约束,
+       b.table_name AS 父表,
+       c.column_name AS 外键列,
+       d.column_name AS 引用列
+FROM user_constraints a
+JOIN user_constraints b ON a.r_constraint_name = b.constraint_name
+JOIN user_cons_columns c ON a.constraint_name = c.constraint_name
+JOIN user_cons_columns d ON b.constraint_name = d.constraint_name AND c.position = d.position
+WHERE a.constraint_type = &#39;R&#39;;
+
+-- 查询哪些表引用了某表
+SELECT a.table_name AS referencing_table,
+       a.constraint_name
+FROM user_constraints a
+WHERE a.r_constraint_name IN (
+    SELECT constraint_name 
+    FROM user_constraints 
+    WHERE table_name = &#39;DEPARTMENTS&#39; AND constraint_type IN (&#39;P&#39;, &#39;U&#39;)
+);
+
+-- 查看约束是否启用
+SELECT constraint_name, table_name, status, validated
+FROM user_constraints
+WHERE table_name = &#39;EMPLOYEES&#39;;
+
+-- 查看禁用状态的约束
+SELECT constraint_name, table_name, status
+FROM user_constraints
+WHERE status = &#39;DISABLED&#39;;
+</code></pre>
+<hr>
+<h2 id="基础查询"><a href="#基础查询" class="headerlink" title="基础查询"></a>基础查询</h2><blockquote>
+<p><strong>核心概念</strong>: 查询是 SQL 的核心，Oracle 用 ROWNUM 或 FETCH 实现分页。</p>
+</blockquote>
+<pre><code class="language-sql">-- 查询所有列
+SELECT * FROM employees;
+
+-- 查询指定列
+SELECT emp_id, emp_name, salary FROM employees;
+
+-- 条件查询
+SELECT * FROM employees WHERE salary &gt; 8000;
+
+-- 给列起别名
+-- 在as关键字后跟别名，如过别名区分大小写或者带空格，必须写在双引号中
+SELECT ename as name,sal*12 &quot;annual salary&quot; FROM employees;
+-- select 后加上 distinct 可以去除重复行
+
+-- LIKE 模糊匹配
+SELECT * FROM employees WHERE emp_name LIKE &#39;%张%&#39;;
+SELECT * FROM employees WHERE emp_name LIKE &#39;张_&#39;;  -- _代表单个字符
+
+-- 排序（默认升序 ASC，降序用 DESC）
+SELECT * FROM employees ORDER BY salary DESC, emp_name ASC;
+
+-- 分页查询（Oracle 12c+ 可用 FETCH）
+-- 方法1: ROWNUM（经典方式），伪列，返回标识行数据顺序的数字（添加行号）
+-- 查询一行添加一个行号，从1开始递增
+-- 下面使用了行内视图，rownum可以作为结果集中的数据查询
+SELECT * FROM (
+    SELECT ROWNUM rn, emp_id, emp_name, salary 
+    FROM employees WHERE ROWNUM &lt;= 10
+) WHERE rn &gt; 0;
+
+-- 方法2: OFFSET（Oracle 12c+）
+SELECT emp_id, emp_name, salary 
+FROM employees 
+ORDER BY emp_id 
+OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY;
+
+-- 去重
+SELECT DISTINCT dept_id FROM employees;
+
+-- 聚合函数
+SELECT 
+    COUNT(*) AS 总人数,
+    AVG(salary) AS 平均工资,
+    MAX(salary) AS 最高工资,
+    MIN(salary) AS 最低工资,
+    SUM(salary) AS 工资总和
+FROM employees;
+
+-- 分组
+SELECT dept_id, AVG(salary) AS avg_salary 
+FROM employees 
+GROUP BY dept_id;
+
+-- 分组后过滤（用 HAVING）
+SELECT dept_id, AVG(salary) AS avg_salary 
+FROM employees 
+GROUP BY dept_id 
+HAVING AVG(salary) &gt; 7000;
+
+-- CASE 表达式（相当于 if-else）
+SELECT emp_name, salary,
+    CASE 
+        WHEN salary &lt; 5000 THEN &#39;低薪&#39;
+        WHEN salary &lt; 10000 THEN &#39;中等&#39;
+        ELSE &#39;高薪&#39;
+    END AS 工资等级
+FROM employees;
+
+-- NVL/COALESCE 处理空值
+SELECT emp_name, NVL(commission, 0) FROM employees;
+SELECT COALESCE(a, b, c) FROM table1;  -- 返回第一个非空值
+</code></pre>
+<hr>
+<h2 id="Oracle函数"><a href="#Oracle函数" class="headerlink" title="Oracle函数"></a>Oracle函数</h2><blockquote>
+<p><strong>核心概念</strong>: Oracle 提供丰富的内置函数，用于数据处理、转换和分析。</p>
+</blockquote>
+<h3 id="日期函数"><a href="#日期函数" class="headerlink" title="日期函数"></a>日期函数</h3><blockquote>
+<p><strong>核心概念</strong>: 日期是数据库中非常重要的类型，Oracle 有强大的日期处理能力。</p>
+</blockquote>
+<pre><code class="language-sql">-- 常用日期函数
+-- SYSDATE: 当前日期时间（精确到秒）
+SELECT SYSDATE FROM DUAL;
+
+-- SYSTIMESTAMP: 当前日期时间（精确到毫秒+时区）
+SELECT SYSTIMESTAMP FROM DUAL;
+
+-- CURRENT_DATE / CURRENT_TIMESTAMP: 当前会话时区的日期时间
+SELECT CURRENT_DATE, CURRENT_TIMESTAMP FROM DUAL;
+
+-- ADD_MONTHS: 加减月份
+SELECT ADD_MONTHS(SYSDATE, 3) FROM DUAL;       -- 3个月后
+SELECT ADD_MONTHS(SYSDATE, -6) FROM DUAL;      -- 6个月前
+
+-- MONTHS_BETWEEN: 计算两个日期相差的月份
+SELECT MONTHS_BETWEEN(SYSDATE, hire_date) FROM employees;
+
+-- LAST_DAY: 返回指定日期所在月的最后一天
+SELECT LAST_DAY(SYSDATE) FROM DUAL;
+
+-- NEXT_DAY: 返回指定日期之后的下一个星期几
+SELECT NEXT_DAY(SYSDATE, &#39;星期一&#39;) FROM DUAL;  -- 下一个周一
+SELECT NEXT_DAY(SYSDATE, 1) FROM DUAL;         -- 1=周日，2=周一...
+
+-- ROUND / TRUNC: 日期四舍五入/截断
+SELECT ROUND(SYSDATE, &#39;YEAR&#39;) FROM DUAL;   -- 四舍五入到年
+SELECT ROUND(SYSDATE, &#39;MONTH&#39;) FROM DUAL;  -- 四舍五入到月
+SELECT ROUND(SYSDATE, &#39;DD&#39;) FROM DUAL;     -- 四舍五入到天
+SELECT TRUNC(SYSDATE, &#39;YEAR&#39;) FROM DUAL;   -- 截断到年的第一天
+SELECT TRUNC(SYSDATE, &#39;MONTH&#39;) FROM DUAL;  -- 截断到月的第一天
+SELECT TRUNC(SYSDATE) FROM DUAL;           -- 截断到天（00:00:00）
+
+-- EXTRACT: 提取日期组成部分
+SELECT EXTRACT(YEAR FROM SYSDATE) FROM DUAL;
+SELECT EXTRACT(MONTH FROM SYSDATE) FROM DUAL;
+SELECT EXTRACT(DAY FROM SYSDATE) FROM DUAL;
+SELECT EXTRACT(HOUR FROM SYSTIMESTAMP) FROM DUAL;
+SELECT EXTRACT(MINUTE FROM SYSTIMESTAMP) FROM DUAL;
+
+-- 日期运算
+SELECT SYSDATE + 1 FROM DUAL;        -- 加1天
+SELECT SYSDATE - 1 FROM DUAL;        -- 减1天
+SELECT SYSDATE + 1/24 FROM DUAL;     -- 加1小时
+SELECT SYSDATE + 1/24/60 FROM DUAL;  -- 加1分钟
+SELECT SYSDATE + 7 FROM DUAL;         -- 一周后
+
+-- 转换函数
+-- TO_CHAR: 日期转字符串
+SELECT TO_CHAR(SYSDATE, &#39;YYYY-MM-DD&#39;) FROM DUAL;
+SELECT TO_CHAR(SYSDATE, &#39;YYYY-MM-DD HH24:MI:SS&#39;) FROM DUAL;
+SELECT TO_CHAR(SYSDATE, &#39;YYYY&quot;年&quot;MM&quot;月&quot;DD&quot;日&quot;&#39;) FROM DUAL;
+SELECT TO_CHAR(SYSDATE, &#39;DAY&#39;) FROM DUAL;        -- 星期几
+SELECT TO_CHAR(SYSDATE, &#39;DY&#39;) FROM DUAL;         -- 星期几（简写）
+SELECT TO_CHAR(SYSDATE, &#39;Q&#39;) FROM DUAL;          -- 第几季度
+
+-- TO_DATE: 字符串转日期
+SELECT TO_DATE(&#39;2024-01-01&#39;, &#39;YYYY-MM-DD&#39;) FROM DUAL;
+SELECT TO_DATE(&#39;20240101103000&#39;, &#39;YYYYMMDDHH24MISS&#39;) FROM DUAL;
+
+-- TO_TIMESTAMP: 字符串转时间戳
+SELECT TO_TIMESTAMP(&#39;2024-01-01 10:30:00&#39;, &#39;YYYY-MM-DD HH24:MI:SS&#39;) FROM DUAL;
+
+-- 日期示例：计算员工入职年限
+SELECT emp_name, hire_date,
+       TRUNC(MONTHS_BETWEEN(SYSDATE, hire_date) / 12) AS years
+FROM employees;
+
+-- 日期示例：显示上下半年
+SELECT emp_name, hire_date,
+       CASE 
+           WHEN EXTRACT(MONTH FROM hire_date) &lt;= 6 THEN &#39;上半年&#39;
+           ELSE &#39;下半年&#39;
+       END AS half_year
+FROM employees;
+</code></pre>
+<h3 id="NULL处理"><a href="#NULL处理" class="headerlink" title="NULL处理"></a>NULL处理</h3><blockquote>
+<p><strong>核心概念</strong>: NULL 表示”未知”或”空值”，它既不是0也不是空字符串。处理NULL需要特殊函数。</p>
+</blockquote>
+<pre><code class="language-sql">-- NVL: 处理单列NULL（两个参数类型必须一致）
+SELECT emp_name, NVL(commission_pct, 0) FROM employees;
+SELECT NVL(&#39;A&#39;, &#39;B&#39;) FROM DUAL;  -- &#39;A&#39;
+
+-- NVL2: 根据是否为NULL返回不同值（3个参数）
+-- 语法: NVL2(expr1, expr2, expr3)
+-- 如果expr1不为NULL，返回expr2；否则返回expr3
+SELECT emp_name, 
+       NVL2(commission_pct, &#39;有提成&#39;, &#39;无提成&#39;) AS commission_status
+FROM employees;
+
+-- NULLIF: 比较两个表达式，相等返回NULL，不等返回第一个
+-- 语法: NULLIF(expr1, expr2)
+SELECT NULLIF(100, 100) FROM DUAL;   -- NULL
+SELECT NULLIF(100, 200) FROM DUAL;   -- 100
+SELECT NULLIF(&#39;A&#39;, &#39;A&#39;) FROM DUAL;   -- NULL
+SELECT NULLIF(&#39;A&#39;, &#39;B&#39;) FROM DUAL;   -- A
+
+-- COALESCE: 返回第一个非NULL值（多个参数）
+-- 语法: COALESCE(expr1, expr2, expr3, ...)
+SELECT COALESCE(NULL, NULL, &#39;A&#39;, &#39;B&#39;) FROM DUAL;  -- A
+SELECT COALESCE(NULL, NULL, NULL) FROM DUAL;      -- NULL
+
+-- 实际应用：优先使用手机，否则用固定电话
+SELECT emp_name,
+       COALESCE(mobile_phone, phone, &#39;无联系方式&#39;) AS contact
+FROM employees;
+
+-- LNNVL: 处理NULL条件（返回TRUE/FALSE）
+-- 用于WHERE子句中，当条件为NULL或FALSE时返回TRUE
+SELECT * FROM employees 
+WHERE LNNVL(commission_pct &gt; 0.2);  -- 提成&lt;=0.2或NULL的员工
+
+-- NVL/COALESCE 在聚合中的使用
+SELECT SUM(NVL(salary, 0)) FROM employees;
+SELECT COUNT(NVL(commission_pct, 0)) FROM employees;
+
+-- DECODE处理NULL
+SELECT emp_name, 
+       DECODE(commission_pct, NULL, &#39;无提成&#39;, &#39;有提成&#39;) AS status
+FROM employees;
+</code></pre>
+<h3 id="通用函数"><a href="#通用函数" class="headerlink" title="通用函数"></a>通用函数</h3><blockquote>
+<p><strong>核心概念</strong>: 通用函数是适用于多种数据类型的转换和处理函数。</p>
+</blockquote>
+<pre><code class="language-sql">-- GREATEST: 返回最大值
+SELECT GREATEST(10, 5, 20, 15) FROM DUAL;
+SELECT GREATEST(&#39;A&#39;, &#39;B&#39;, &#39;C&#39;) FROM DUAL;
+SELECT GREATEST(SYSDATE, SYSDATE + 7, SYSDATE - 7) FROM DUAL;
+
+-- LEAST: 返回最小值
+SELECT LEAST(10, 5, 20, 15) FROM DUAL;
+SELECT LEAST(&#39;A&#39;, &#39;B&#39;, &#39;C&#39;) FROM DUAL;
+
+-- SIGN: 返回符号（正数=1，零=0，负数=-1）
+SELECT SIGN(100) FROM DUAL;   -- 1
+SELECT SIGN(0) FROM DUAL;     -- 0
+SELECT SIGN(-100) FROM DUAL;  -- -1
+SELECT SIGN(salary - 5000) FROM employees;  -- 判断是否高于5000
+
+-- ABS: 绝对值
+SELECT ABS(-100) FROM DUAL;  -- 100
+
+-- FLOOR / CEIL: 向下/向上取整
+SELECT FLOOR(3.7) FROM DUAL;  -- 3
+SELECT CEIL(3.2) FROM DUAL;   -- 4
+SELECT FLOOR(-3.7) FROM DUAL; -- -4
+SELECT CEIL(-3.2) FROM DUAL;  -- -3
+
+-- ROUND: 四舍五入
+SELECT ROUND(3.456, 2) FROM DUAL;  -- 3.46
+SELECT ROUND(3.456, 0) FROM DUAL;  -- 3
+SELECT ROUND(3456, -2) FROM DUAL;  -- 3500
+
+-- TRUNC: 截断
+SELECT TRUNC(3.456, 2) FROM DUAL;  -- 3.45
+SELECT TRUNC(3456, -2) FROM DUAL;   -- 3400
+SELECT TRUNC(SYSDATE) FROM DUAL;    -- 截断到天
+
+-- MOD: 取模（余数）
+SELECT MOD(10, 3) FROM DUAL;   -- 1
+SELECT MOD(10, 2) FROM DUAL;   -- 0
+SELECT MOD(salary, 1000) FROM employees;  -- 工资除以1000的余数
+
+-- POWER: 幂运算
+SELECT POWER(2, 3) FROM DUAL;   -- 8
+SELECT POWER(4, 0.5) FROM DUAL; -- 2 (平方根)
+
+-- SQRT: 平方根
+SELECT SQRT(16) FROM DUAL;  -- 4
+
+-- EXP / LN / LOG: 指数和对数
+SELECT EXP(1) FROM DUAL;      -- e ≈ 2.718
+SELECT LN(2.718) FROM DUAL;   -- 1
+SELECT LOG(10, 100) FROM DUAL; -- 2
+
+-- CHR / ASCII: 字符与ASCII码转换
+SELECT CHR(65) FROM DUAL;    -- A
+SELECT ASCII(&#39;A&#39;) FROM DUAL; -- 65
+
+-- LENGTH / LENGTHB: 字符长度/字节长度
+SELECT LENGTH(&#39;你好&#39;) FROM DUAL;   -- 2
+SELECT LENGTHB(&#39;你好&#39;) FROM DUAL;  -- 4 (UTF8下一个汉字占3字节)
+
+-- LPAD / RPAD: 左/右填充
+SELECT LPAD(&#39;ABC&#39;, 10, &#39;*&#39;) FROM DUAL;  -- *******ABC
+SELECT RPAD(&#39;ABC&#39;, 10, &#39;*&#39;) FROM DUAL;  -- ABC*******
+
+-- LTRIM / RTRIM / TRIM: 去除空格或指定字符
+SELECT LTRIM(&#39;   ABC   &#39;) FROM DUAL;    -- &#39;ABC   &#39;
+SELECT RTRIM(&#39;   ABC   &#39;) FROM DUAL;    -- &#39;   ABC&#39;
+SELECT TRIM(&#39;   ABC   &#39;) FROM DUAL;     -- &#39;ABC&#39;
+SELECT TRIM(&#39;A&#39; FROM &#39;AABCCAA&#39;) FROM DUAL;  -- B BCC
+
+-- REPLACE: 替换字符串
+SELECT REPLACE(&#39;Hello World&#39;, &#39;World&#39;, &#39;Oracle&#39;) FROM DUAL;
+SELECT REPLACE(&#39;A-B-C-D&#39;, &#39;-&#39;, &#39;&#39;) FROM DUAL;
+
+-- TRANSLATE: 字符替换（逐字符映射）
+SELECT TRANSLATE(&#39;ABC&#39;, &#39;ABC&#39;, &#39;123&#39;) FROM DUAL;  -- 123
+SELECT TRANSLATE(&#39;A1B2C3&#39;, &#39;12&#39;, &#39;XY&#39;) FROM DUAL; -- AXBYC3
+
+-- SUBSTR: 截取子字符串
+SELECT SUBSTR(&#39;Hello World&#39;, 1, 5) FROM DUAL;   -- Hello (从1开始)
+SELECT SUBSTR(&#39;Hello World&#39;, -5) FROM DUAL;      -- World (从右边开始)
+SELECT SUBSTR(&#39;Hello World&#39;, 7, 5) FROM DUAL;    -- World
+
+-- INSTR: 查找子串位置
+SELECT INSTR(&#39;Hello World&#39;, &#39;o&#39;) FROM DUAL;        -- 5 (第一次出现)
+SELECT INSTR(&#39;Hello World&#39;, &#39;o&#39;, 6) FROM DUAL;     -- 8 (从第6位开始找)
+SELECT INSTR(&#39;Hello World&#39;, &#39;o&#39;, 1, 2) FROM DUAL;  -- 8 (第2次出现)
+
+-- CONCAT: 连接字符串（只支持2个参数）
+SELECT CONCAT(&#39;Hello&#39;, &#39;World&#39;) FROM DUAL;  -- HelloWorld
+
+-- || : 字符串连接（多个）
+SELECT &#39;Hello&#39; || &#39; &#39; || &#39;World&#39; FROM DUAL;
+
+-- UPPER / LOWER / INITCAP: 大小写转换
+SELECT UPPER(&#39;hello&#39;) FROM DUAL;    -- HELLO
+SELECT LOWER(&#39;HELLO&#39;) FROM DUAL;    -- hello
+SELECT INITCAP(&#39;hello world&#39;) FROM DUAL;  -- Hello World
+
+-- ROWNUM: 行号（伪列）
+SELECT ROWNUM, emp_name FROM employees WHERE ROWNUM &lt;= 10;
+
+-- ROWID: 行地址（伪列，唯一标识每行）
+SELECT ROWID, emp_name FROM employees;
+</code></pre>
+<h3 id="DECODE函数和CASE语句"><a href="#DECODE函数和CASE语句" class="headerlink" title="DECODE函数和CASE语句"></a>DECODE函数和CASE语句</h3><blockquote>
+<p><strong>核心概念</strong>: DECODE 是 Oracle 特有的函数，用于值的替换；CASE 是标准 SQL 的条件表达式，功能更强大。</p>
+</blockquote>
+<pre><code class="language-sql">-- DECODE: 值的替换（类似switch-case）
+-- 语法: DECODE(value, if1, then1, if2, then2, ..., default)
+
+-- 基本用法：简单值替换
+SELECT emp_name,
+       DECODE(dept_id, 
+              10, &#39;财务部&#39;,
+              20, &#39;市场部&#39;,
+              30, &#39;研发部&#39;,
+              &#39;其他部门&#39;) AS department
+FROM employees;
+
+-- 多值匹配
+SELECT emp_name,
+       DECODE(job_id,
+              &#39;CLERK&#39;, &#39;职员&#39;,
+              &#39;SALESMAN&#39;, &#39;销售&#39;,
+              &#39;MANAGER&#39;, &#39;经理&#39;,
+              &#39;其他&#39;) AS job_title
+FROM employees;
+
+-- DECODE 配合聚合函数：统计各部门人数
+SELECT DECODE(dept_id, 
+              10, &#39;财务部&#39;,
+              20, &#39;市场部&#39;,
+              30, &#39;研发部&#39;,
+              &#39;其他&#39;) AS dept_name,
+       COUNT(*) AS emp_count
+FROM employees
+GROUP BY DECODE(dept_id, 
+                 10, &#39;财务部&#39;,
+                 20, &#39;市场部&#39;,
+                 30, &#39;研发部&#39;,
+                 &#39;其他&#39;);
+
+-- CASE 表达式：标准SQL语法，更灵活
+
+-- 简单CASE（类似DECODE）
+SELECT emp_name,
+       CASE dept_id
+           WHEN 10 THEN &#39;财务部&#39;
+           WHEN 20 THEN &#39;市场部&#39;
+           WHEN 30 THEN &#39;研发部&#39;
+           ELSE &#39;其他部门&#39;
+       END AS department
+FROM employees;
+
+-- 搜索CASE（更强大的条件判断）
+SELECT emp_name, salary,
+       CASE 
+           WHEN salary &lt; 5000 THEN &#39;低薪&#39;
+           WHEN salary &lt; 10000 THEN &#39;中等&#39;
+           WHEN salary &lt; 20000 THEN &#39;高薪&#39;
+           ELSE &#39;超高薪&#39;
+       END AS salary_level,
+       CASE 
+           WHEN hire_date &lt; TO_DATE(&#39;2010-01-01&#39;, &#39;YYYY-MM-DD&#39;) THEN &#39;老员工&#39;
+           WHEN hire_date &lt; TO_DATE(&#39;2020-01-01&#39;, &#39;YYYY-MM-DD&#39;) THEN &#39;中年员工&#39;
+           ELSE &#39;新员工&#39;
+       END AS tenure
+FROM employees;
+
+-- CASE 在 WHERE 子句中
+SELECT * FROM employees
+WHERE CASE 
+          WHEN salary &gt; 10000 THEN &#39;高收入&#39;
+          ELSE &#39;普通收入&#39;
+      END = &#39;高收入&#39;;
+
+-- CASE 在 ORDER BY 中（动态排序）
+SELECT * FROM employees
+ORDER BY CASE 
+            WHEN job_id = &#39;PRESIDENT&#39; THEN 1
+            WHEN job_id = &#39;MANAGER&#39; THEN 2
+            ELSE 3
+         END;
+
+-- CASE 在 UPDATE 中
+UPDATE employees
+SET salary = CASE 
+                WHEN dept_id = 10 THEN salary * 1.1
+                WHEN dept_id = 20 THEN salary * 1.15
+                ELSE salary * 1.05
+             END;
+
+-- CASE 嵌套
+SELECT emp_name,
+       CASE dept_id
+           WHEN 10 THEN 
+               CASE job_id
+                   WHEN &#39;MANAGER&#39; THEN &#39;财务经理&#39;
+                   ELSE &#39;财务员工&#39;
+               END
+           WHEN 20 THEN &#39;市场部&#39;
+           ELSE &#39;其他&#39;
+       END AS detail
+FROM employees;
+
+-- CASE 与聚合函数：条件统计
+SELECT 
+    COUNT(CASE WHEN salary &gt; 10000 THEN 1 END) AS 高薪人数,
+    COUNT(CASE WHEN salary BETWEEN 5000 AND 10000 THEN 1 END) AS 中薪人数,
+    COUNT(CASE WHEN salary &lt; 5000 THEN 1 END) AS 低薪人数,
+    SUM(CASE WHEN dept_id = 10 THEN salary ELSE 0 END) AS 财务部总工资
+FROM employees;
+
+-- NULL条件判断
+SELECT emp_name,
+       CASE 
+           WHEN commission_pct IS NULL THEN &#39;无提成&#39;
+           WHEN commission_pct &lt; 0.1 THEN &#39;低提成&#39;
+           WHEN commission_pct &lt; 0.2 THEN &#39;中提成&#39;
+           ELSE &#39;高提成&#39;
+       END AS commission_level
+FROM employees;
+</code></pre>
+<h3 id="排序函数"><a href="#排序函数" class="headerlink" title="排序函数"></a>排序函数</h3><blockquote>
+<p><strong>核心概念</strong>: Oracle 提供强大的分析函数，用于在结果集中进行排序和排名。</p>
+</blockquote>
+<pre><code class="language-sql">-- ROW_NUMBER: 连续排名（无并列），序号唯一不重复
+-- 格式：row_number() over(partiton by col1 order by col2)
+-- 根据col1分组，在分组内根据col2排序
+SELECT emp_name, salary,
+       ROW_NUMBER() OVER (PARTITON BY deptno ORDER BY salary DESC) AS rank
+FROM employees;
+
+-- RANK: 有并列，跳过排名，数字产生跳跃
+SELECT emp_name, salary,
+       RANK() OVER (PARTITON BY deptno ORDER BY salary DESC) AS rank
+FROM employees;
+-- 例如: 10000, 9000, 9000, 8000 -&gt; 排名: 1, 2, 2, 4
+
+-- DENSE_RANK: 有并列，不跳过排名，会产生相同的数字排名
+SELECT emp_name, salary,
+       DENSE_RANK() OVER (PARTITON BY deptno ORDER BY salary DESC) AS rank
+FROM employees;
+-- 例如: 10000, 9000, 9000, 8000 -&gt; 排名: 1, 2, 2, 3
+
+-- PARTITION BY: 分组内排名
+SELECT dept_id, emp_name, salary,
+       ROW_NUMBER() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS dept_rank,
+       RANK() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS dept_rank_with_tie
+FROM employees;
+
+-- NTILE: 将数据分成N组
+SELECT emp_name, salary,
+       NTILE(4) OVER (ORDER BY salary DESC) AS quartile  -- 四分位数
+FROM employees;
+
+-- LAG / LEAD: 访问前一行/后一行数据
+SELECT emp_name, hire_date, salary,
+       LAG(salary, 1) OVER (ORDER BY hire_date) AS prev_salary,    -- 前一个人工资
+       LEAD(salary, 1) OVER (ORDER BY hire_date) AS next_salary    -- 后一个人工资
+FROM employees
+WHERE dept_id = 30;
+
+-- LAG/LEAD 带默认值
+SELECT emp_name, salary,
+       LAG(salary, 1, 0) OVER (ORDER BY salary DESC) AS prev_salary,
+       LEAD(salary, 1, 0) OVER (ORDER BY salary DESC) AS next_salary
+FROM employees;
+
+-- FIRST_VALUE / LAST_VALUE: 第一/最后一个值
+SELECT emp_name, hire_date, salary,
+       FIRST_VALUE(salary) OVER (ORDER BY hire_date) AS first_salary,
+       LAST_VALUE(salary) OVER (ORDER BY hire_date) AS current_salary
+FROM employees;
+
+-- NTH_VALUE: 第N个值
+SELECT emp_name, salary,
+       NTH_VALUE(salary, 2) OVER (ORDER BY salary DESC) AS second_highest
+FROM employees;
+
+-- OVER 完整语法
+SELECT emp_name, dept_id, salary,
+       ROW_NUMBER() OVER (
+           PARTITION BY dept_id    -- 按部门分组
+           ORDER BY salary DESC    -- 工资降序
+       ) AS dept_rank,
+       RANK() OVER (
+           ORDER BY salary DESC
+       ) AS overall_rank
+FROM employees;
+
+-- 多窗口组合
+SELECT emp_name, dept_id, salary, hire_date,
+       ROW_NUMBER() OVER (PARTITION BY dept_id ORDER BY salary DESC) AS salary_rank,
+       ROW_NUMBER() OVER (PARTITION BY dept_id ORDER BY hire_date) AS hire_rank
+FROM employees;
+
+-- 累计计算
+SELECT emp_name, salary,
+       SUM(salary) OVER (ORDER BY emp_id) AS cumulative_salary,  -- 累计 sum
+       AVG(salary) OVER (ORDER BY emp_id) AS cumulative_avg      -- 累计 avg
+FROM employees
+WHERE dept_id = 10;
+</code></pre>
+<h3 id="聚合函数"><a href="#聚合函数" class="headerlink" title="聚合函数"></a>聚合函数</h3><blockquote>
+<p><strong>核心概念</strong>: 聚合函数对一组值进行计算，返回单个值。常与 GROUP BY 配合使用。</p>
+</blockquote>
+<pre><code class="language-sql">-- 基础聚合函数
+SELECT 
+    COUNT(*) AS total_count,           -- 总行数
+    COUNT(commission_pct) AS has_comm,  -- 非NULL计数
+    COUNT(DISTINCT dept_id) AS dept_num,-- 去重计数
+    SUM(salary) AS total_salary,        -- 求和
+    AVG(salary) AS avg_salary,          -- 平均值
+    MAX(salary) AS max_salary,          -- 最大值
+    MIN(salary) AS min_salary           -- 最小值
+FROM employees;
+
+-- GROUP BY: 分组聚合
+SELECT dept_id, job_id,
+       COUNT(*) AS emp_count,
+       AVG(salary) AS avg_salary,
+       SUM(salary) AS total_salary,
+       MAX(salary) AS max_salary,
+       MIN(salary) AS min_salary
+FROM employees
+GROUP BY dept_id, job_id
+ORDER BY dept_id, job_id;
+
+-- HAVING: 分组后过滤
+SELECT dept_id,
+       AVG(salary) AS avg_salary
+FROM employees
+GROUP BY dept_id
+HAVING AVG(salary) &gt; 5000;
+
+-- ROLLUP: 聚合小计（层级汇总）
+SELECT dept_id, job_id, SUM(salary) AS total_salary
+FROM employees
+GROUP BY ROLLUP(dept_id, job_id);
+-- 结果: (部门+职位)汇总 -&gt; (部门)汇总 -&gt; 总计
+
+-- CUBE: 全量交叉汇总
+SELECT dept_id, job_id, SUM(salary) AS total_salary
+FROM employees
+GROUP BY CUBE(dept_id, job_id);
+-- 结果: 所有维度组合的汇总
+
+-- GROUPING: 判断是否小计行
+SELECT 
+    GROUPING(dept_id) AS is_dept_total,
+    GROUPING(job_id) AS is_job_total,
+    dept_id, job_id, 
+    SUM(salary) AS total_salary
+FROM employees
+GROUP BY ROLLUP(dept_id, job_id);
+-- GROUPING()=1 表示小计行，=0 表示明细行
+
+-- GROUPING SETS: 指定聚合维度
+SELECT dept_id, job_id, SUM(salary) AS total_salary
+FROM employees
+GROUP BY GROUPING SETS(dept_id, job_id);
+-- 等同于: GROUP BY dept_id UNION ALL GROUP BY job_id
+
+-- LISTAGG: 字符串聚合（行转列）
+SELECT dept_id,
+       LISTAGG(emp_name, &#39;,&#39;) WITHIN GROUP (ORDER BY emp_name) AS employees
+FROM employees
+GROUP BY dept_id;
+
+-- 配合 DISTINCT
+SELECT dept_id,
+       LISTAGG(DISTINCT job_id, &#39;,&#39;) WITHIN GROUP (ORDER BY job_id) AS jobs
+FROM employees
+GROUP BY dept_id;
+
+-- COUNT + CASE 条件统计
+SELECT 
+    COUNT(CASE WHEN salary &gt; 10000 THEN 1 END) AS 高薪,
+    COUNT(CASE WHEN salary BETWEEN 5000 AND 10000 THEN 1 END) AS 中薪,
+    COUNT(CASE WHEN salary &lt; 5000 THEN 1 END) AS 低薪
+FROM employees;
+
+-- 窗口聚合函数（OVER）
+-- 不分组，整个结果集作为窗口
+SELECT emp_name, salary,
+       SUM(salary) OVER() AS total_salary,
+       AVG(salary) OVER() AS avg_salary,
+       COUNT(*) OVER() AS total_count
+FROM employees;
+
+-- 带 PARTITION BY 的窗口聚合
+SELECT dept_id, emp_name, salary,
+       SUM(salary) OVER(PARTITION BY dept_id) AS dept_total,
+       AVG(salary) OVER(PARTITION BY dept_id) AS dept_avg,
+       COUNT(*) OVER(PARTITION BY dept_id) AS dept_count
+FROM employees;
+
+-- 滑动窗口（ROWS BETWEEN）
+SELECT emp_name, salary,
+       SUM(salary) OVER(
+           ORDER BY emp_id 
+           ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+       ) AS cumulative_sum
+FROM employees;
+-- UNBOUNDED PRECEDING: 开头
+-- CURRENT ROW: 当前行
+-- UNBOUNDED FOLLOWING: 结尾
+
+-- 统计函数：标准差、方差
+SELECT 
+    STDDEV(salary) AS std_dev,     -- 标准差
+    VARIANCE(salary) AS variance,  -- 方差
+    CORR(salary, commission_pct) AS correlation  -- 相关系数
+FROM employees;
+
+-- RATIO_TO_REPORT: 占比
+SELECT emp_name, salary,
+       ROUND(RATIO_TO_REPORT(salary) OVER() * 100, 2) AS percentage
+FROM employees
+WHERE dept_id = 10;
+
+-- KEEP (DENSE_RANK FIRST/LAST): 取排序后第一个/最后一个
+SELECT dept_id,
+       MAX(salary) KEEP (DENSE_RANK FIRST ORDER BY hire_date) AS earliest_hire_salary,
+       MIN(salary) KEEP (DENSE_RANK LAST ORDER BY hire_date) AS latest_hire_salary
+FROM employees
+GROUP BY dept_id;
+</code></pre>
+<hr>
+<h2 id="表关联查询"><a href="#表关联查询" class="headerlink" title="表关联查询"></a>表关联查询</h2><blockquote>
+<p><strong>核心概念</strong>: 把多张表拼在一起查，Oracle 支持 ANSI 语法和传统语法。</p>
+</blockquote>
+<pre><code class="language-sql">-- 内连接（INNER JOIN）：两边都有的才显示
+SELECT e.emp_id, e.emp_name, d.dept_name
+FROM employees e
+INNER JOIN departments d ON e.dept_id = d.dept_id;
+
+-- 左连接（LEFT JOIN）：左边全保留
+SELECT e.emp_id, e.emp_name, d.dept_name
+FROM employees e
+LEFT JOIN departments d ON e.dept_id = d.dept_id;
+
+-- 右连接（RIGHT JOIN）：右边全保留
+SELECT e.emp_id, e.emp_name, d.dept_name
+FROM employees e
+RIGHT JOIN departments d ON e.dept_id = d.dept_id;
+
+-- 全外连接（FULL OUTER JOIN）：两边都保留
+SELECT e.emp_id, e.emp_name, d.dept_name
+FROM employees e
+FULL OUTER JOIN departments d ON e.dept_id = d.dept_id;
+
+-- 笛卡尔积（CROSS JOIN）：所有组合
+SELECT e.emp_name, d.dept_name
+FROM employees e
+CROSS JOIN departments d;
+
+-- 多表关联
+SELECT e.emp_name, d.dept_name, l.city
+FROM employees e
+JOIN departments d ON e.dept_id = d.dept_id
+JOIN locations l ON d.location_id = l.location_id;
+
+-- 自连接：自己连自己（上下级关系）
+SELECT e.emp_name AS 员工, m.emp_name AS 主管
+FROM employees e
+LEFT JOIN employees m ON e.manager_id = m.emp_id;
+
+-- 集合运算（ UNION 并集、INTERSECT 交集、MINUS 差集）
+SELECT emp_name FROM employees_a
+UNION
+SELECT emp_name FROM employees_b;
+</code></pre>
+<hr>
+<h2 id="PL-SQL基础"><a href="#PL-SQL基础" class="headerlink" title="PL&#x2F;SQL基础"></a>PL&#x2F;SQL基础</h2><blockquote>
+<p><strong>核心概念</strong>: PL&#x2F;SQL 是 Oracle 的编程语言，类似于 Java + SQL，能写逻辑处理。</p>
+</blockquote>
+<pre><code class="language-plsql">-- PL/SQL 基本结构，分为声明，执行，异常三部分，其中执行部分是必须要有的
+DECLARE
+    -- 声明变量
+    -- 不能超过30字符，必须字母开头，不分大小写，不能关键字
+    -- 多出的类型：binary_integer,带符号整数;boolean;rowid,存放数据库行号 
+    v_name VARCHAR2(100);
+ -- 参照表的列类型
+ -- 表名.字段名@type
+ -- v_name empp.ename@type
+    v_salary NUMBER(10, 2);
+    v_count NUMBER;
+BEGIN
+    -- 业务逻辑
+    v_name := &#39;张三&#39;;  -- 赋值用 :=
+    v_salary := 8000;
+    
+    DBMS_OUTPUT.PUT_LINE(&#39;员工: &#39; || v_name || &#39;, 工资: &#39; || v_salary);
+    
+    -- 查询赋值（INTO）
+    SELECT salary INTO v_salary FROM employees WHERE emp_id = 1;
+    
+    -- 条件判断
+    IF v_salary &gt; 10000 THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;高薪&#39;);
+    ELSIF v_salary &gt; 5000 THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;中等&#39;);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE(&#39;低薪&#39;);
+    END IF;
+    
+    -- 循环
+    -- WHILE 循环
+    DECLARE
+        i NUMBER := 1;
+    BEGIN
+        WHILE i &lt;= 10 LOOP
+            DBMS_OUTPUT.PUT_LINE(i);
+            i := i + 1;
+        END LOOP;
+    END;
+    
+    -- 简单LOOP循环,必须有exit语句，不然会死循环
+    declare
+    	v_x number(4) := 1;
+    begin
+    	loop
+    	dbms_outpput.put_line(v_x);
+    	v_x:=v_x+1;
+    	exit when v_x&gt;10;
+    	end loop;
+    end;
+    
+    -- FOR 循环
+    BEGIN
+        FOR i IN 1..10 LOOP
+            DBMS_OUTPUT.PUT_LINE(i);
+        END LOOP;
+    END;
+    
+    -- 游标 FOR 循环（简化写法）
+    -- FOR emp_record IN (SELECT * FROM employees) LOOP
+    --     DBMS_OUTPUT.PUT_LINE(emp_record.emp_name);
+    -- END LOOP;
+    
+    COMMIT;
+END;
+/
+
+-- 记录类型（类似结构体）
+-- type 类型名 is record(
+--变量名1，
+--变量名2
+--)
+
+DECLARE
+	-- 定义一种数据类型
+    TYPE emp_record_type IS RECORD (
+        emp_id NUMBER,
+        emp_name VARCHAR2(100),
+        salary NUMBER
+    );
+    emp_rec emp_record_type;
+BEGIN
+    SELECT emp_id, emp_name, salary 
+    INTO emp_rec 
+    FROM employees 
+    WHERE emp_id = 1;
+    
+    DBMS_OUTPUT.PUT_LINE(emp_rec.emp_name);
+EXCEPTION
+	when no_data_found then
+	DBMS_OUTPUT.PUT_LINE(&#39;异常！&#39;);
+END;
+/
+
+-- 表类型（类似数组）
+DECLARE
+    TYPE emp_table_type IS TABLE OF employees.emp_name%TYPE INDEX BY PLS_INTEGER;
+    emp_table emp_table_type;
+BEGIN
+    -- 批量赋值
+    emp_table(1) := &#39;张三&#39;;
+    emp_table(2) := &#39;李四&#39;;
+    
+    DBMS_OUTPUT.PUT_LINE(emp_table(1));
+END;
+/
+
+-- 参照记录类型
+-- 表名%rowtype
+
+declare
+	e emp%rowtype;
+begin
+	select * into e
+	from emp
+	where empno=7839;
+	dbms_outpput.put_line(e.ename||&#39;,&#39;||e.sal);
+end;
+/
+</code></pre>
+<hr>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><blockquote>
+<p><strong>核心概念</strong>: 异常是程序执行过程中发生的错误，PL&#x2F;SQL 提供了完善的异常处理机制，就像”错误捕手”，能捕获并处理各种错误情况。</p>
+</blockquote>
+<h3 id="异常类型"><a href="#异常类型" class="headerlink" title="异常类型"></a>异常类型</h3><pre><code class="language-plsql">-- 异常类型说明：
+-- 1. 预定义异常：Oracle 自动定义好的常见错误（如除零、找不到数据等）
+-- 2. 非预定义异常：Oracle 错误码对应的异常（需要 PRAGMA EXCEPTION_INIT 关联）
+-- 3. 用户自定义异常：业务逻辑中主动定义的异常
+
+-- 1. 预定义异常示例
+
+DECLARE
+    v_result NUMBER;
+BEGIN
+    -- 尝试除以零（会触发预定义异常）
+    v_result := 10 / 0;
+EXCEPTION
+    WHEN ZERO_DIVIDE THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;不能除以零！&#39;);
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;其他错误: &#39; || SQLERRM);
+END;
+/
+
+-- 常用预定义异常
+-- ZERO_DIVIDE       除零 :错误
+-- TOO_MANY_ROWS     : SELECT INTO 返回多行
+-- NO_DATA_FOUND     : SELECT INTO 没有返回数据
+-- INVALID_NUMBER    : 字符串转数字失败
+-- VALUE_ERROR       : 类型转换或赋值错误
+-- DUP_VAL_ON_INDEX  : 违反唯一索引
+-- CURSOR_ALREADY_OPEN: 游标已打开
+-- INVALID_CURSOR    : 游标操作无效
+-- NOT_LOGGED_ON     : 未连接到数据库
+-- TIMEOUT_ON_RESOURCE: 资源等待超时
+
+-- 2. 非预定义异常（将 Oracle 错误码转为异常）
+
+DECLARE
+    -- 声明异常
+    e_foreign_key EXCEPTION;
+    -- 关联错误码
+    PRAGMA EXCEPTION_INIT(e_foreign_key, -2292);  -- 违反外键约束
+BEGIN
+    DELETE FROM departments WHERE dept_id = 10;
+EXCEPTION
+    WHEN e_foreign_key THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;无法删除，该部门有员工！&#39;);
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;错误: &#39; || SQLERRM);
+END;
+/
+
+-- 常用 Oracle 错误码
+-- -1      : 违反唯一约束
+-- -2291   : 违反外键约束（子表有数据）
+-- -2292   : 违反外键约束（父表被引用）
+-- -1400   : 违反非空约束
+-- -12899  : 值太大
+-- -1722   : 无效数字
+-- -1012   : 未登录
+
+-- 3. 用户自定义异常
+
+DECLARE
+    -- 定义异常
+    e_salary_low EXCEPTION;
+    e_salary_high EXCEPTION;
+    -- 定义异常初始化
+    PRAGMA EXCEPTION_INIT(e_salary_low, -20001);
+    PRAGMA EXCEPTION_INIT(e_salary_high, -20002);
+    
+    v_salary NUMBER := 1500;
+BEGIN
+    IF v_salary &lt; 2000 THEN
+        -- 抛出异常
+        RAISE_APPLICATION_ERROR(-20001, &#39;工资太低了！&#39;);
+    ELSIF v_salary &gt; 50000 THEN
+        RAISE_APPLICATION_ERROR(-20002, &#39;工资太高了！&#39;);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE(&#39;工资正常: &#39; || v_salary);
+    END IF;
+EXCEPTION
+    WHEN e_salary_low THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;错误: &#39; || SQLERRM);
+    WHEN e_salary_high THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;错误: &#39; || SQLERRM);
+END;
+/
+</code></pre>
+<h3 id="异常处理语法"><a href="#异常处理语法" class="headerlink" title="异常处理语法"></a>异常处理语法</h3><pre><code class="language-plsql">-- 基本异常处理结构
+DECLARE
+    -- 声明部分
+    v_name VARCHAR2(100);
+BEGIN
+    -- 执行部分
+    SELECT emp_name INTO v_name FROM employees WHERE emp_id = 1;
+    DBMS_OUTPUT.PUT_LINE(&#39;员工名: &#39; || v_name);
+EXCEPTION
+    -- 异常处理部分
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;未找到该员工！&#39;);
+    WHEN TOO_MANY_ROWS THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;数据错误：返回多行！&#39;);
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;发生错误: &#39; || SQLERRM);
+END;
+/
+
+-- SQLCODE 和 SQLERRM（获取错误信息）
+DECLARE
+    v_error_code NUMBER;
+    v_error_msg VARCHAR2(1000);
+BEGIN
+    -- 触发错误
+    UPDATE employees SET salary = salary / 0;
+EXCEPTION
+    WHEN OTHERS THEN
+        v_error_code := SQLCODE;
+        v_error_msg := SQLERRM;
+        DBMS_OUTPUT.PUT_LINE(&#39;错误代码: &#39; || v_error_code);
+        DBMS_OUTPUT.PUT_LINE(&#39;错误信息: &#39; || v_error_msg);
+        
+        -- 记录到日志表
+        INSERT INTO error_log (error_code, error_msg, create_time)
+        VALUES (v_error_code, v_error_msg, SYSDATE);
+        COMMIT;
+        
+        -- 重新抛出异常（可选）
+        RAISE;
+END;
+/
+
+-- 多异常分支
+DECLARE
+    v_emp_id NUMBER := 1;
+    v_salary NUMBER;
+    v_name VARCHAR2(100);
+BEGIN
+    SELECT salary INTO v_salary FROM employees WHERE emp_id = v_emp_id;
+    
+    -- 业务校验
+    IF v_salary &lt; 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, &#39;工资不能为负数&#39;);
+    END IF;
+    
+    DBMS_OUTPUT.PUT_LINE(&#39;工资: &#39; || v_salary);
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;员工不存在: &#39; || v_emp_id);
+    WHEN INVALID_NUMBER THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;无效的员工编号&#39;);
+    WHEN VALUE_ERROR THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;数据类型错误&#39;);
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;系统错误: &#39; || SQLERRM);
+END;
+/
+
+-- 嵌套块的异常处理
+DECLARE
+    v_name VARCHAR2(100);
+BEGIN
+    DECLARE
+        v_salary NUMBER;
+    BEGIN
+        SELECT salary INTO v_salary FROM employees WHERE emp_id = 1;
+        IF v_salary IS NULL THEN
+            RAISE_APPLICATION_ERROR(-20010, &#39;工资未设置&#39;);
+        END IF;
+    EXCEPTION
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE(&#39;内层异常: &#39; || SQLERRM);
+            RAISE;  -- 重新抛出到外层
+    END;
+    
+    DBMS_OUTPUT.PUT_LINE(&#39;处理完成&#39;);
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;外层异常: &#39; || SQLERRM);
+END;
+/
+</code></pre>
+<h3 id="异常处理示例"><a href="#异常处理示例" class="headerlink" title="异常处理示例"></a>异常处理示例</h3><pre><code class="language-plsql">-- 示例1：完整的增删改查异常处理
+
+CREATE TABLE emp_backup AS SELECT * FROM employees WHERE 1=2;
+
+DECLARE
+    v_emp_id NUMBER := 100;
+    v_count NUMBER;
+BEGIN
+    -- 检查员工是否存在
+    SELECT COUNT(*) INTO v_count FROM employees WHERE emp_id = v_emp_id;
+    
+    IF v_count = 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, &#39;员工不存在: &#39; || v_emp_id);
+    END IF;
+    
+    -- 备份员工数据
+    INSERT INTO emp_backup 
+    SELECT * FROM employees WHERE emp_id = v_emp_id;
+    
+    -- 更新工资
+    UPDATE employees SET salary = salary * 1.1 WHERE emp_id = v_emp_id;
+    
+    IF SQL%ROWCOUNT = 0 THEN
+        RAISE_APPLICATION_ERROR(-20002, &#39;更新失败&#39;);
+    END IF;
+    
+    COMMIT;
+    DBMS_OUTPUT.PUT_LINE(&#39;工资调整成功！&#39;);
+    
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;员工不存在&#39;);
+        ROLLBACK;
+    WHEN TOO_MANY_ROWS THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;数据错误：找到多条记录&#39;);
+        ROLLBACK;
+    WHEN DUP_VAL_ON_INDEX THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;违反唯一约束&#39;);
+        ROLLBACK;
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;错误: &#39; || SQLERRM);
+        ROLLBACK;
+END;
+/
+
+-- 示例2：通用异常处理过程
+
+CREATE OR REPLACE PROCEDURE execute_sql(
+    p_sql VARCHAR2
+) IS
+    v_result VARCHAR2(1000);
+BEGIN
+    EXECUTE IMMEDIATE p_sql;
+    DBMS_OUTPUT.PUT_LINE(&#39;执行成功&#39;);
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;SQL执行失败&#39;);
+        DBMS_OUTPUT.PUT_LINE(&#39;错误代码: &#39; || SQLCODE);
+        DBMS_OUTPUT.PUT_LINE(&#39;错误信息: &#39; || SQLERRM);
+END;
+/
+
+-- 示例3：函数中的异常处理
+
+CREATE OR REPLACE FUNCTION get_emp_salary(
+    p_emp_id IN NUMBER
+) RETURN NUMBER IS
+    v_salary NUMBER;
+    e_not_found EXCEPTION;
+    e_invalid_id EXCEPTION;
+BEGIN
+    -- 参数校验
+    IF p_emp_id IS NULL THEN
+        RAISE_APPLICATION_ERROR(-20001, &#39;员工ID不能为空&#39;);
+    END IF;
+    
+    IF p_emp_id &lt;= 0 THEN
+        RAISE e_invalid_id;
+    END IF;
+    
+    -- 查询工资
+    SELECT salary INTO v_salary 
+    FROM employees 
+    WHERE emp_id = p_emp_id;
+    
+    RETURN NVL(v_salary, 0);
+    
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        -- 员工不存在返回0
+        RETURN 0;
+    WHEN e_invalid_id THEN
+        RAISE_APPLICATION_ERROR(-20002, &#39;无效的员工ID&#39;);
+    WHEN OTHERS THEN
+        -- 记录错误并重新抛出
+        DBMS_OUTPUT.PUT_LINE(&#39;查询失败: &#39; || SQLERRM);
+        RAISE;
+END;
+/
+
+-- 示例4：游标异常处理
+
+DECLARE
+    CURSOR emp_cursor IS 
+        SELECT emp_id, emp_name, salary FROM employees;
+    
+    v_emp_id employees.emp_id%TYPE;
+    v_name employees.emp_name%TYPE;
+    v_salary employees.salary%TYPE;
+    
+    e_salary_error EXCEPTION;
+    PRAGMA EXCEPTION_INIT(e_salary_error, -20001);
+BEGIN
+    OPEN emp_cursor;
+    
+    LOOP
+        FETCH emp_cursor INTO v_emp_id, v_name, v_salary;
+        EXIT WHEN emp_cursor%NOTFOUND;
+        
+        -- 检查工资是否异常
+        IF v_salary &lt; 0 THEN
+            CLOSE emp_cursor;
+            RAISE_APPLICATION_ERROR(-20001, 
+                &#39;员工 &#39; || v_name || &#39; 工资异常: &#39; || v_salary);
+        END IF;
+        
+        DBMS_OUTPUT.PUT_LINE(v_emp_id || &#39; - &#39; || v_name || &#39; - &#39; || v_salary);
+    END LOOP;
+    
+    CLOSE emp_cursor;
+    
+EXCEPTION
+    WHEN OTHERS THEN
+        IF emp_cursor%ISOPEN THEN
+            CLOSE emp_cursor;
+        END IF;
+        DBMS_OUTPUT.PUT_LINE(&#39;处理中断: &#39; || SQLERRM);
+END;
+/
+
+-- 示例5：使用 RAISE_APPLICATION_ERROR 自定义错误
+
+-- 错误码范围：-20001 到 -20999
+DECLARE
+    v_age NUMBER := -5;
+BEGIN
+    IF v_age &lt; 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, &#39;年龄不能为负数&#39;);
+    ELSIF v_age &gt; 150 THEN
+        RAISE_APPLICATION_ERROR(-20002, &#39;年龄不合法&#39;);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE(&#39;年龄: &#39; || v_age);
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE(DBMS_UTIL.FORMAT_ERROR_STACK);
+END;
+/
+
+-- 示例6：异常传播
+
+CREATE OR REPLACE PROCEDURE proc1 AS
+BEGIN
+    DBMS_OUTPUT.PUT_LINE(&#39;proc1 开始&#39;);
+    proc2;  -- 调用proc2
+    DBMS_OUTPUT.PUT_LINE(&#39;proc1 结束&#39;);
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;proc1 捕获: &#39; || SQLERRM);
+        RAISE;  -- 重新抛出
+END;
+/
+
+CREATE OR REPLACE PROCEDURE proc2 AS
+BEGIN
+    DBMS_OUTPUT.PUT_LINE(&#39;proc2 开始&#39;);
+    RAISE_APPLICATION_ERROR(-20001, &#39;proc2中的错误&#39;);
+    DBMS_OUTPUT.PUT_LINE(&#39;proc2 结束&#39;);
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;proc2 捕获: &#39; || SQLERRM);
+        RAISE;  -- 重新抛出，让proc1处理
+END;
+/
+</code></pre>
+<h3 id="异常相关视图"><a href="#异常相关视图" class="headerlink" title="异常相关视图"></a>异常相关视图</h3><pre><code class="language-sql">-- 查看用户定义的异常
+SELECT name, type, sequence 
+FROM user_source 
+WHERE name = &#39;YOUR_PROCEDURE_NAME&#39;;
+
+-- 查看编译错误
+SHOW ERRORS PROCEDURE procedure_name;
+-- 或
+SELECT line, position, text 
+FROM user_errors 
+WHERE name = &#39;PROCEDURE_NAME&#39;
+ORDER BY sequence;
+
+-- 在 SQL*Plus 中查看
+-- SQL&gt; SHOW ERRORS PROCEDURE my_procedure;
+</code></pre>
+<hr>
+<h2 id="存储过程与函数"><a href="#存储过程与函数" class="headerlink" title="存储过程与函数"></a>存储过程与函数</h2><blockquote>
+<p><strong>核心概念</strong>: 存储过程和函数是预编译的 SQL 块，可重复调用。过程无返回值，函数有返回值。</p>
+</blockquote>
+<pre><code class="language-plsql">-- 创建存储过程（无返回值）
+CREATE OR REPLACE PROCEDURE update_salary(
+    p_emp_id IN NUMBER,
+    p_salary IN NUMBER
+) IS
+BEGIN
+    UPDATE employees SET salary = p_salary WHERE emp_id = p_emp_id;
+    COMMIT;
+    DBMS_OUTPUT.PUT_LINE(&#39;更新成功&#39;);
+END;
+/
+
+-- 调用存储过程
+BEGIN
+    update_salary(1, 15000);
+END;
+/
+
+-- 或者
+EXEC update_salary(1, 15000);
+
+-- 创建函数（有返回值）
+--参数类型有三种：
+--输入参数：参数名in 数据类型 形参=实参(默认)
+--输出参数：参数名out 数据类型 实参=形参
+--输入输出参数：参数名 in out 数据类型相赋值 形参和实参都可以
+CREATE OR REPLACE FUNCTION get_emp_salary(
+    p_emp_id IN NUMBER
+) RETURN NUMBER IS  -- 返回类型不用加长度，不能写括号，is或者as都可以
+    v_salary NUMBER;
+BEGIN
+    SELECT salary INTO v_salary FROM employees WHERE emp_id = p_emp_id;
+    RETURN v_salary;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN 0;
+END;
+/
+
+-- 调用函数
+DECLARE
+    v_sal NUMBER;
+BEGIN
+    v_sal := get_emp_salary(1);
+    DBMS_OUTPUT.PUT_LINE(&#39;工资: &#39; || v_sal);
+END;
+/
+
+-- 带out参数的函数
+-- 返回两个函数的和，差
+create or replace function getResult(
+    p_a number,p_b number,p_x out number)
+return number
+is
+	v_sum number(4);
+begin
+	v_sum :=p_a+p_b;
+	p_x := p_a - p_b;
+	return v_sum;
+end;
+
+--调用带out参数的函数
+declare 
+	v_sum number(4);
+	v_x number(4);
+begin
+	v_sum := getResult(2,1,v_x);
+	 DBMS_OUTPUT.PUT_LINE(&#39;和：&#39;|| v_sum || &#39;差&#39;||v_x);
+end;
+/
+
+-- 带 OUT 参数的过程
+CREATE OR REPLACE PROCEDURE get_emp_info(
+    p_emp_id IN NUMBER,
+    p_emp_name OUT VARCHAR2,
+    p_salary OUT NUMBER
+) IS
+BEGIN
+    SELECT emp_name, salary 
+    INTO p_emp_name, p_salary 
+    FROM employees 
+    WHERE emp_id = p_emp_id;
+END;
+/
+
+-- 调用带 OUT 参数的过程
+DECLARE
+    v_name VARCHAR2(100);
+    v_sal NUMBER;
+BEGIN
+    get_emp_info(1, v_name, v_sal);
+    DBMS_OUTPUT.PUT_LINE(v_name || &#39; - &#39; || v_sal);
+END;
+/
+
+-- 删除过程/函数
+DROP PROCEDURE update_salary;
+DROP FUNCTION get_emp_salary;
+</code></pre>
+<hr>
+<h2 id="触发器"><a href="#触发器" class="headerlink" title="触发器"></a>触发器</h2><blockquote>
+<p><strong>核心概念</strong>: 触发器是”自动触发”的代码，当发生特定事件时自动执行（如增删改）。</p>
+</blockquote>
+<pre><code class="language-plsql">-- 创建触发器：插入数据后自动记录
+CREATE OR REPLACE TRIGGER trg_emp_insert
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    DBMS_OUTPUT.PUT_LINE(&#39;新员工已添加: &#39; || :NEW.emp_name);
+END;
+/
+
+-- 创建触发器：更新前记录旧值
+CREATE OR REPLACE TRIGGER trg_emp_update
+BEFORE UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    DBMS_OUTPUT.PUT_LINE(&#39;修改前: &#39; || :OLD.salary || &#39;, 修改后: &#39; || :NEW.salary);
+END;
+/
+
+-- 创建触发器：删除前阻止或记录
+CREATE OR REPLACE TRIGGER trg_emp_delete
+BEFORE DELETE ON employees
+FOR EACH ROW
+BEGIN
+    RAISE_APPLICATION_ERROR(-20001, &#39;不允许删除员工数据&#39;);
+END;
+/
+
+-- 创建触发器：复合触发器（多个时机）
+CREATE OR REPLACE TRIGGER trg_emp_audit
+FOR INSERT OR UPDATE OR DELETE ON employees
+COMPOUND TRIGGER
+    BEFORE STATEMENT IS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE(&#39;操作即将开始&#39;);
+    END BEFORE STATEMENT;
+    
+    AFTER EACH ROW IS
+    BEGIN
+        IF INSERTING THEN
+            DBMS_OUTPUT.PUT_LINE(&#39;插入: &#39; || :NEW.emp_name);
+        ELSIF UPDATING THEN
+            DBMS_OUTPUT.PUT_LINE(&#39;更新: &#39; || :OLD.emp_name || &#39; -&gt; &#39; || :NEW.emp_name);
+        ELSIF DELETING THEN
+            DBMS_OUTPUT.PUT_LINE(&#39;删除: &#39; || :OLD.emp_name);
+        END IF;
+    END AFTER EACH ROW;
+    
+    AFTER STATEMENT IS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE(&#39;操作已完成&#39;);
+    END AFTER STATEMENT;
+END trg_emp_audit;
+/
+
+-- 禁用/启用触发器
+ALTER TRIGGER trg_emp_insert DISABLE;
+ALTER TRIGGER trg_emp_insert ENABLE;
+
+-- 删除触发器
+DROP TRIGGER trg_emp_insert;
+</code></pre>
+<hr>
+<h2 id="游标"><a href="#游标" class="headerlink" title="游标"></a>游标</h2><p>游标就是指向查询结果的指针，游标指向哪条记录，提取的就是哪条记录的数据。</p>
+<p>游标的使用流程：</p>
+<p>(1)声明游标：</p>
+<pre><code class="language-plsql">cursor cursorname is s
+elect statement;
+例如：cursor curemp is
+select * from emp;
+</code></pre>
+<p>(2）打开游标：</p>
+<pre><code class="language-plsql">open cursor_name; 
+例如: open cur emp;
+</code></pre>
+<p>(3）从游标中提取数据： </p>
+<pre><code class="language-plsql">fetch cursor name into variable[..];
+例如：fetch curemp into
+v empno,v ename,v job,v mgrv hiredate,v sal,v comm,v deptno;
+</code></pre>
+<p>(4)关闭游标：close cursorname;</p>
+<blockquote>
+<p><strong>核心概念</strong>: 游标用于逐行处理查询结果，就像”遍历”数据。</p>
+</blockquote>
+<pre><code class="language-plsql">-- 显式游标（手动控制）
+DECLARE
+    CURSOR emp_cursor IS  -- 1.声明游标
+    SELECT emp_id, emp_name, salary FROM employees WHERE dept_id = 10;
+    
+    v_emp_id NUMBER;
+    v_emp_name VARCHAR2(100);
+    v_salary NUMBER;
+BEGIN
+    OPEN emp_cursor;   -- 2.打开游标
+    LOOP
+        FETCH emp_cursor INTO v_emp_id, v_emp_name, v_salary;   -- 3.从游标提取数据
+        EXIT WHEN emp_cursor%NOTFOUND;  -- 没数据了退出
+        
+        DBMS_OUTPUT.PUT_LINE(v_emp_id || &#39; - &#39; || v_emp_name || &#39; - &#39; || v_salary);
+    END LOOP;
+    CLOSE emp_cursor;   --4.关闭游标
+END;
+/
+
+-- 简化写法：FOR 循环自动开关游标
+DECLARE
+    CURSOR emp_cursor IS 
+        SELECT emp_id, emp_name, salary FROM employees WHERE dept_id = 10;
+BEGIN
+    FOR emp_rec IN emp_cursor LOOP
+        DBMS_OUTPUT.PUT_LINE(emp_rec.emp_id || &#39; - &#39; || emp_rec.emp_name);
+    END LOOP;
+END;
+/
+
+-- 更简：直接用子查询
+BEGIN
+    FOR emp_rec IN (SELECT emp_id, emp_name FROM employees) LOOP
+        DBMS_OUTPUT.PUT_LINE(emp_rec.emp_name);
+    END LOOP;
+END;
+/
+
+-- 游标属性
+-- emp_cursor%FOUND   -- 是否找到数据，返回TRUE或FALSE
+-- emp_cursor%NOTFOUND -- 取反
+-- emp_cursor%ROWCOUNT -- 已取出行数
+-- emp_cursor%ISOPEN   -- 是否打开
+
+-- 参数化游标
+-- cursor 游标名(参数列表) is 查询语句;
+DECLARE
+    CURSOR emp_cursor(p_dept_id NUMBER) IS 
+        SELECT emp_name, salary FROM employees WHERE dept_id = p_dept_id;
+BEGIN
+    FOR emp_rec IN emp_cursor(10) LOOP
+        DBMS_OUTPUT.PUT_LINE(emp_rec.emp_name);
+    END LOOP;
+END;
+/
+
+-- 游标 FOR 循环（简化写法）,for后的变量叫隐藏变量，从in后的语句查询数据赋值给隐藏变量
+-- 游标for循环也可以带参数
+     FOR emp_record IN (SELECT * FROM employees) LOOP
+         DBMS_OUTPUT.PUT_LINE(emp_record.emp_name);
+     END LOOP;
+    
+
+-- 隐式游标（自动管理，用于单行操作），用于添加删除和修改
+BEGIN
+    UPDATE employees SET salary = salary + 100 WHERE emp_id = 1;
+    IF SQL%FOUND THEN
+        DBMS_OUTPUT.PUT_LINE(&#39;更新了 &#39; || SQL%ROWCOUNT || &#39; 行&#39;);
+    END IF;
+END;
+/
+</code></pre>
+<hr>
+<h2 id="事务与锁"><a href="#事务与锁" class="headerlink" title="事务与锁"></a>事务与锁</h2><blockquote>
+<p><strong>核心概念</strong>: 事务保证数据一致性，锁防止并发冲突。Oracle 默认隔离级别是 READ COMMITTED。</p>
+</blockquote>
+<pre><code class="language-plsql">-- 事务控制
+BEGIN
+    UPDATE accounts SET balance = balance - 1000 WHERE account_id = 1;
+    UPDATE accounts SET balance = balance + 1000 WHERE account_id = 2;
+    
+    -- 手动提交
+    COMMIT;
+    
+    -- 或者回滚
+    -- ROLLBACK;
+END;
+/
+
+-- 保存点
+BEGIN
+    INSERT INTO employees VALUES(1, &#39;A&#39;);
+    SAVEPOINT sp1;
+    INSERT INTO employees VALUES(2, &#39;B&#39;);
+    ROLLBACK TO sp1;  -- 回滚到保存点，只保留 A
+    COMMIT;
+END;
+/
+
+-- 锁（手动加锁）
+-- 行级锁：FOR UPDATE
+SELECT * FROM employees WHERE emp_id = 1 FOR UPDATE;
+
+-- 锁住多行
+SELECT * FROM employees WHERE dept_id = 10 FOR UPDATE;
+
+-- 加锁超时设置
+ALTER SESSION SET LOCK_TIMEOUT = 30;  -- 30秒
+
+-- 死锁处理（Oracle 自动检测并回滚）
+-- 查看锁
+-- SELECT * FROM v$locked_object;
+-- SELECT * FROM v$session WHERE sid IN (SELECT session_id FROM v$locked_object);
+
+-- 隔离级别（Oracle 只支持 READ COMMITTED 和 SERIALIZABLE）
+ALTER SESSION SET ISOLATION_LEVEL = SERIALIZABLE;
+
+-- 只读事务
+SET TRANSACTION READ ONLY;
+</code></pre>
+<hr>
+<h2 id="其他对象"><a href="#其他对象" class="headerlink" title="其他对象"></a>其他对象</h2><blockquote>
+<p><strong>核心概念</strong>: 序列、视图、物化视图、索引、包等是 Oracle 的重要对象。</p>
+</blockquote>
+<pre><code class="language-plsql">-- 序列（类似自增，Oracle 没有 AUTO_INCREMENT）
+-- 用于生成唯一数字值的数据库对象，生成主键时用
+CREATE SEQUENCE seq_emp_id
+START WITH 1 
+INCREMENT BY 1   -- 设置步长
+NOMAXVALUE -- 或 MAXVALUE m 或 NOMINVALUE 或 MINVALUE n
+CYCLE  -- NOCYCLE，表示递增到最大或最小之后是否可以重复序列
+CACHE 20;   -- 表示在数据库缓存里存储多少个序列的值
+
+-- 使用序列
+-- nextval和currval,下一个值和当前值
+INSERT INTO employees (emp_id, emp_name) VALUES (seq_emp_id.NEXTVAL, &#39;张三&#39;);
+SELECT seq_emp_id.CURRVAL FROM DUAL;  -- 获取当前值
+
+-- 删除序列
+DROP SEQUENCE seq_emp_id;
+
+-- 视图（虚拟表，不存储数据），简化复杂查询，提供权限访问
+-- 简单视图：只从一个表获得且不包含函数运算，分组函数，表达式，剩下的都是复杂视图
+-- 下面是复杂视图示例，复杂视图不能进行增删改操作
+-- 结尾加上 with read only 就变为只读视图
+CREATE OR REPLACE VIEW v_emp_dept AS
+SELECT e.emp_id, e.emp_name, d.dept_name
+FROM employees e
+JOIN departments d ON e.dept_id = d.dept_id
+WITH READ ONLY;
+
+-- 查询视图
+SELECT * FROM v_emp_dept;
+
+-- 物化视图（存储数据，可定时刷新）
+CREATE MATERIALIZED VIEW mv_emp_dept
+BUILD IMMEDIATE
+REFRESH COMPLETE
+START WITH SYSDATE NEXT SYSDATE + 1  -- 每天刷新
+AS
+SELECT e.emp_id, e.emp_name, d.dept_name
+FROM employees e
+JOIN departments d ON e.dept_id = d.dept_id;
+
+-- 索引（提升查询速度），查询语句中不用指定使用哪个索引
+-- 聚集索引：索引顺序和表记录的顺序一致，相对的是非聚集索引
+-- 普通索引
+CREATE INDEX idx_emp_name ON employees(emp_name);
+-- 使用索引
+select * from emloyees where emp_name = &#39;KING&#39;;
+
+-- 唯一索引
+CREATE UNIQUE INDEX idx_emp_email ON employees(email);
+
+-- 复合索引（最左前缀）
+CREATE INDEX idx_emp_dept_sal ON employees(dept_id, salary);
+
+-- 函数索引（基于函数的索引）
+CREATE INDEX idx_emp_upper ON employees(UPPER(emp_name));
+
+-- 删除索引
+DROP INDEX idx_emp_name;
+
+-- 查看执行计划
+EXPLAIN PLAN FOR SELECT * FROM employees WHERE emp_name = &#39;张三&#39;;
+SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
+
+-- 同义词（对象的别名）
+CREATE SYNONYM emp FOR employees;
+SELECT * FROM emp;  -- 等于 SELECT * FROM employees
+
+-- 包（封装过程、函数、变量），类似于JAVA中的类
+-- 包由两部分组成：包定义和包主体
+-- 创建包规范（定义）
+CREATE OR REPLACE PACKAGE emp_pkg IS
+    PROCEDURE update_salary(p_emp_id NUMBER, p_salary NUMBER);
+    FUNCTION get_emp_name(p_emp_id NUMBER) RETURN VARCHAR2;
+END emp_pkg;
+/
+
+-- 创建包体
+CREATE OR REPLACE PACKAGE BODY emp_pkg IS
+    PROCEDURE update_salary(p_emp_id NUMBER, p_salary NUMBER) IS
+    BEGIN
+        UPDATE employees SET salary = p_salary WHERE emp_id = p_emp_id;
+    END;
+    
+    FUNCTION get_emp_name(p_emp_id NUMBER) RETURN VARCHAR2 IS
+        v_name VARCHAR2(100);
+    BEGIN
+        SELECT emp_name INTO v_name FROM employees WHERE emp_id = p_emp_id;
+        RETURN v_name;
+    END;
+END emp_pkg;
+/
+
+-- 调用包
+BEGIN
+    emp_pkg.update_salary(1, 10000);
+    DBMS_OUTPUT.PUT_LINE(emp_pkg.get_emp_name(1));
+END;
+/
+</code></pre>
+<hr>
+<h2 id="常用系统表-视图"><a href="#常用系统表-视图" class="headerlink" title="常用系统表&#x2F;视图"></a>常用系统表&#x2F;视图</h2><blockquote>
+<p><strong>核心概念</strong>: Oracle 提供大量数据字典视图查询元数据。</p>
+</blockquote>
+<pre><code class="language-plsql">-- 查询用户下的所有表
+SELECT table_name FROM user_tables;
+
+-- 查询表的所有列
+SELECT column_name, data_type, data_length, nullable
+FROM user_tab_columns WHERE table_name = &#39;EMPLOYEES&#39;;
+
+-- 查询表的约束
+SELECT constraint_name, constraint_type, column_name
+FROM user_cons_columns 
+JOIN user_constraints USING (constraint_name)
+WHERE table_name = &#39;EMPLOYEES&#39;;
+
+-- 查询索引
+SELECT index_name, column_name
+FROM user_ind_columns WHERE table_name = &#39;EMPLOYEES&#39;;
+
+-- 查询序列
+SELECT sequence_name, last_number FROM user_sequences;
+
+-- 查询视图定义
+SELECT text FROM user_views WHERE view_name = &#39;V_EMP_DEPT&#39;;
+
+-- 查询当前会话信息
+SELECT user, SYSDATE, SYSTIMESTAMP FROM DUAL;
+
+-- 查询 Oracle 版本
+SELECT * FROM v$version;
+</code></pre>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">baymax0101</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://baymax0101.github.io/2026/03/26/Y%E5%88%86%E9%92%9F%E9%80%9F%E6%88%90Oracle/">https://baymax0101.github.io/2026/03/26/Y%E5%88%86%E9%92%9F%E9%80%9F%E6%88%90Oracle/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">baymax0101</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                                    <span class="chip bg-color">数据库</span>
+                                </a>
+                            
+                                <a href="/tags/SQL/">
+                                    <span class="chip bg-color">SQL</span>
+                                </a>
+                            
+                                <a href="/tags/%E9%80%9F%E6%9F%A5%E8%A1%A8/">
+                                    <span class="chip bg-color">速查表</span>
+                                </a>
+                            
+                                <a href="/tags/Oracle/">
+                                    <span class="chip bg-color">Oracle</span>
+                                </a>
+                            
+                                <a href="/tags/PL-SQL/">
+                                    <span class="chip bg-color">PL/SQL</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2026/03/26/Python%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="Python入门学习笔记">
+                        
+                        <span class="card-title">Python入门学习笔记</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2026-03-26
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" class="post-category">
+                                    编程语言
+                                </a>
+                            
+                            <a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Python/" class="post-category">
+                                    Python
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Python/">
+                        <span class="chip bg-color">Python</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%BC%96%E7%A8%8B/">
+                        <span class="chip bg-color">编程</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+                        <span class="chip bg-color">学习笔记</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2026/03/25/Y%E5%88%86%E9%92%9F%E9%80%9F%E6%88%90MYSQL/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="Y分钟速成MYSQL">
+                        
+                        <span class="card-title">Y分钟速成MYSQL</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2026-03-25
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="post-category">
+                                    数据库
+                                </a>
+                            
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/" class="post-category">
+                                    MySQL
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/MySQL/">
+                        <span class="chip bg-color">MySQL</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                        <span class="chip bg-color">数据库</span>
+                    </a>
+                    
+                    <a href="/tags/SQL/">
+                        <span class="chip bg-color">SQL</span>
+                    </a>
+                    
+                    <a href="/tags/%E9%80%9F%E6%9F%A5%E8%A1%A8/">
+                        <span class="chip bg-color">速查表</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="503838841"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="/libs/aplayer/Meting.min.js"></script>
+
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2019-2026</span>
+            
+            <a href="/about" target="_blank">baymax0101</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            
+            <br>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/blinkfox" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:1181062873@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1181062873" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 1181062873" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
