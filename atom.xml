@@ -15,11 +15,11 @@
       <name>baymax0101</name>
     </author>
     <category term="FastAPI 实战" scheme="https://baymax0101.github.io/categories/FastAPI-%E5%AE%9E%E6%88%98/"/>
+    <category term="FastAPI" scheme="https://baymax0101.github.io/tags/FastAPI/"/>
     <category term="Python" scheme="https://baymax0101.github.io/tags/Python/"/>
     <category term="数据库" scheme="https://baymax0101.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     <category term="SQLAlchemy" scheme="https://baymax0101.github.io/tags/SQLAlchemy/"/>
     <category term="Alembic" scheme="https://baymax0101.github.io/tags/Alembic/"/>
-    <category term="FastAPI" scheme="https://baymax0101.github.io/tags/FastAPI/"/>
     <id>https://baymax0101.github.io/2026/04/21/SQLAlchemy-2-0-Alembic%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E6%A8%A1%E4%B8%8E%E7%89%88%E6%9C%AC%E8%BF%81%E7%A7%BB/</id>
     <link href="https://baymax0101.github.io/2026/04/21/SQLAlchemy-2-0-Alembic%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E6%A8%A1%E4%B8%8E%E7%89%88%E6%9C%AC%E8%BF%81%E7%A7%BB/"/>
     <published>2026-04-21T02:25:47.000Z</published>
@@ -31,6 +31,66 @@
     </summary>
     <title>SQLAlchemy 2.0 + Alembic：数据库建模与版本迁移</title>
     <updated>2026-04-21T02:31:05.293Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>baymax0101</name>
+    </author>
+    <category term="FastAPI 实战" scheme="https://baymax0101.github.io/categories/FastAPI-%E5%AE%9E%E6%88%98/"/>
+    <category term="Celery" scheme="https://baymax0101.github.io/tags/Celery/"/>
+    <category term="FastAPI" scheme="https://baymax0101.github.io/tags/FastAPI/"/>
+    <category term="Python" scheme="https://baymax0101.github.io/tags/Python/"/>
+    <category term="异步任务" scheme="https://baymax0101.github.io/tags/%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1/"/>
+    <category term="Redis" scheme="https://baymax0101.github.io/tags/Redis/"/>
+    <id>https://baymax0101.github.io/2026/04/21/Celery-%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1%E9%98%9F%E5%88%97%EF%BC%9A%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E4%B8%8E%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E8%BF%BD%E8%B8%AA/</id>
+    <link href="https://baymax0101.github.io/2026/04/21/Celery-%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1%E9%98%9F%E5%88%97%EF%BC%9A%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E4%B8%8E%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E8%BF%BD%E8%B8%AA/"/>
+    <published>2026-04-21T02:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>本文是《FastAPI 实战》系列第 6 篇，也是第一阶段的收官篇。上篇我们讲了 <a href="/2026/04/21/Redis-%E7%BC%93%E5%AD%98%E5%AE%9E%E6%88%98%EF%BC%9A%E7%BC%93%E]]>
+    </summary>
+    <title>Celery 异步任务队列：定时任务与任务状态追踪</title>
+    <updated>2026-04-21T07:23:03.451Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>baymax0101</name>
+    </author>
+    <category term="FastAPI 实战" scheme="https://baymax0101.github.io/categories/FastAPI-%E5%AE%9E%E6%88%98/"/>
+    <category term="FastAPI" scheme="https://baymax0101.github.io/tags/FastAPI/"/>
+    <category term="Python" scheme="https://baymax0101.github.io/tags/Python/"/>
+    <category term="JWT" scheme="https://baymax0101.github.io/tags/JWT/"/>
+    <category term="后端" scheme="https://baymax0101.github.io/tags/%E5%90%8E%E7%AB%AF/"/>
+    <category term="认证" scheme="https://baymax0101.github.io/tags/%E8%AE%A4%E8%AF%81/"/>
+    <id>https://baymax0101.github.io/2026/04/21/JWT-%E8%AE%A4%E8%AF%81%E7%B3%BB%E7%BB%9F%E5%AE%8C%E6%95%B4%E5%AE%9E%E7%8E%B0%EF%BC%9A%E4%BB%8E%E7%99%BB%E5%BD%95%E5%88%B0-Token-%E5%88%B7%E6%96%B0/</id>
+    <link href="https://baymax0101.github.io/2026/04/21/JWT-%E8%AE%A4%E8%AF%81%E7%B3%BB%E7%BB%9F%E5%AE%8C%E6%95%B4%E5%AE%9E%E7%8E%B0%EF%BC%9A%E4%BB%8E%E7%99%BB%E5%BD%95%E5%88%B0-Token-%E5%88%B7%E6%96%B0/"/>
+    <published>2026-04-21T02:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>本文是《FastAPI 实战》系列第 4 篇。上篇我们讲了 <a href="/2026/04/14/SQLAlchemy-2-0-Alembic-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E6%A8%A1%E4%B]]>
+    </summary>
+    <title>JWT 双 Token 机制实战：Access Token + Refresh Token 完整实现</title>
+    <updated>2026-04-21T07:18:06.106Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>baymax0101</name>
+    </author>
+    <category term="FastAPI 实战" scheme="https://baymax0101.github.io/categories/FastAPI-%E5%AE%9E%E6%88%98/"/>
+    <category term="FastAPI" scheme="https://baymax0101.github.io/tags/FastAPI/"/>
+    <category term="Python" scheme="https://baymax0101.github.io/tags/Python/"/>
+    <category term="Redis" scheme="https://baymax0101.github.io/tags/Redis/"/>
+    <category term="后端" scheme="https://baymax0101.github.io/tags/%E5%90%8E%E7%AB%AF/"/>
+    <category term="缓存" scheme="https://baymax0101.github.io/tags/%E7%BC%93%E5%AD%98/"/>
+    <id>https://baymax0101.github.io/2026/04/21/Redis-%E7%BC%93%E5%AD%98%E5%AE%9E%E6%88%98%EF%BC%9A%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E3%80%81%E9%9B%AA%E5%B4%A9%E3%80%81%E5%87%BB%E7%A9%BF%E7%9A%84%E5%8E%9F%E7%90%86%E4%B8%8E%E8%A7%A3%E6%B3%95/</id>
+    <link href="https://baymax0101.github.io/2026/04/21/Redis-%E7%BC%93%E5%AD%98%E5%AE%9E%E6%88%98%EF%BC%9A%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E3%80%81%E9%9B%AA%E5%B4%A9%E3%80%81%E5%87%BB%E7%A9%BF%E7%9A%84%E5%8E%9F%E7%90%86%E4%B8%8E%E8%A7%A3%E6%B3%95/"/>
+    <published>2026-04-21T02:00:00.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>本文是《FastAPI 实战》系列第 5 篇。上篇我们讲了 <a href="/2026/04/21/JWT-%E8%AE%A4%E8%AF%81%E7%B3%BB%E7%BB%9F%E5%AE%8C%E6%95%B4%E5%AE%9E%E7%8E]]>
+    </summary>
+    <title>Redis 缓存三大问题：穿透、雪崩、击穿的原理与 Python 解法</title>
+    <updated>2026-04-21T07:17:50.569Z</updated>
   </entry>
   <entry>
     <author>
@@ -63,7 +123,7 @@
       <![CDATA[<h1 id="为什么有些项目使用多种编程语言"><a href="#为什么有些项目使用多种编程语言" class="headerlink" title="为什么有些项目使用多种编程语言"></a>为什么有些项目使用多种编程语言</h1><p>提到多语言项目，很多人第一反应是 D]]>
     </summary>
     <title>为什么有些项目使用多种编程语言</title>
-    <updated>2026-04-21T01:34:01.158Z</updated>
+    <updated>2026-04-21T07:18:35.129Z</updated>
   </entry>
   <entry>
     <author>
