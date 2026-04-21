@@ -4,11 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="SQLAlchemy 2.0 + Alembic：数据库建模与版本迁移, 编程技术">
+    <meta name="keywords" content="OpenSpec 与 Specify 入门：规范驱动开发让 AI 不再幻觉, 编程技术">
     <meta name="description" content="
-本文是《FastAPI 实战》系列第 3 篇。查看系列目录
-
-前两篇我们搞定了路由和依赖注入，但一个正经的后端服务离不开数据库。在 Python 生态里，SQLAlchemy 几乎是 ORM 的事实标准，而 Alembic 则是它的官方迁">
+一句话摘要：本文介绍规范驱动开发（Spec-Driven Development）的理念，对比 OpenSpec 与 Specify（GitHub Spec Kit）两款工具的差异，并给出各自的安装和使用方式，帮你让 AI 编程助手从”拍">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -20,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>SQLAlchemy 2.0 + Alembic：数据库建模与版本迁移 | Hexo</title>
+    <title>OpenSpec 与 Specify 入门：规范驱动开发让 AI 不再幻觉 | Hexo</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
 
@@ -338,12 +336,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">SQLAlchemy 2.0 + Alembic：数据库建模与版本迁移</h1>
+                    <h1 class="description center-align post-title">OpenSpec 与 Specify 入门：规范驱动开发让 AI 不再幻觉</h1>
                 </div>
             </div>
         </div>
@@ -367,39 +365,30 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/FastAPI/">
-                                <span class="chip bg-color">FastAPI</span>
+                            <a href="/tags/AI/">
+                                <span class="chip bg-color">AI</span>
                             </a>
                         
-                            <a href="/tags/Python/">
-                                <span class="chip bg-color">Python</span>
+                            <a href="/tags/Spec-Driven-Development/">
+                                <span class="chip bg-color">Spec-Driven Development</span>
                             </a>
                         
-                            <a href="/tags/SQLAlchemy/">
-                                <span class="chip bg-color">SQLAlchemy</span>
+                            <a href="/tags/Claude-Code/">
+                                <span class="chip bg-color">Claude Code</span>
                             </a>
                         
-                            <a href="/tags/Alembic/">
-                                <span class="chip bg-color">Alembic</span>
+                            <a href="/tags/Cursor/">
+                                <span class="chip bg-color">Cursor</span>
                             </a>
                         
-                            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
-                                <span class="chip bg-color">数据库</span>
+                            <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">
+                                <span class="chip bg-color">工程实践</span>
                             </a>
                         
                     </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fas fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/FastAPI-%E5%AE%9E%E6%88%98/" class="post-category">
-                                FastAPI 实战
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -430,392 +419,212 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <blockquote>
-<p>本文是《FastAPI 实战》系列第 3 篇。<a href="#">查看系列目录</a></p>
+<p>一句话摘要：本文介绍规范驱动开发（Spec-Driven Development）的理念，对比 OpenSpec 与 Specify（GitHub Spec Kit）两款工具的差异，并给出各自的安装和使用方式，帮你让 AI 编程助手从”拍脑袋写代码”变成”按规范施工”。</p>
 </blockquote>
-<p>前两篇我们搞定了路由和依赖注入，但一个正经的后端服务离不开数据库。在 Python 生态里，SQLAlchemy 几乎是 ORM 的事实标准，而 Alembic 则是它的官方迁移工具。但网上的 SQLAlchemy 教程大多是 1.x 的老写法，你照着抄很可能会踩坑——因为 2.0 的 API 变化非常大。</p>
-<blockquote>
-<p>一句话摘要：从零搭建一套基于 SQLAlchemy 2.0 + Alembic 的异步数据库层，涵盖模型定义、关系映射、CRUD、迁移脚本和版本回滚，帮你避开新旧版本混用的坑。</p>
-</blockquote>
-<hr>
-<h2 id="背景与问题"><a href="#背景与问题" class="headerlink" title="背景与问题"></a>背景与问题</h2><p>假设你要做一个博客系统，有用户、文章、标签三张表。用户和文章是一对多关系（一个用户写多篇文章），文章和标签是多对多关系（一篇文章多个标签，一个标签下多篇文章）。</p>
-<p>不用 ORM，你得手写 <code>CREATE TABLE</code>、<code>INSERT</code>、<code>SELECT</code>、<code>JOIN</code>，还得维护字段类型变更时的表结构同步。字段加一列、改个长度，都要手动写 <code>ALTER TABLE</code> 并在各个环境执行——这在大团队协作里简直是灾难。</p>
-<p><strong>ORM（Object-Relational Mapping）</strong> 的核心价值是：用 Python 类来定义表结构，用对象操作代替手写 SQL，同时让数据库 schema 的变更可追溯、可回滚。</p>
-<p>SQLAlchemy 2.0 相比 1.x 有几个关键变化，也是很多人踩坑的原因：</p>
-<table>
+<h2 id="背景与问题"><a href="#背景与问题" class="headerlink" title="背景与问题"></a>背景与问题</h2><p>用 Claude Code、Cursor 或 GitHub Copilot 写代码久了，你一定会遇到一个经典场景：</p>
+<p>你告诉 AI “给我加一个用户认证功能”，它唰唰唰生成了一堆代码。看起来没问题，但跑起来发现：</p>
+<ul>
+<li>密码用了明文存储，而不是 bcrypt</li>
+<li>JWT Token 没有设置过期时间</li>
+<li>登录接口的返回结构跟现有 API 完全不统一</li>
+</ul>
+<p>你让它改，它改了 A 又破坏了 B。三个回合下来，你的上下文窗口爆了，AI 开始”失忆”，甚至把刚才修好的地方又改回去了。</p>
+<p>这就是 <strong>AI 幻觉</strong> 在工程层面的表现：AI 没有”全局观”，它只根据你当前的提示和有限的上下文做局部最优解，而不是按照整个项目的规范来执行。</p>
+<p><strong>规范驱动开发（Spec-Driven Development）</strong> 就是来解决这个问题的。核心思路很简单：在让 AI 写代码之前，先让它（或你自己）写一份<strong>规范文档（Spec）</strong>，把要做什么、怎么做、做到什么标准说清楚。AI 后续的所有代码生成，都严格基于这份规范，而不是凭空发挥。</p>
+<h2 id="核心原理"><a href="#核心原理" class="headerlink" title="核心原理"></a>核心原理</h2><p>Spec 驱动开发借鉴了建筑行业的施工图纸逻辑：</p>
+<ul>
+<li><strong>没有图纸</strong>，工人（AI）只能凭经验搭积木，搭完发现承重墙位置不对，拆了重来。</li>
+<li><strong>有了图纸</strong>，工人按图施工，监理（你）按图验收，每一道工序都有据可查。</li>
+</ul>
+<p>在技术实现上，Spec 驱动开发引入了一个关键机制：<strong>Delta Spec（差异规范）</strong>。每一次功能变更都被显式标注为 <code>ADDED</code>（新增）、<code>MODIFIED</code>（修改）或 <code>REMOVED</code>（删除），而不是直接覆盖原有代码。这迫使 AI（和人类）在动手之前，先想清楚变更对现有系统的影响。</p>
+<h2 id="工具简介：OpenSpec-与-Specify"><a href="#工具简介：OpenSpec-与-Specify" class="headerlink" title="工具简介：OpenSpec 与 Specify"></a>工具简介：OpenSpec 与 Specify</h2><p>目前生态中最成熟的两款 Spec 驱动开发工具分别是 <strong>OpenSpec</strong> 和 <strong>Specify</strong>（GitHub Spec Kit 的命令行工具）。</p>
+<h3 id="OpenSpec"><a href="#OpenSpec" class="headerlink" title="OpenSpec"></a>OpenSpec</h3><p>OpenSpec 由 Fission AI 开源，定位是<strong>现有项目（Brownfield）的增量变更管理</strong>。它采用轻量级的三阶段工作流：<strong>提案（Proposal）→ 应用（Apply）→ 归档（Archive）</strong>。</p>
+<p>安装方式（需要 Node.js 18+）：</p>
+<pre><code class="language-bash">npm install -g @fission-ai/openspec
+</code></pre>
+<p>初始化项目：</p>
+<pre><code class="language-bash">openspec init --tools claude
+</code></pre>
+<p>执行后会在项目根目录生成 <code>openspec/</code> 文件夹：</p>
+<pre><code>openspec/
+├── specs/          # 当前系统的权威规范（Source of Truth）
+├── changes/        # 每个功能的变更提案
+│   └── {feature}/
+│       ├── proposal.md   # 变更提案
+│       ├── tasks.md      # 任务清单
+│       └── delta/        # 差异规范（ADDED/MODIFIED/REMOVED）
+└── project.md      # 项目概述
+</code></pre>
+<p>在 Claude Code 中使用 OpenSpec 的典型流程：</p>
+<pre><code class="language-bash"># 1. 创建新功能提案
+/opsx:new user-auth
+
+# 2. AI 根据 proposal.md 编写代码
+/opsx:apply
+
+# 3. 验证实现是否符合规范
+/opsx:verify
+
+# 4. 归档，将 delta 合并回主规范
+/opsx:archive
+</code></pre>
+<h3 id="Specify（GitHub-Spec-Kit）"><a href="#Specify（GitHub-Spec-Kit）" class="headerlink" title="Specify（GitHub Spec Kit）"></a>Specify（GitHub Spec Kit）</h3><p>Specify 是 GitHub 官方推出的 Spec Kit 的命令行入口，定位是<strong>从零开始的新项目（Greenfield）</strong>。它采用更严格的五阶段工作流：<strong>原则（Principles）→ 规范（Specification）→ 计划（Plan）→ 任务（Tasks）→ 实现（Implement）</strong>。</p>
+<p>安装方式（需要 uv）：</p>
+<pre><code class="language-bash">uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+</code></pre>
+<p>初始化项目：</p>
+<pre><code class="language-bash">specify init my-project --ai claude
+</code></pre>
+<p>在 Claude Code 中使用 Specify 的典型流程：</p>
+<pre><code class="language-bash"># 1. 定义系统规范
+/speckit.specify
+
+# 2. 生成实施计划
+/speckit.plan
+
+# 3. 拆解任务清单
+/speckit.tasks
+
+# 4. 按任务实现代码
+/speckit.implement
+</code></pre>
+<h2 id="核心区别对比"><a href="#核心区别对比" class="headerlink" title="核心区别对比"></a>核心区别对比</h2><table>
 <thead>
 <tr>
-<th>变化点</th>
-<th>1.x 写法</th>
-<th>2.0 写法</th>
+<th>维度</th>
+<th>OpenSpec</th>
+<th>Specify（Spec Kit）</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>查询语法</td>
-<td><code>session.query(User).all()</code></td>
-<td><code>session.execute(select(User)).scalars().all()</code></td>
+<td><strong>出品方</strong></td>
+<td>Fission AI</td>
+<td>GitHub</td>
 </tr>
 <tr>
-<td>异步支持</td>
-<td>需要 <code>asyncalchemy</code> 等第三方包</td>
-<td>原生支持 <code>AsyncSession</code></td>
+<td><strong>适用场景</strong></td>
+<td>现有项目迭代（Brownfield）</td>
+<td>从零开发新项目（Greenfield）</td>
 </tr>
 <tr>
-<td>模型基类</td>
-<td><code>declarative_base()</code> 返回一个基类</td>
-<td><code>DeclarativeBase</code> 作为基类，模型直接继承</td>
+<td><strong>安装方式</strong></td>
+<td><code>npm install -g @fission-ai/openspec</code></td>
+<td><code>uv tool install specify-cli</code></td>
 </tr>
 <tr>
-<td>字段定义</td>
-<td><code>Column(Integer, primary_key=True)</code></td>
-<td><code>mapped_column(Integer, primary_key=True)</code></td>
+<td><strong>规范体量</strong></td>
+<td>~250 行（轻量）</td>
+<td>~800 行（全面）</td>
 </tr>
 <tr>
-<td>关系定义</td>
-<td><code>relationship(&quot;Post&quot;, backref=&quot;author&quot;)</code></td>
-<td><code>relationship(&quot;Post&quot;, back_populates=&quot;author&quot;)</code></td>
+<td><strong>流程阶段</strong></td>
+<td>3 阶段：提案 → 应用 → 归档</td>
+<td>5 阶段：原则 → 规范 → 计划 → 任务 → 实现</td>
+</tr>
+<tr>
+<td><strong>变更追踪</strong></td>
+<td>Delta Spec + 归档历史</td>
+<td>无内置变更隔离机制</td>
+</tr>
+<tr>
+<td><strong>自由度</strong></td>
+<td>非线性，可随时回改提案</td>
+<td>线性流程，需按步骤执行</td>
+</tr>
+<tr>
+<td><strong>Token 消耗</strong></td>
+<td>较低</td>
+<td>较高</td>
 </tr>
 </tbody></table>
-<p>如果你在网上搜到的教程还在用 <code>query()</code> 和 <code>Column()</code>，那基本就是旧版——<strong>不要抄</strong>。</p>
-<hr>
-<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>你需要 Python 3.10+，安装以下依赖：</p>
-<pre><code class="language-bash">pip install sqlalchemy[asyncio] alembic asyncpg pydantic
-</code></pre>
+<p>简单记忆法：</p>
 <ul>
-<li><code>sqlalchemy[asyncio]</code>：SQLAlchemy 2.0，带异步扩展</li>
-<li><code>alembic</code>：官方迁移工具</li>
-<li><code>asyncpg</code>：PostgreSQL 的异步驱动（推荐生产用；本地测试可用 <code>aiosqlite</code>）</li>
-<li><code>pydantic</code>：用于数据校验（FastAPI 已自带）</li>
+<li><strong>已有代码库，做功能迭代或 Bug 修复</strong> → 选 OpenSpec。它的 Delta Spec 机制天然适合”在现有大厦里装修”。</li>
+<li><strong>从零开始新项目，需要完整架构设计</strong> → 选 Specify。它的五阶段流程能帮你把地基打牢。</li>
 </ul>
-<p>本地快速测试用 SQLite：</p>
-<pre><code class="language-bash">pip install aiosqlite
+<h2 id="实战：用-OpenSpec-给现有项目加一个缓存层"><a href="#实战：用-OpenSpec-给现有项目加一个缓存层" class="headerlink" title="实战：用 OpenSpec 给现有项目加一个缓存层"></a>实战：用 OpenSpec 给现有项目加一个缓存层</h2><p>假设你有一个 FastAPI 项目，想用 OpenSpec 规范驱动的方式给所有列表查询接口加上 Redis 缓存。</p>
+<h3 id="步骤-1：初始化-OpenSpec"><a href="#步骤-1：初始化-OpenSpec" class="headerlink" title="步骤 1：初始化 OpenSpec"></a>步骤 1：初始化 OpenSpec</h3><pre><code class="language-bash"># 在项目根目录执行
+openspec init --tools claude
 </code></pre>
-<hr>
-<h2 id="实战代码"><a href="#实战代码" class="headerlink" title="实战代码"></a>实战代码</h2><h3 id="第一步：定义数据模型"><a href="#第一步：定义数据模型" class="headerlink" title="第一步：定义数据模型"></a>第一步：定义数据模型</h3><p>我们先定义三张表，同时展示一对多和多对多关系。</p>
-<pre><code class="language-python"># app/models.py
-from datetime import datetime
-from typing import List, Optional
-
-from sqlalchemy import ForeignKey, Table, Column, String, Text, DateTime
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-
-
-class Base(DeclarativeBase):
-    pass
-
-
-# 多对多关联表
-article_tag = Table(
-    &quot;article_tag&quot;,
-    Base.metadata,
-    Column(&quot;article_id&quot;, ForeignKey(&quot;articles.id&quot;), primary_key=True),
-    Column(&quot;tag_id&quot;, ForeignKey(&quot;tags.id&quot;), primary_key=True),
-)
-
-
-class User(Base):
-    __tablename__ = &quot;users&quot;
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(50), unique=True, index=True)
-    email: Mapped[str] = mapped_column(String(120), unique=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-
-    # 一对多：一个用户有多篇文章
-    articles: Mapped[List[&quot;Article&quot;]] = relationship(
-        back_populates=&quot;author&quot;, cascade=&quot;all, delete-orphan&quot;
-    )
-
-
-class Article(Base):
-    __tablename__ = &quot;articles&quot;
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    title: Mapped[str] = mapped_column(String(200))
-    content: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    author_id: Mapped[int] = mapped_column(ForeignKey(&quot;users.id&quot;))
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-
-    # 一对多反向引用
-    author: Mapped[&quot;User&quot;] = relationship(back_populates=&quot;articles&quot;)
-
-    # 多对多：一篇文章多个标签
-    tags: Mapped[List[&quot;Tag&quot;]] = relationship(
-        secondary=article_tag, back_populates=&quot;articles&quot;
-    )
-
-
-class Tag(Base):
-    __tablename__ = &quot;tags&quot;
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(50), unique=True, index=True)
-
-    # 多对多反向引用
-    articles: Mapped[List[&quot;Article&quot;]] = relationship(
-        secondary=article_tag, back_populates=&quot;tags&quot;
-    )
+<h3 id="步骤-2：创建变更提案"><a href="#步骤-2：创建变更提案" class="headerlink" title="步骤 2：创建变更提案"></a>步骤 2：创建变更提案</h3><pre><code class="language-bash">/opsx:new add-redis-cache
 </code></pre>
-<p>几个值得注意的点：</p>
+<p>Claude Code 会在 <code>openspec/changes/add-redis-cache/</code> 下生成 <code>proposal.md</code>，内容类似：</p>
+<pre><code class="language-markdown"># Proposal: Add Redis Cache for List Endpoints
+
+## 目标
+为所有列表查询接口添加 Redis 缓存，减少数据库压力。
+
+## Delta Spec
+
+### ADDED
+- `app/core/cache.py`：Redis 连接管理与缓存装饰器
+- `app/dependencies/cache.py`：FastAPI Depends 缓存注入
+
+### MODIFIED
+- `app/api/items.py`：`list_items()` 增加缓存读取逻辑
+- `app/api/users.py`：`list_users()` 增加缓存读取逻辑
+
+### REMOVED
+- 无
+
+## 验收标准
+- 首次请求命中数据库，二次请求命中 Redis（&lt; 5ms）
+- 缓存过期时间统一为 300 秒
+- 所有缓存 key 带前缀 `fastapi:list:`
+</code></pre>
+<h3 id="步骤-3：应用规范"><a href="#步骤-3：应用规范" class="headerlink" title="步骤 3：应用规范"></a>步骤 3：应用规范</h3><pre><code class="language-bash">/opsx:apply
+</code></pre>
+<p>Claude Code 读取 <code>proposal.md</code> 和 Delta Spec，只修改 <code>MODIFIED</code> 中指定的文件，只新增 <code>ADDED</code> 中指定的文件。不会碰其他无关代码。</p>
+<h3 id="步骤-4：验证与归档"><a href="#步骤-4：验证与归档" class="headerlink" title="步骤 4：验证与归档"></a>步骤 4：验证与归档</h3><pre><code class="language-bash">/opsx:verify
+/opsck:archive
+</code></pre>
+<p>验证通过后，OpenSpec 会把这次的 Delta Spec 合并到 <code>openspec/specs/</code> 下的主规范中，变更历史永久保留。</p>
+<h2 id="实战：用-Specify-从零搭建一个任务队列服务"><a href="#实战：用-Specify-从零搭建一个任务队列服务" class="headerlink" title="实战：用 Specify 从零搭建一个任务队列服务"></a>实战：用 Specify 从零搭建一个任务队列服务</h2><p>假设你要从零开始一个 Celery + Redis 的任务队列服务。</p>
+<h3 id="步骤-1：初始化项目"><a href="#步骤-1：初始化项目" class="headerlink" title="步骤 1：初始化项目"></a>步骤 1：初始化项目</h3><pre><code class="language-bash">specify init task-service --ai claude
+cd task-service
+</code></pre>
+<h3 id="步骤-2：定义规范"><a href="#步骤-2：定义规范" class="headerlink" title="步骤 2：定义规范"></a>步骤 2：定义规范</h3><pre><code class="language-bash">/speckit.specify
+</code></pre>
+<p>你需要告诉 AI 系统的核心约束，例如：</p>
+<pre><code>- 使用 FastAPI 作为 Web 框架
+- 使用 Celery + Redis 作为任务队列
+- 所有任务必须支持重试，最大重试 3 次
+- 任务状态必须持久化到 PostgreSQL
+</code></pre>
+<p>Specify 会生成一份完整的系统规范文档（<code>specs/specification.md</code>），包含数据模型、API 接口、任务定义等。</p>
+<h3 id="步骤-3：生成计划与任务"><a href="#步骤-3：生成计划与任务" class="headerlink" title="步骤 3：生成计划与任务"></a>步骤 3：生成计划与任务</h3><pre><code class="language-bash">/speckit.plan
+/speckit.tasks
+</code></pre>
+<p>AI 会把规范拆解成可执行的任务清单（<code>tasks.md</code>），例如：</p>
+<pre><code class="language-markdown">- [ ] 搭建 FastAPI 项目骨架
+- [ ] 配置 Celery 与 Redis 连接
+- [ ] 定义任务模型与数据库表
+- [ ] 实现任务提交接口
+- [ ] 实现任务状态查询接口
+- [ ] 编写单元测试
+</code></pre>
+<h3 id="步骤-4：按任务实现"><a href="#步骤-4：按任务实现" class="headerlink" title="步骤 4：按任务实现"></a>步骤 4：按任务实现</h3><pre><code class="language-bash">/speckit.implement
+</code></pre>
+<p>AI 按照 <code>tasks.md</code> 逐项实现，每完成一项打勾。你可以随时暂停、回退或调整规范。</p>
+<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><h3 id="❌-错误做法：把-OpenSpec-和-Specify-混着用"><a href="#❌-错误做法：把-OpenSpec-和-Specify-混着用" class="headerlink" title="❌ 错误做法：把 OpenSpec 和 Specify 混着用"></a>❌ 错误做法：把 OpenSpec 和 Specify 混着用</h3><p>有人觉得 OpenSpec 的 Delta 机制好，Specify 的规范全面，于是两个都装。结果同一个项目里既有 <code>openspec/</code> 又有 <code>specs/</code> 目录，AI 完全懵掉，不知道应该遵循哪份规范。</p>
+<p>✅ <strong>正确做法</strong>：一个项目只选一个工具。Brownfield 选 OpenSpec，Greenfield 选 Specify，不要混用。</p>
+<h3 id="❌-错误做法：规范写得太细，成了”伪代码文学”"><a href="#❌-错误做法：规范写得太细，成了”伪代码文学”" class="headerlink" title="❌ 错误做法：规范写得太细，成了”伪代码文学”"></a>❌ 错误做法：规范写得太细，成了”伪代码文学”</h3><p>有人写 Spec 时把每一行代码都描述出来，比如”第 1 行 import redis，第 2 行定义函数…”，结果规范本身几百行，AI 的上下文窗口被吃光，代码生成质量反而下降。</p>
+<p>✅ <strong>正确做法</strong>：规范只描述<strong>做什么</strong>和<strong>验收标准</strong>，不描述<strong>怎么做</strong>。把实现细节留给 AI。OpenSpec 推荐的 ~250 行规范体量是经过验证的甜点。</p>
+<h3 id="❌-错误做法：归档后删掉-changes-目录"><a href="#❌-错误做法：归档后删掉-changes-目录" class="headerlink" title="❌ 错误做法：归档后删掉 changes/ 目录"></a>❌ 错误做法：归档后删掉 <code>changes/</code> 目录</h3><p>OpenSpec 的 <code>changes/</code> 目录归档后会被移动到 <code>changes/archive/</code>，这是刻意设计的。有人为了”整洁”直接删掉，结果变更历史丢失，后续排查问题无据可查。</p>
+<p>✅ <strong>正确做法</strong>：保留归档目录，它是项目的变更日志。如果确实需要清理，只删已合并到主规范且超过半年的旧归档。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>规范驱动开发不是给 AI 上枷锁，而是给它一张<strong>施工图纸</strong>。OpenSpec 和 Specify 是两张不同场景的图纸：前者轻量灵活，适合在现有项目里做增量变更；后者全面严谨，适合从零搭建新项目。</p>
+<p><strong>下一步可以学什么</strong>：</p>
 <ul>
-<li><code>Mapped[T]</code> 是 2.0 的类型注解写法，IDE 能自动补全，也能在 <code>mypy</code> 类型检查时报错。</li>
-<li><code>mapped_column()</code> 替代了旧版的 <code>Column()</code>。</li>
-<li><code>relationship(back_populates=...)</code> 替代了 <code>backref</code>，双向关系需要两边都写，虽然啰嗦但更明确。</li>
-<li><code>cascade=&quot;all, delete-orphan&quot;</code> 表示删除用户时，他的文章也会被级联删除——<strong>谨慎使用</strong>，业务上可能不允许。</li>
+<li>把 OpenSpec 或 Specify 集成到你的 CI&#x2F;CD 流程中，实现”规范变更必须审批，代码实现必须匹配规范”</li>
+<li>探索 Maestro 等工具，将 Spec 驱动开发与多 Agent 协作结合</li>
+<li>在团队内推行 Spec Review（规范评审），把代码评审前移一层</li>
 </ul>
-<h3 id="第二步：配置异步-Session"><a href="#第二步：配置异步-Session" class="headerlink" title="第二步：配置异步 Session"></a>第二步：配置异步 Session</h3><p>SQLAlchemy 2.0 原生支持异步，关键在于 <code>create_async_engine</code> + <code>async_sessionmaker</code>。</p>
-<pre><code class="language-python"># app/db.py
-import os
-from contextlib import asynccontextmanager
-
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-
-DATABASE_URL = os.getenv(&quot;DATABASE_URL&quot;, &quot;sqlite+aiosqlite:///./blog.db&quot;)
-
-engine = create_async_engine(DATABASE_URL, echo=False)
-AsyncSessionLocal = async_sessionmaker(
-    engine, class_=AsyncSession, expire_on_commit=False
-)
-
-
-async def get_db() -&gt; AsyncSession:
-    &quot;&quot;&quot;FastAPI Depends 用的 Session 生成器。&quot;&quot;&quot;
-    async with AsyncSessionLocal() as session:
-        try:
-            yield session
-        finally:
-            await session.close()
-
-
-@asynccontextmanager
-async def get_db_context():
-    &quot;&quot;&quot;上下文管理器版本，适合脚本和测试。&quot;&quot;&quot;
-    async with AsyncSessionLocal() as session:
-        yield session
-</code></pre>
-<p><code>expire_on_commit=False</code> 很重要：默认情况下 <code>commit()</code> 后对象会被”过期”，下次访问会触发懒加载。异步环境下懒加载会报错（因为对象绑定的是已关闭的 Session），关闭过期机制可以避免这个问题。</p>
-<h3 id="第三步：CRUD-操作"><a href="#第三步：CRUD-操作" class="headerlink" title="第三步：CRUD 操作"></a>第三步：CRUD 操作</h3><p>下面展示最常用的增删改查，以及关联查询。</p>
-<pre><code class="language-python"># app/crud.py
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
-
-from app.db import get_db_context
-from app.models import User, Article, Tag
-
-
-async def create_user(username: str, email: str) -&gt; User:
-    async with get_db_context() as db:
-        user = User(username=username, email=email)
-        db.add(user)
-        await db.commit()
-        await db.refresh(user)  # 获取自增 ID
-        return user
-
-
-async def get_user_with_articles(user_id: int) -&gt; User | None:
-    async with get_db_context() as db:
-        result = await db.execute(
-            select(User)
-            .where(User.id == user_id)
-            .options(selectinload(User.articles))
-        )
-        return result.scalar_one_or_none()
-
-
-async def create_article(title: str, content: str, author_id: int, tag_names: list[str]) -&gt; Article:
-    async with get_db_context() as db:
-        # 查找或创建标签
-        tags = []
-        for name in tag_names:
-            result = await db.execute(select(Tag).where(Tag.name == name))
-            tag = result.scalar_one_or_none()
-            if tag is None:
-                tag = Tag(name=name)
-                db.add(tag)
-            tags.append(tag)
-
-        article = Article(
-            title=title,
-            content=content,
-            author_id=author_id,
-            tags=tags,
-        )
-        db.add(article)
-        await db.commit()
-        await db.refresh(article)
-        return article
-
-
-async def list_articles(skip: int = 0, limit: int = 10) -&gt; list[Article]:
-    async with get_db_context() as db:
-        result = await db.execute(
-            select(Article)
-            .offset(skip)
-            .limit(limit)
-            .order_by(Article.created_at.desc())
-        )
-        return result.scalars().all()
-</code></pre>
-<p><strong>关联查询</strong>需要特别注意：如果你 <code>select(User)</code> 后直接访问 <code>user.articles</code>，异步环境下会抛 <code>MissingGreenlet</code> 错误。解决办法是在查询时用 <code>options(selectinload(User.articles))</code> 预加载关联数据。</p>
-<h3 id="第四步：在-FastAPI-中集成"><a href="#第四步：在-FastAPI-中集成" class="headerlink" title="第四步：在 FastAPI 中集成"></a>第四步：在 FastAPI 中集成</h3><pre><code class="language-python"># main.py
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.db import get_db
-from app.crud import create_user, get_user_with_articles
-from app.schemas import UserCreate, UserResponse
-
-app = FastAPI()
-
-
-@app.post(&quot;/users&quot;, response_model=UserResponse, status_code=201)
-async def register_user(payload: UserCreate, db: AsyncSession = Depends(get_db)):
-    &quot;&quot;&quot;注册新用户。&quot;&quot;&quot;
-    user = await create_user(payload.username, payload.email)
-    return user
-
-
-@app.get(&quot;/users/{user_id}&quot;, response_model=UserResponse)
-async def read_user(user_id: int, db: AsyncSession = Depends(get_db)):
-    &quot;&quot;&quot;获取用户信息及文章列表。&quot;&quot;&quot;
-    user = await get_user_with_articles(user_id)
-    if user is None:
-        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
-    return user
-</code></pre>
-<p>注意 <code>create_user</code> 内部用了 <code>get_db_context()</code>（自己开 Session），而接口层用 <code>Depends(get_db)</code>（FastAPI 注入 Session）。两者不要混用——否则会出现”Session 嵌套”的诡异问题。</p>
-<h3 id="第五步：Alembic-迁移"><a href="#第五步：Alembic-迁移" class="headerlink" title="第五步：Alembic 迁移"></a>第五步：Alembic 迁移</h3><p>初始化 Alembic：</p>
-<pre><code class="language-bash">alembic init alembic
-</code></pre>
-<p>这会生成 <code>alembic/</code> 目录和 <code>alembic.ini</code>。接下来修改两个关键文件。</p>
-<p><strong>修改 <code>alembic/env.py</code></strong>，让它知道你的异步引擎：</p>
-<pre><code class="language-python"># alembic/env.py
-import asyncio
-from sqlalchemy.ext.asyncio import create_async_engine
-
-from app.models import Base  # 导入你的模型基类
-from app.db import DATABASE_URL
-
-config = context.config
-config.set_main_option(&quot;sqlalchemy.url&quot;, DATABASE_URL)
-
-target_metadata = Base.metadata
-
-
-def run_migrations_offline():
-    url = config.get_main_option(&quot;sqlalchemy.url&quot;)
-    context.configure(
-        url=url,
-        target_metadata=target_metadata,
-        literal_binds=True,
-        dialect_opts={&quot;paramstyle&quot;: &quot;named&quot;},
-    )
-    with context.begin_transaction():
-        context.run_migrations()
-
-
-async def run_migrations_online():
-    connectable = create_async_engine(DATABASE_URL)
-    async with connectable.connect() as connection:
-        await connection.run_sync(do_run_migrations)
-    await connectable.dispose()
-
-
-def do_run_migrations(connection):
-    context.configure(connection=connection, target_metadata=target_metadata)
-    with context.begin_transaction():
-        context.run_migrations()
-
-
-if context.is_offline_mode():
-    run_migrations_offline()
-else:
-    asyncio.run(run_migrations_online())
-</code></pre>
-<p><strong>生成迁移脚本</strong>：</p>
-<pre><code class="language-bash">alembic revision --autogenerate -m &quot;init_models&quot;
-</code></pre>
-<p>这条命令会对比当前数据库 schema 和 <code>Base.metadata</code>，自动生成 <code>CREATE TABLE</code> 语句。</p>
-<p><strong>执行迁移</strong>：</p>
-<pre><code class="language-bash">alembic upgrade head
-</code></pre>
-<p><strong>回滚到上一个版本</strong>：</p>
-<pre><code class="language-bash">alembic downgrade -1
-</code></pre>
-<p><strong>回滚到特定版本</strong>：</p>
-<pre><code class="language-bash">alembic downgrade 8f3a2b1c4d5e  # revision ID
-</code></pre>
-<h3 id="第六步：多环境配置"><a href="#第六步：多环境配置" class="headerlink" title="第六步：多环境配置"></a>第六步：多环境配置</h3><p>实际项目里，开发、测试、生产用的数据库地址不同。不要在 <code>env.py</code> 里硬编码，用环境变量：</p>
-<pre><code class="language-bash"># .env
-DATABASE_URL=postgresql+asyncpg://user:pass@localhost/blog_dev
-</code></pre>
-<p>在 <code>alembic.ini</code> 中，把 <code>sqlalchemy.url</code> 留空或写占位符，然后在 <code>env.py</code> 中读取环境变量：</p>
-<pre><code class="language-python">import os
-DATABASE_URL = os.getenv(&quot;DATABASE_URL&quot;, &quot;sqlite+aiosqlite:///./blog.db&quot;)
-config.set_main_option(&quot;sqlalchemy.url&quot;, DATABASE_URL)
-</code></pre>
-<p>如果你需要同时支持<strong>异步驱动</strong>（<code>asyncpg</code>）和<strong>同步驱动</strong>（<code>psycopg2</code>），可以在 <code>.env</code> 里定义两个 URL，迁移时 Alembic 需要同步引擎，运行时用异步引擎。</p>
-<h3 id="第七步：推荐的项目目录结构"><a href="#第七步：推荐的项目目录结构" class="headerlink" title="第七步：推荐的项目目录结构"></a>第七步：推荐的项目目录结构</h3><pre><code>project/
-├── alembic/                  # Alembic 迁移目录
-│   ├── env.py
-│   ├── script.py.mako
-│   └── versions/             # 迁移脚本
-├── app/
-│   ├── __init__.py
-│   ├── main.py               # FastAPI 入口
-│   ├── models.py             # SQLAlchemy 模型
-│   ├── schemas.py            # Pydantic 模型
-│   ├── crud.py               # 数据库操作封装
-│   ├── db.py                 # 引擎和 Session 工厂
-│   └── api/
-│       └── users.py          # 路由拆分
-├── .env                      # 环境变量（勿提交到 Git）
-├── alembic.ini
-├── requirements.txt
-└── pyproject.toml
-</code></pre>
-<hr>
-<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><p><strong>❌ 错误：混用 <code>query()</code> 和 <code>execute()</code>，或者旧版 <code>Column()</code> 和新版 <code>mapped_column()</code></strong></p>
-<p>有些教程写 <code>session.query(User).filter(...)</code>，但 2.0 的异步 Session 没有 <code>query()</code> 方法。你应该用 <code>session.execute(select(...))</code>。</p>
-<p>同样，<code>Column(Integer, primary_key=True)</code> 在 2.0 的 <code>Mapped</code> 类型系统下不会被类型检查器正确识别，必须用 <code>mapped_column(Integer, primary_key=True)</code>。</p>
-<p>✅ <strong>正确做法</strong>：全项目统一使用 SQLAlchemy 2.0 的 <code>select()</code> + <code>execute()</code> + <code>mapped_column()</code> + <code>Mapped[T]</code> 写法。</p>
-<hr>
-<p><strong>❌ 错误：异步环境下访问未预加载的关联属性</strong></p>
-<pre><code class="language-python"># 错误示范
-user = await db.get(User, 1)
-for article in user.articles:  # 这里会抛 MissingGreenlet！
-    print(article.title)
-</code></pre>
-<p>异步引擎不支持懒加载（lazy loading），因为关联查询需要一次新的数据库请求，但原 Session 已经关闭了。</p>
-<p>✅ <strong>正确做法</strong>：查询时显式预加载关联数据。</p>
-<pre><code class="language-python">result = await db.execute(
-    select(User).options(selectinload(User.articles))
-)
-user = result.scalar_one()
-</code></pre>
-<p>或者如果你只需要一两个关联字段，用 <code>joinedload()</code> 做 <code>JOIN</code> 查询，比 <code>selectinload()</code> 的二次查询更高效。</p>
-<hr>
-<p><strong>❌ 错误：忘记 <code>await db.commit()</code>，以为 <code>add()</code> 会自动提交</strong></p>
-<pre><code class="language-python"># 错误示范
-db.add(user)
-# 没有 commit，数据根本没写进去！
-</code></pre>
-<p>SQLAlchemy 的 <code>add()</code> 只是把对象放入 Session 的”待处理队列”，真正的 INSERT 发生在 <code>commit()</code> 时。</p>
-<p>✅ <strong>正确做法</strong>：增删改后必须 <code>await db.commit()</code>，需要自增 ID 时再加 <code>await db.refresh(obj)</code>。</p>
-<hr>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>SQLAlchemy 2.0 的 <code>Mapped</code> 类型系统和原生异步支持，让 Python ORM 终于跟上了现代类型安全编程的潮流。配合 Alembic，你可以用一套代码同时管理模型定义和 schema 迁移，团队协同时不再需要手动同步 <code>ALTER TABLE</code>。</p>
-<p>下一步可以学什么：</p>
-<ul>
-<li>学习 <strong>Pydantic v2</strong> 的 <code>model_validator</code> 和 <code>computed_field</code>，在 schemas 层做更复杂的业务校验</li>
-<li>了解 <strong>数据库连接池</strong> 调优（<code>pool_size</code>、<code>max_overflow</code>），为高并发做准备</li>
-<li>为 CRUD 层写 <strong>pytest-asyncio</strong> 测试，用 <code>aiosqlite</code> 做内存数据库测试</li>
-</ul>
-<hr>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://docs.sqlalchemy.org/en/20/">SQLAlchemy 2.0 官方文档</a></li>
-<li><a target="_blank" rel="noopener" href="https://alembic.sqlalchemy.org/en/latest/tutorial.html">Alembic 官方教程</a></li>
-<li><a target="_blank" rel="noopener" href="https://fastapi.tiangolo.com/tutorial/sql-databases/">FastAPI SQLAlchemy 官方示例</a></li>
-<li>上一篇：<a href="/2026/04/15/FastAPI-%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/">FastAPI 实战（二）：依赖注入与中间件</a></li>
-<li>下一篇：JWT 认证系统完整实现（持续更新中）</li>
+<li><a target="_blank" rel="noopener" href="https://intent-driven.dev/knowledge/openspec/">OpenSpec 官方文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/github/spec-kit">GitHub Spec Kit 仓库</a></li>
+<li><a target="_blank" rel="noopener" href="https://intent-driven.dev/knowledge/spec-kit-vs-openspec/">Spec Kit vs OpenSpec 对比分析</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7603781883974385683">OpenSpec 与 Spec Kit 使用对比（掘金）</a></li>
+<li><a target="_blank" rel="noopener" href="https://dev.to/newbe36524/the-hallucination-problem-of-ai-programming-assistants-how-to-implement-specification-driven-2i2j">The Hallucination Problem of AI Programming Assistants（Dev.to）</a></li>
 </ul>
 
                 
@@ -843,7 +652,7 @@ db.add(user)
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://baymax0101.github.io/2026/04/21/SQLAlchemy-2-0-Alembic%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E6%A8%A1%E4%B8%8E%E7%89%88%E6%9C%AC%E8%BF%81%E7%A7%BB/">https://baymax0101.github.io/2026/04/21/SQLAlchemy-2-0-Alembic%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E6%A8%A1%E4%B8%8E%E7%89%88%E6%9C%AC%E8%BF%81%E7%A7%BB/</a>
+                    <a href="https://baymax0101.github.io/2026/04/21/OpenSpec-%E4%B8%8E-Specify-%E5%85%A5%E9%97%A8%EF%BC%9A%E8%A7%84%E8%8C%83%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%A9-AI-%E4%B8%8D%E5%86%8D%E5%B9%BB%E8%A7%89/">https://baymax0101.github.io/2026/04/21/OpenSpec-%E4%B8%8E-Specify-%E5%85%A5%E9%97%A8%EF%BC%9A%E8%A7%84%E8%8C%83%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%A9-AI-%E4%B8%8D%E5%86%8D%E5%B9%BB%E8%A7%89/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -881,24 +690,24 @@ db.add(user)
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/FastAPI/">
-                                    <span class="chip bg-color">FastAPI</span>
+                                <a href="/tags/AI/">
+                                    <span class="chip bg-color">AI</span>
                                 </a>
                             
-                                <a href="/tags/Python/">
-                                    <span class="chip bg-color">Python</span>
+                                <a href="/tags/Spec-Driven-Development/">
+                                    <span class="chip bg-color">Spec-Driven Development</span>
                                 </a>
                             
-                                <a href="/tags/SQLAlchemy/">
-                                    <span class="chip bg-color">SQLAlchemy</span>
+                                <a href="/tags/Claude-Code/">
+                                    <span class="chip bg-color">Claude Code</span>
                                 </a>
                             
-                                <a href="/tags/Alembic/">
-                                    <span class="chip bg-color">Alembic</span>
+                                <a href="/tags/Cursor/">
+                                    <span class="chip bg-color">Cursor</span>
                                 </a>
                             
-                                <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
-                                    <span class="chip bg-color">数据库</span>
+                                <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">
+                                    <span class="chip bg-color">工程实践</span>
                                 </a>
                             
                         </div>
@@ -976,9 +785,10 @@ db.add(user)
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2026/04/21/OpenSpec-%E4%B8%8E-Specify-%E5%85%A5%E9%97%A8%EF%BC%9A%E8%A7%84%E8%8C%83%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%A9-AI-%E4%B8%8D%E5%86%8D%E5%B9%BB%E8%A7%89/">
                     <div class="card-image">
@@ -996,9 +806,9 @@ db.add(user)
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2026-04-21
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2026-04-21
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -1007,6 +817,7 @@ db.add(user)
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -1041,13 +852,13 @@ db.add(user)
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2026/04/21/Celery-%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1%E9%98%9F%E5%88%97%EF%BC%9A%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E4%B8%8E%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E8%BF%BD%E8%B8%AA/">
+                <a href="/2026/04/21/SQLAlchemy-2-0-Alembic%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E6%A8%A1%E4%B8%8E%E7%89%88%E6%9C%AC%E8%BF%81%E7%A7%BB/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="Celery 异步任务队列：定时任务与任务状态追踪">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="SQLAlchemy 2.0 + Alembic：数据库建模与版本迁移">
                         
-                        <span class="card-title">Celery 异步任务队列：定时任务与任务状态追踪</span>
+                        <span class="card-title">SQLAlchemy 2.0 + Alembic：数据库建模与版本迁移</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1075,10 +886,6 @@ db.add(user)
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Celery/">
-                        <span class="chip bg-color">Celery</span>
-                    </a>
-                    
                     <a href="/tags/FastAPI/">
                         <span class="chip bg-color">FastAPI</span>
                     </a>
@@ -1087,12 +894,16 @@ db.add(user)
                         <span class="chip bg-color">Python</span>
                     </a>
                     
-                    <a href="/tags/%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1/">
-                        <span class="chip bg-color">异步任务</span>
+                    <a href="/tags/SQLAlchemy/">
+                        <span class="chip bg-color">SQLAlchemy</span>
                     </a>
                     
-                    <a href="/tags/Redis/">
-                        <span class="chip bg-color">Redis</span>
+                    <a href="/tags/Alembic/">
+                        <span class="chip bg-color">Alembic</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                        <span class="chip bg-color">数据库</span>
                     </a>
                     
                 </div>

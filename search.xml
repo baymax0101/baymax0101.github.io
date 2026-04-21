@@ -442,6 +442,125 @@ services:
       </tags>
   </entry>
   <entry>
+    <title>FASTAPI实战（一）：路由与请求处理</title>
+    <url>/2026/04/11/FASTAPI%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7%E5%AE%9E%E6%88%98%EF%BC%9A%E8%B7%AF%E7%94%B1%E4%B8%8E%E8%AF%B7%E6%B1%82%E5%A4%84%E7%90%86/</url>
+    <content><![CDATA[<p> FastAPI 之所以能火起来，最核心的原因就两个：性能炸裂，写法简洁。但是很多新手刚入门的时候，最容易踩坑的地方就是路由和请求处理。这篇文章，我会带你从零手写一个完整的 REST API，让你彻底搞懂 FastAPI 的路由系统。</p>
+<h2 id="1-问题背景"><a href="#1-问题背景" class="headerlink" title="1. 问题背景"></a>1. 问题背景</h2><p> 先说为什么路由这个概念这么重要。</p>
+<p> 现在的 Web 服务，本质上就是一个接收请求、返回响应的过程。用户通过 URL 访问你的服务，后端服务解析这个 URL，决定由哪个函数来处理这个请求，返回什么数据。这个「谁来处理」的机制，就是路由。</p>
+<p> FastAPI 的路由系统非常强大，它支持 HTTP 方法过滤、路径参数、查询参数、请求体自动解析等等。如果这些你都不会，那基本上就告别 FastAPI 了。</p>
+<p> 在之前的 Flask 时代，路由是一个一个手写的，代码一多就乱成一团。FastAPI 用装饰器的方式，把路由和函数绑定在一起，代码结构清晰太多了。这篇文章，我会用一个完整的用户管理接口作为示例，带你把 FastAPI 的路由学透。</p>
+<h2 id="2-原理分析"><a href="#2-原理分析" class="headerlink" title="2. 原理分析"></a>2. 原理分析</h2><p> FastAPI 的路由本质上是这样的一个匹配过程：收到一个 HTTP 请求之后，FastAPI 会依次遍历你定义的所有路由装饰器，找到第一个匹配的那个装饰器，然后执行它下面的函数，返回函数的返回值。</p>
+<p> 这个过程有几个关键点需要理解。</p>
+<p> 第一个是 HTTP 方法。GET、POST、PUT、DELETE 这些方法，代表了不同的操作类型。GET 是获取数据，POST 是创建数据，PUT 是更新数据，DELETE 是删除数据。如果你收到的请求方法和你定义的不匹配，FastAPI 会直接返回 405 Method Not Allowed。</p>
+<p> 第二个是路径参数。比如 <code>/users/{user_id}</code>，这个大括号里面的 user_id 就是路径参数。FastAPI 会把这个部分提取出来，作为参数传给处理函数。如果你访问 <code>/users/123</code>，那么 user_id 就是 123。</p>
+<p> 第三个是查询参数。比如 <code>/users?page=1&amp;size=10</code>，问号后面的部分就是查询参数。FastAPI 会自动把这些参数解析成函数参数，你只需要在函数参数后面加上默认参数就可以直接使用。</p>
+<p> 第四个是请求体。POST 和 PUT 请求通常会带一个请求体，这个请求体可以是 JSON、Form 表单或者文件。FastAPI 会根据你的类型注解自动解析，省去了手写解析代码的麻烦。</p>
+<p> 这四点就是 FastAPI 路由最核心的东西，下面我们直接上代码。</p>
+<h2 id="3-代码实现"><a href="#3-代码实现" class="headerlink" title="3. 代码实现"></a>3. 代码实现</h2><p> 首先安装 FastAPI 和 uvicorn：</p>
+<pre><code class="language-bash">pip install fastapi uvicorn
+</code></pre>
+<p> 然后写代码。这里实现了一个完整的用户管理接口，包括增删改查：</p>
+<pre><code class="language-python">from fastapi import FastAPI, HTTPException, Query, Path, Body
+from pydantic import BaseModel
+from typing import Optional, List
+from datetime import datetime
+
+app = FastAPI()
+
+# 用户数据模型
+class User(BaseModel):
+    id: Optional[int] = None
+    username: str
+    email: str
+    created_at: Optional[str] = None
+
+# 模拟数据库
+users_db = {}
+user_id_counter = 0
+
+# 创建用户
+@app.post(&quot;/users&quot;, response_model=User)
+def create_user(user: User):
+    global user_id_counter
+    user_id_counter += 1
+    user.id = user_id_counter
+    user.created_at = datetime.now().isoformat()
+    users_db[user_id_counter] = user
+    return user
+
+# 获取用户列表
+@app.get(&quot;/users&quot;, response_model=List[User])
+def get_users(
+    page: int = Query(1, ge=1, description=&quot;页码&quot;),
+    size: int = Query(10, ge=1, le=100, description=&quot;每页数量&quot;)
+):
+    start = (page - 1) * size
+    end = start + size
+    return list(users_db.values())[start:end]
+
+# 获取单个用户
+@app.get(&quot;/users/{user_id}&quot;, response_model=User)
+def get_user(user_id: int = Path(..., description=&quot;用户ID&quot;)):
+    if user_id not in users_db:
+        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
+    return users_db[user_id]
+
+# 更新用户
+@app.put(&quot;/users/{user_id}&quot;, response_model=User)
+def update_user(user_id: int, user: User):
+    if user_id not in users_db:
+        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
+    user.id = user_id
+    user.created_at = users_db[user_id].created_at
+    users_db[user_id] = user
+    return user
+
+# 删除用户
+@app.delete(&quot;/users/{user_id}&quot;)
+def delete_user(user_id: int):
+    if user_id not in users_db:
+        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
+    del users_db[user_id]
+    return {&quot;message&quot;: &quot;User deleted&quot;}
+
+if __name__ == &quot;__main__&quot;:
+    import uvicorn
+    uvicorn.run(app, host=&quot;0.0.0.0&quot;, port=8000)
+</code></pre>
+<p> User 是一个 Pydantic 模型，用来校验请求体的数据。users_db 是一个字典，模拟数据库。create_user 是创建用户，get_users 是获取用户列表，get_user 是获取单个用户，update_user 是更新用户，delete_user 是删除用户。</p>
+<p> 这里面有几个关键点。Query 用来定义查询参数，Path 用来定义路径参数，Body 用来解析请求体。HTTPException 用来抛出错误，response_model 用来定义返回数据的格式。</p>
+<p> 启动服务：</p>
+<pre><code class="language-bash">python main.py
+</code></pre>
+<p> 然后用 curl 测试：</p>
+<pre><code class="language-bash"># 创建用户
+curl -X POST &quot;http://localhost:8000/users&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;username&quot;: &quot;tom&quot;, &quot;email&quot;: &quot;tom@example.com&quot;}&#39;
+
+# 获取用户列表
+curl &quot;http://localhost:8000/users?page=1&amp;size=10&quot;
+
+# 获取单个用户
+curl &quot;http://localhost:8000/users/1&quot;
+
+# 更新用户
+curl -X PUT &quot;http://localhost:8000/users/1&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;username&quot;: &quot;tom Updated&quot;, &quot;email&quot;: &quot;tom.new@example.com&quot;}&#39;
+
+# 删除用户
+curl -X DELETE &quot;http://localhost:8000/users/1&quot;
+</code></pre>
+<h2 id="4-踩坑总结"><a href="#4-踩坑总结" class="headerlink" title="4. 踩坑总结"></a>4. 踩坑总结</h2><p> 最后说几个我踩过的坑。</p>
+<p> 第一个坑是路径参数的顺序。如果你定义了 <code>/users/{user_id}</code> 和 <code>/users/me</code> 这两个路由，必须把 <code>/users/me</code> 放在前面。否则 FastAPI 会把 me 当作 user_id 处理，永远匹配不到正确的路由。</p>
+<p> 第二个坑是类型注解。如果你没有给路径参数加类型注解，FastAPI 会把它当作字符串处理。如果你需要整数，就一定要加 <code>int</code> 类型注解。</p>
+<p> 第三个坑是必填参数。路径参数和查询参数默认都是必填的，如果你想让某个参数变成可选的，需要设置默认值，或者用 <code>Optional</code> 包装。</p>
+<p> 第四个坑是请求体的必填验证。Pydantic 模型中，如果某个字段没有默认值，那么这个字段就是必填的。如果你想让某个字段变成可选的，给它加个 None 作为默认值就可以了。</p>
+<p> 掌握了这四个坑， FastAPI 路由就入门了。</p>
+]]></content>
+  </entry>
+  <entry>
     <title>AI 核心概念串讲：从 Token 到 Agent，一篇文章讲清大模型生态</title>
     <url>/2026/04/21/AI-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%B2%E8%AE%B2/</url>
     <content><![CDATA[<blockquote>
@@ -658,122 +777,148 @@ LLM + Token（模型+信息原子）  ← 提供核心推理能力
 ]]></content>
   </entry>
   <entry>
-    <title>FASTAPI实战（一）：路由与请求处理</title>
-    <url>/2026/04/11/FASTAPI%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7%E5%AE%9E%E6%88%98%EF%BC%9A%E8%B7%AF%E7%94%B1%E4%B8%8E%E8%AF%B7%E6%B1%82%E5%A4%84%E7%90%86/</url>
-    <content><![CDATA[<p> FastAPI 之所以能火起来，最核心的原因就两个：性能炸裂，写法简洁。但是很多新手刚入门的时候，最容易踩坑的地方就是路由和请求处理。这篇文章，我会带你从零手写一个完整的 REST API，让你彻底搞懂 FastAPI 的路由系统。</p>
-<h2 id="1-问题背景"><a href="#1-问题背景" class="headerlink" title="1. 问题背景"></a>1. 问题背景</h2><p> 先说为什么路由这个概念这么重要。</p>
-<p> 现在的 Web 服务，本质上就是一个接收请求、返回响应的过程。用户通过 URL 访问你的服务，后端服务解析这个 URL，决定由哪个函数来处理这个请求，返回什么数据。这个「谁来处理」的机制，就是路由。</p>
-<p> FastAPI 的路由系统非常强大，它支持 HTTP 方法过滤、路径参数、查询参数、请求体自动解析等等。如果这些你都不会，那基本上就告别 FastAPI 了。</p>
-<p> 在之前的 Flask 时代，路由是一个一个手写的，代码一多就乱成一团。FastAPI 用装饰器的方式，把路由和函数绑定在一起，代码结构清晰太多了。这篇文章，我会用一个完整的用户管理接口作为示例，带你把 FastAPI 的路由学透。</p>
-<h2 id="2-原理分析"><a href="#2-原理分析" class="headerlink" title="2. 原理分析"></a>2. 原理分析</h2><p> FastAPI 的路由本质上是这样的一个匹配过程：收到一个 HTTP 请求之后，FastAPI 会依次遍历你定义的所有路由装饰器，找到第一个匹配的那个装饰器，然后执行它下面的函数，返回函数的返回值。</p>
-<p> 这个过程有几个关键点需要理解。</p>
-<p> 第一个是 HTTP 方法。GET、POST、PUT、DELETE 这些方法，代表了不同的操作类型。GET 是获取数据，POST 是创建数据，PUT 是更新数据，DELETE 是删除数据。如果你收到的请求方法和你定义的不匹配，FastAPI 会直接返回 405 Method Not Allowed。</p>
-<p> 第二个是路径参数。比如 <code>/users/{user_id}</code>，这个大括号里面的 user_id 就是路径参数。FastAPI 会把这个部分提取出来，作为参数传给处理函数。如果你访问 <code>/users/123</code>，那么 user_id 就是 123。</p>
-<p> 第三个是查询参数。比如 <code>/users?page=1&amp;size=10</code>，问号后面的部分就是查询参数。FastAPI 会自动把这些参数解析成函数参数，你只需要在函数参数后面加上默认参数就可以直接使用。</p>
-<p> 第四个是请求体。POST 和 PUT 请求通常会带一个请求体，这个请求体可以是 JSON、Form 表单或者文件。FastAPI 会根据你的类型注解自动解析，省去了手写解析代码的麻烦。</p>
-<p> 这四点就是 FastAPI 路由最核心的东西，下面我们直接上代码。</p>
-<h2 id="3-代码实现"><a href="#3-代码实现" class="headerlink" title="3. 代码实现"></a>3. 代码实现</h2><p> 首先安装 FastAPI 和 uvicorn：</p>
-<pre><code class="language-bash">pip install fastapi uvicorn
-</code></pre>
-<p> 然后写代码。这里实现了一个完整的用户管理接口，包括增删改查：</p>
-<pre><code class="language-python">from fastapi import FastAPI, HTTPException, Query, Path, Body
+    <title>FastAPI 实战（二）：依赖注入与中间件</title>
+    <url>/2026/04/15/FastAPI-%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/</url>
+    <content><![CDATA[<p>依赖注入是 FastAPI 最强大的特性之一很多人说 FastAPI 比 Flask 高级、高级在哪？答案就在这一篇文章里。依赖注入让代码的解耦变得极其简单，而且它还天然支持异步，完美契合 FastAPI 的高性能特性。</p>
+<h2 id="1-问题背景"><a href="#1-问题背景" class="headerlink" title="1. 问题背景"></a>1. 问题背景</h2><p> 先说依赖注入解决了什么问题。</p>
+<p> 假设你有一个获取当前用户的接口，在真实项目里面，你通常需要先从请求头里面拿到 Token，然后验证 Token 是否有效，再从 Token 里面解析出用户 ID，最后去数据库查用户信息。这里面，验证 Token 是通用的逻辑，每个需要用户信息的接口都要写一遍。</p>
+<p> 在 Flask 时代，你会怎么做？写一个装饰器，在每个接口上面加这个装饰器。这是常见的做法，但是问题也很明显：装饰器的写法比较繁琐，而且装饰器还不好传递参数，测试的时候也不方便 mock。</p>
+<p> FastAPI 的依赖注入从根本上解决了这个问题。它用一种极其优雅的方式，把这些通用逻辑抽取出来，在每个接口需要用的时候，悄悄注入进去。你只需要在函数参数里面声明一下，FastAPI 就会自动帮你完成所有的准备工作。</p>
+<p> 除了依赖注入，中间件也是很重要的话题。中间件可以在请求到达路由之前，或者响应返回之后，做一些统一的处理。比如统一的日志记录、统一添加响应头、统一做请求限流等等。这两个功能，就是这篇文章要讲的内容。</p>
+<h2 id="2-原理分析"><a href="#2-原理分析" class="headerlink" title="2. 原理分析"></a>2. 原理分析</h2><p> 先说依赖注入的原理。</p>
+<p> FastAPI 的依赖注入，本质上是一个「提供者-消费者」的模型。你定义一个函数，这个函数返回一个值，然后在其他路由函数里面，把这个函数名作为参数传进去，FastAPI 就会自动调用这个函数，把返回值注入到参数里面。</p>
+<p> 这个过程有几个关键点。</p>
+<p> 第一个是延迟执行。依赖函数只在有请求的时候才会执行，不会再应用启动的时候执行。而且每次请求都会执行一次，这意味着依赖函数里面可以写动态逻辑，比如每次都从数据库最新获取数据。</p>
+<p> 第二个是依赖链。一个依赖函数还可以依赖另一个依赖函数，FastAPI 会自动处理这个依赖链。比如 A 依赖 B，B 依赖 C，那么执行 A 的时候，会先执行 B，执行 B 的时候，会先执行 C。</p>
+<p> 第三个是缓存。默认情况下，同一个请求内的依赖函数只会执行一次。如果你需要每次都执行，可以设置 <code>use_cache=False</code>。</p>
+<p> 第四个是覆盖。测试的时候，你可以直接向 Depends 传递一个假的对象，替换掉原来的依赖函数，非常方便测试。</p>
+<p> 接下来是中间件的原理。</p>
+<p> FastAPI 的中间件有两种。一种是 WSGI 中间件，这种是同步的，会阻塞请求。另一种是 ASGI 中间件，这种是异步的，不会阻塞请求。FastAPI 推荐使用 ASGI 中间件，性能更好。</p>
+<p> 中间件的执行顺序是这样的：请求进来之后，会先经过所有的中间件，然后到达路由函数，路由函数处理完之后，再依次经过中间件返回。所以如果你想在请求之前做一些处理，就把逻辑写在进入路由之前；如果你想在响应返回之前做一些处理，就把逻辑写在返回响应之后。</p>
+<h2 id="3-代码实现"><a href="#3-代码实现" class="headerlink" title="3. 代码实现"></a>3. 代码实现</h2><p> 先看依赖注入的完整示例：</p>
+<pre><code class="language-python">from fastapi import FastAPI, Depends, HTTPException, Header
+from typing import Optional
 from pydantic import BaseModel
-from typing import Optional, List
-from datetime import datetime
+import jwt
 
 app = FastAPI()
 
-# 用户数据模型
-class User(BaseModel):
-    id: Optional[int] = None
-    username: str
-    email: str
-    created_at: Optional[str] = None
-
 # 模拟数据库
-users_db = {}
-user_id_counter = 0
+users_db = {
+    1: {&quot;id&quot;: 1, &quot;username&quot;: &quot;tom&quot;, &quot;email&quot;: &quot;tom@example.com&quot;},
+    2: {&quot;id&quot;: 2, &quot;username&quot;: &quot;jerry&quot;, &quot;email&quot;: &quot;jerry@example.com&quot;},
+}
 
-# 创建用户
-@app.post(&quot;/users&quot;, response_model=User)
-def create_user(user: User):
-    global user_id_counter
-    user_id_counter += 1
-    user.id = user_id_counter
-    user.created_at = datetime.now().isoformat()
-    users_db[user_id_counter] = user
-    return user
+SECRET_KEY = &quot;my-secret-key&quot;
 
-# 获取用户列表
-@app.get(&quot;/users&quot;, response_model=List[User])
-def get_users(
-    page: int = Query(1, ge=1, description=&quot;页码&quot;),
-    size: int = Query(10, ge=1, le=100, description=&quot;每页数量&quot;)
-):
-    start = (page - 1) * size
-    end = start + size
-    return list(users_db.values())[start:end]
+# JWT 解析函数
+def parse_token(token: str = Header(...)) -&gt; dict:
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[&quot;HS256&quot;])
+        return payload
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail=&quot;Token expired&quot;)
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail=&quot;Invalid token&quot;)
 
-# 获取单个用户
-@app.get(&quot;/users/{user_id}&quot;, response_model=User)
-def get_user(user_id: int = Path(..., description=&quot;用户ID&quot;)):
+# 获取当前用户
+def get_current_user(payload: dict = Depends(parse_token)) -&gt; dict:
+    user_id = payload.get(&quot;user_id&quot;)
     if user_id not in users_db:
         raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
     return users_db[user_id]
 
-# 更新用户
-@app.put(&quot;/users/{user_id}&quot;, response_model=User)
-def update_user(user_id: int, user: User):
-    if user_id not in users_db:
-        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
-    user.id = user_id
-    user.created_at = users_db[user_id].created_at
-    users_db[user_id] = user
-    return user
+# 这是一个需要登录才能访问的接口
+@app.get(&quot;/profile&quot;)
+def get_profile(user: dict = Depends(get_current_user)):
+    return {&quot;username&quot;: user[&quot;username&quot;], &quot;email&quot;: user[&quot;email&quot;]}
 
-# 删除用户
-@app.delete(&quot;/users/{user_id}&quot;)
-def delete_user(user_id: int):
-    if user_id not in users_db:
-        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
-    del users_db[user_id]
-    return {&quot;message&quot;: &quot;User deleted&quot;}
+# 这是一个可选登录的接口，不强制要求 Token
+def get_optional_user():
+    def inner(
+        authorization: Optional[str] = Header(None)
+    ) -&gt; Optional[dict]:
+        if authorization and authorization.startswith(&quot;Bearer &quot;):
+            token = authorization.replace(&quot;Bearer &quot;, &quot;&quot;)
+            try:
+                payload = jwt.decode(token, SECRET_KEY, algorithms=[&quot;HS256&quot;])
+                user_id = payload.get(&quot;user_id&quot;)
+                return users_db.get(user_id)
+            except:
+                return None
+        return None
+    return inner
+
+@app.get(&quot;/articles&quot;)
+def get_articles(user: Optional[dict] = Depends(get_optional_user())):
+    if user:
+        return {&quot;articles&quot;: [...], &quot;user&quot;: user[&quot;username&quot;]}
+    return {&quot;articles&quot;: [...], &quot;user&quot;: None}
 
 if __name__ == &quot;__main__&quot;:
     import uvicorn
     uvicorn.run(app, host=&quot;0.0.0.0&quot;, port=8000)
 </code></pre>
-<p> User 是一个 Pydantic 模型，用来校验请求体的数据。users_db 是一个字典，模拟数据库。create_user 是创建用户，get_users 是获取用户列表，get_user 是获取单个用户，update_user 是更新用户，delete_user 是删除用户。</p>
-<p> 这里面有几个关键点。Query 用来定义查询参数，Path 用来定义路径参数，Body 用来解析请求体。HTTPException 用来抛出错误，response_model 用来定义返回数据的格式。</p>
-<p> 启动服务：</p>
-<pre><code class="language-bash">python main.py
+<p> 这段代码展示了依赖注入的几种用法。parse_token 是解析 JWT Token 的依赖，get_current_user 是获取当前用户的依赖，它依赖 parse_token。在 profile 接口里面，只需要写 <code>user: dict = Depends(get_current_user)</code>，FastAPI 就会自动完成 Token 解析和用户查询。</p>
+<p> get_optional_user 展示了如何创建一个可选的依赖。这个依赖返回一个函数，这个函数会检查请求头里面有没有 Token，如果有就解析，没有就返回 None。</p>
+<p> 接下来看中间件的示例：</p>
+<pre><code class="language-python">from fastapi import FastAPI, Request
+from starlette.middleware.base import BaseHTTPMiddleware
+import time
+
+# 记录请求耗时的中间件
+class TimingMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        start_time = time.time()
+        response = await call_next(request)
+        process_time = time.time() - start_time
+        response.headers[&quot;X-Process-Time&quot;] = str(process_time)
+        return response
+
+# 添加自定义响应头的中间件
+class HeaderMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        response.headers[&quot;X-Custom-Header&quot;] = &quot;my-value&quot;
+        response.headers[&quot;X-Developer&quot;] = &quot;FastAPI&quot;
+        return response
+
+app = FastAPI()
+app.add_middleware(TimingMiddleware)
+app.add_middleware(HeaderMiddleware)
+
+@app.get(&quot;/test&quot;)
+def test():
+    return {&quot;message&quot;: &quot;ok&quot;}
+
+# 这个接口会抛异常，测试错误处理中间件
+@app.get(&quot;/error&quot;)
+def error():
+    raise ValueError(&quot;This is a test error&quot;)
+
+# 全局异常处理
+@app.exception_handler(ValueError)
+async def value_error_handler(request: Request, exc: ValueError):
+    return JSONResponse(
+        status_code=500,
+        content={&quot;detail&quot;: str(exc)}
+    )
+
+from starlette.responses import JSONResponse
+
+if __name__ == &quot;__main__&quot;:
+    import uvicorn
+    uvicorn.run(app, host=&quot;0.0.0.0&quot;, port=8000)
 </code></pre>
-<p> 然后用 curl 测试：</p>
-<pre><code class="language-bash"># 创建用户
-curl -X POST &quot;http://localhost:8000/users&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d &#39;{&quot;username&quot;: &quot;tom&quot;, &quot;email&quot;: &quot;tom@example.com&quot;}&#39;
-
-# 获取用户列表
-curl &quot;http://localhost:8000/users?page=1&amp;size=10&quot;
-
-# 获取单个用户
-curl &quot;http://localhost:8000/users/1&quot;
-
-# 更新用户
-curl -X PUT &quot;http://localhost:8000/users/1&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d &#39;{&quot;username&quot;: &quot;tom Updated&quot;, &quot;email&quot;: &quot;tom.new@example.com&quot;}&#39;
-
-# 删除用户
-curl -X DELETE &quot;http://localhost:8000/users/1&quot;
-</code></pre>
-<h2 id="4-踩坑总结"><a href="#4-踩坑总结" class="headerlink" title="4. 踩坑总结"></a>4. 踩坑总结</h2><p> 最后说几个我踩过的坑。</p>
-<p> 第一个坑是路径参数的顺序。如果你定义了 <code>/users/{user_id}</code> 和 <code>/users/me</code> 这两个路由，必须把 <code>/users/me</code> 放在前面。否则 FastAPI 会把 me 当作 user_id 处理，永远匹配不到正确的路由。</p>
-<p> 第二个坑是类型注解。如果你没有给路径参数加类型注解，FastAPI 会把它当作字符串处理。如果你需要整数，就一定要加 <code>int</code> 类型注解。</p>
-<p> 第三个坑是必填参数。路径参数和查询参数默认都是必填的，如果你想让某个参数变成可选的，需要设置默认值，或者用 <code>Optional</code> 包装。</p>
-<p> 第四个坑是请求体的必填验证。Pydantic 模型中，如果某个字段没有默认值，那么这个字段就是必填的。如果你想让某个字段变成可选的，给它加个 None 作为默认值就可以了。</p>
-<p> 掌握了这四个坑， FastAPI 路由就入门了。</p>
+<p> 中间件的定义很简单，继承 BaseHTTPMiddleware，然后实现 dispatch 方法。dispatch 方法接收 request 和 call_next，request 是请求对象，call_next 是一个函数，调用它会把请求传递给下一个中间件或者路由函数。</p>
+<p> TimingMiddleware 在请求处理前后记录时间，然后给响应头添加 X-Process-Time。HeaderMiddleware 给所有响应添加自定义的头。</p>
+<p> 还有一种特殊的中间件是异常处理器。用 @app.exception_handler 装饰器可以注册全局的异常处理逻辑，这样就不用在每个路由函数里面 try except 了。</p>
+<h2 id="4-踩坑总结"><a href="#4-踩坑总结" class="headerlink" title="4. 踩坑总结"></a>4. 踩坑总结</h2><p> 最后说几个可能踩的坑。</p>
+<p> 第一个坑是依赖注入的顺序。如果你有两个依赖 A 和 B，B 依赖 A，那么定义接口的时候，写成 <code>func(a: type = Depends(A), b: type = Depends(B))</code> 和 <code>func(b: type = Depends(B), a: type = Depends(A))</code> 效果是一样的，FastAPI 会自动解析依赖链，顺序不影响执行。</p>
+<p> 第二个坑是 Depends 和函数调用的区别。如果你写成 <code>Depends(get_current_user)</code>，这是正确的。如果你写成 <code>Depends(get_current_user())</code>，这就错了，因为 get_current_user() 会立即执行，而 Depends 期望的是一个可调用对象。</p>
+<p> 第三个坑是中间件的顺序。中间件的执行顺序是从上到下添加，从下到上执行。比如你添加了 A 和 B 两个中间件，那么请求的执行顺序是 A -&gt; B -&gt; 路由 -&gt; B -&gt; A，响应同理。所以如果你的中间件有依赖关系，一定要注意添加顺序。</p>
+<p> 第四个坑是同步和异步的混用。FastAPI 支持异步的依赖和同步的依赖混用，但是如果你在异步的路由函数里面使用同步的依赖，会有一定的性能损失。尽量保持一致，要么全是同步，要么全是异步。</p>
+<p> 避开这四个坑，依赖注入和中间件你就掌握了。这两个特性是 FastAPI 区别于 Flask 的核心优势，用好了，你的代码会变得非常简洁优雅。</p>
 ]]></content>
   </entry>
   <entry>
@@ -1299,149 +1444,681 @@ async def logout(token: str = Depends(oauth2_scheme)):
       </tags>
   </entry>
   <entry>
-    <title>FastAPI 实战（二）：依赖注入与中间件</title>
-    <url>/2026/04/15/FastAPI-%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/</url>
-    <content><![CDATA[<p>依赖注入是 FastAPI 最强大的特性之一很多人说 FastAPI 比 Flask 高级、高级在哪？答案就在这一篇文章里。依赖注入让代码的解耦变得极其简单，而且它还天然支持异步，完美契合 FastAPI 的高性能特性。</p>
-<h2 id="1-问题背景"><a href="#1-问题背景" class="headerlink" title="1. 问题背景"></a>1. 问题背景</h2><p> 先说依赖注入解决了什么问题。</p>
-<p> 假设你有一个获取当前用户的接口，在真实项目里面，你通常需要先从请求头里面拿到 Token，然后验证 Token 是否有效，再从 Token 里面解析出用户 ID，最后去数据库查用户信息。这里面，验证 Token 是通用的逻辑，每个需要用户信息的接口都要写一遍。</p>
-<p> 在 Flask 时代，你会怎么做？写一个装饰器，在每个接口上面加这个装饰器。这是常见的做法，但是问题也很明显：装饰器的写法比较繁琐，而且装饰器还不好传递参数，测试的时候也不方便 mock。</p>
-<p> FastAPI 的依赖注入从根本上解决了这个问题。它用一种极其优雅的方式，把这些通用逻辑抽取出来，在每个接口需要用的时候，悄悄注入进去。你只需要在函数参数里面声明一下，FastAPI 就会自动帮你完成所有的准备工作。</p>
-<p> 除了依赖注入，中间件也是很重要的话题。中间件可以在请求到达路由之前，或者响应返回之后，做一些统一的处理。比如统一的日志记录、统一添加响应头、统一做请求限流等等。这两个功能，就是这篇文章要讲的内容。</p>
-<h2 id="2-原理分析"><a href="#2-原理分析" class="headerlink" title="2. 原理分析"></a>2. 原理分析</h2><p> 先说依赖注入的原理。</p>
-<p> FastAPI 的依赖注入，本质上是一个「提供者-消费者」的模型。你定义一个函数，这个函数返回一个值，然后在其他路由函数里面，把这个函数名作为参数传进去，FastAPI 就会自动调用这个函数，把返回值注入到参数里面。</p>
-<p> 这个过程有几个关键点。</p>
-<p> 第一个是延迟执行。依赖函数只在有请求的时候才会执行，不会再应用启动的时候执行。而且每次请求都会执行一次，这意味着依赖函数里面可以写动态逻辑，比如每次都从数据库最新获取数据。</p>
-<p> 第二个是依赖链。一个依赖函数还可以依赖另一个依赖函数，FastAPI 会自动处理这个依赖链。比如 A 依赖 B，B 依赖 C，那么执行 A 的时候，会先执行 B，执行 B 的时候，会先执行 C。</p>
-<p> 第三个是缓存。默认情况下，同一个请求内的依赖函数只会执行一次。如果你需要每次都执行，可以设置 <code>use_cache=False</code>。</p>
-<p> 第四个是覆盖。测试的时候，你可以直接向 Depends 传递一个假的对象，替换掉原来的依赖函数，非常方便测试。</p>
-<p> 接下来是中间件的原理。</p>
-<p> FastAPI 的中间件有两种。一种是 WSGI 中间件，这种是同步的，会阻塞请求。另一种是 ASGI 中间件，这种是异步的，不会阻塞请求。FastAPI 推荐使用 ASGI 中间件，性能更好。</p>
-<p> 中间件的执行顺序是这样的：请求进来之后，会先经过所有的中间件，然后到达路由函数，路由函数处理完之后，再依次经过中间件返回。所以如果你想在请求之前做一些处理，就把逻辑写在进入路由之前；如果你想在响应返回之前做一些处理，就把逻辑写在返回响应之后。</p>
-<h2 id="3-代码实现"><a href="#3-代码实现" class="headerlink" title="3. 代码实现"></a>3. 代码实现</h2><p> 先看依赖注入的完整示例：</p>
-<pre><code class="language-python">from fastapi import FastAPI, Depends, HTTPException, Header
-from typing import Optional
-from pydantic import BaseModel
-import jwt
-
-app = FastAPI()
-
-# 模拟数据库
-users_db = {
-    1: {&quot;id&quot;: 1, &quot;username&quot;: &quot;tom&quot;, &quot;email&quot;: &quot;tom@example.com&quot;},
-    2: {&quot;id&quot;: 2, &quot;username&quot;: &quot;jerry&quot;, &quot;email&quot;: &quot;jerry@example.com&quot;},
-}
-
-SECRET_KEY = &quot;my-secret-key&quot;
-
-# JWT 解析函数
-def parse_token(token: str = Header(...)) -&gt; dict:
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[&quot;HS256&quot;])
-        return payload
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail=&quot;Token expired&quot;)
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail=&quot;Invalid token&quot;)
-
-# 获取当前用户
-def get_current_user(payload: dict = Depends(parse_token)) -&gt; dict:
-    user_id = payload.get(&quot;user_id&quot;)
-    if user_id not in users_db:
-        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
-    return users_db[user_id]
-
-# 这是一个需要登录才能访问的接口
-@app.get(&quot;/profile&quot;)
-def get_profile(user: dict = Depends(get_current_user)):
-    return {&quot;username&quot;: user[&quot;username&quot;], &quot;email&quot;: user[&quot;email&quot;]}
-
-# 这是一个可选登录的接口，不强制要求 Token
-def get_optional_user():
-    def inner(
-        authorization: Optional[str] = Header(None)
-    ) -&gt; Optional[dict]:
-        if authorization and authorization.startswith(&quot;Bearer &quot;):
-            token = authorization.replace(&quot;Bearer &quot;, &quot;&quot;)
-            try:
-                payload = jwt.decode(token, SECRET_KEY, algorithms=[&quot;HS256&quot;])
-                user_id = payload.get(&quot;user_id&quot;)
-                return users_db.get(user_id)
-            except:
-                return None
-        return None
-    return inner
-
-@app.get(&quot;/articles&quot;)
-def get_articles(user: Optional[dict] = Depends(get_optional_user())):
-    if user:
-        return {&quot;articles&quot;: [...], &quot;user&quot;: user[&quot;username&quot;]}
-    return {&quot;articles&quot;: [...], &quot;user&quot;: None}
-
-if __name__ == &quot;__main__&quot;:
-    import uvicorn
-    uvicorn.run(app, host=&quot;0.0.0.0&quot;, port=8000)
+    <title>Python入门学习笔记</title>
+    <url>/2026/03/26/Python%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<h2 id="print用法"><a href="#print用法" class="headerlink" title="print用法"></a>print用法</h2><p>转义符\，跟在\后面的引号不会被认为是语法结构的一部分</p>
+<pre><code class="language-python">print(&quot;He said \&quot;Let\&#39;s go\&quot;&quot;)  #转义符
+print(&quot;Hello&quot;+&quot; world&quot;+&quot;!&quot;)    #字符串拼接
 </code></pre>
-<p> 这段代码展示了依赖注入的几种用法。parse_token 是解析 JWT Token 的依赖，get_current_user 是获取当前用户的依赖，它依赖 parse_token。在 profile 接口里面，只需要写 <code>user: dict = Depends(get_current_user)</code>，FastAPI 就会自动完成 Token 解析和用户查询。</p>
-<p> get_optional_user 展示了如何创建一个可选的依赖。这个依赖返回一个函数，这个函数会检查请求头里面有没有 Token，如果有就解析，没有就返回 None。</p>
-<p> 接下来看中间件的示例：</p>
-<pre><code class="language-python">from fastapi import FastAPI, Request
-from starlette.middleware.base import BaseHTTPMiddleware
-import time
-
-# 记录请求耗时的中间件
-class TimingMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        start_time = time.time()
-        response = await call_next(request)
-        process_time = time.time() - start_time
-        response.headers[&quot;X-Process-Time&quot;] = str(process_time)
-        return response
-
-# 添加自定义响应头的中间件
-class HeaderMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        response = await call_next(request)
-        response.headers[&quot;X-Custom-Header&quot;] = &quot;my-value&quot;
-        response.headers[&quot;X-Developer&quot;] = &quot;FastAPI&quot;
-        return response
-
-app = FastAPI()
-app.add_middleware(TimingMiddleware)
-app.add_middleware(HeaderMiddleware)
-
-@app.get(&quot;/test&quot;)
-def test():
-    return {&quot;message&quot;: &quot;ok&quot;}
-
-# 这个接口会抛异常，测试错误处理中间件
-@app.get(&quot;/error&quot;)
-def error():
-    raise ValueError(&quot;This is a test error&quot;)
-
-# 全局异常处理
-@app.exception_handler(ValueError)
-async def value_error_handler(request: Request, exc: ValueError):
-    return JSONResponse(
-        status_code=500,
-        content={&quot;detail&quot;: str(exc)}
-    )
-
-from starlette.responses import JSONResponse
-
-if __name__ == &quot;__main__&quot;:
-    import uvicorn
-    uvicorn.run(app, host=&quot;0.0.0.0&quot;, port=8000)
+<p>\n 表示换行</p>
+<p>三引号 ‘‘‘‘’’’’或‘‘‘’’’都可，在三引号中换行会当作内容的换行，不是代码语句的结束。</p>
+<pre><code class="language-python">print(&quot;&quot;&quot;君问归期未有期，巴山夜雨涨秋池。
+何当共剪西窗烛，却话巴山夜雨时。 &quot;&quot;&quot;)
 </code></pre>
-<p> 中间件的定义很简单，继承 BaseHTTPMiddleware，然后实现 dispatch 方法。dispatch 方法接收 request 和 call_next，request 是请求对象，call_next 是一个函数，调用它会把请求传递给下一个中间件或者路由函数。</p>
-<p> TimingMiddleware 在请求处理前后记录时间，然后给响应头添加 X-Process-Time。HeaderMiddleware 给所有响应添加自定义的头。</p>
-<p> 还有一种特殊的中间件是异常处理器。用 @app.exception_handler 装饰器可以注册全局的异常处理逻辑，这样就不用在每个路由函数里面 try except 了。</p>
-<h2 id="4-踩坑总结"><a href="#4-踩坑总结" class="headerlink" title="4. 踩坑总结"></a>4. 踩坑总结</h2><p> 最后说几个可能踩的坑。</p>
-<p> 第一个坑是依赖注入的顺序。如果你有两个依赖 A 和 B，B 依赖 A，那么定义接口的时候，写成 <code>func(a: type = Depends(A), b: type = Depends(B))</code> 和 <code>func(b: type = Depends(B), a: type = Depends(A))</code> 效果是一样的，FastAPI 会自动解析依赖链，顺序不影响执行。</p>
-<p> 第二个坑是 Depends 和函数调用的区别。如果你写成 <code>Depends(get_current_user)</code>，这是正确的。如果你写成 <code>Depends(get_current_user())</code>，这就错了，因为 get_current_user() 会立即执行，而 Depends 期望的是一个可调用对象。</p>
-<p> 第三个坑是中间件的顺序。中间件的执行顺序是从上到下添加，从下到上执行。比如你添加了 A 和 B 两个中间件，那么请求的执行顺序是 A -&gt; B -&gt; 路由 -&gt; B -&gt; A，响应同理。所以如果你的中间件有依赖关系，一定要注意添加顺序。</p>
-<p> 第四个坑是同步和异步的混用。FastAPI 支持异步的依赖和同步的依赖混用，但是如果你在异步的路由函数里面使用同步的依赖，会有一定的性能损失。尽量保持一致，要么全是同步，要么全是异步。</p>
-<p> 避开这四个坑，依赖注入和中间件你就掌握了。这两个特性是 FastAPI 区别于 Flask 的核心优势，用好了，你的代码会变得非常简洁优雅。</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>变量是用来存储或指代值的，变量不能以数字开头，变量用等号(&#x3D;)赋值。</p>
+<p>变量也可以给变量赋值</p>
+<pre><code class="language-python">greet = &quot;您好，吃了吗您&quot;
+greet_chinese = greet
+greet_english = &quot;Hey you what&#39;s up&quot;
+greet = greet_english
+print(greet + &quot;老王&quot;)
+print(greet_english + &quot;Alex&quot;)
+</code></pre>
+<p>变量取名应该易于理解和记忆，Python的变量命名约定为全部小写，不同单词用下划线分割开，例如user_name，原本空格的地方全部用下划线连接，变量名大小写敏感，且不能占据关键字，例如print。</p>
+<h2 id="python数学运算"><a href="#python数学运算" class="headerlink" title="python数学运算"></a>python数学运算</h2><table>
+<thead>
+<tr>
+<th>加</th>
+<th>+</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>减</td>
+<td>-</td>
+</tr>
+<tr>
+<td>乘</td>
+<td>*</td>
+</tr>
+<tr>
+<td>除</td>
+<td>&#x2F;</td>
+</tr>
+<tr>
+<td>乘方</td>
+<td>**</td>
+</tr>
+</tbody></table>
+<p>更高阶的运算需要用到math库。</p>
+<pre><code class="language-python">import math
+
+#一元二次方程求根公式
+a=1
+b=9
+c=20
+delta = b ** 2 - 4 * a * c
+print((-b + math.sqrt(delta)) / (2 * a))
+print((-b - math.sqrt(delta)) / (2 * a))
+
+&quot;&quot;&quot;
+多行注释
+&quot;&quot;&quot;
+</code></pre>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><table>
+<thead>
+<tr>
+<th>整型</th>
+<th>a &#x3D; 1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>浮点型</td>
+<td>b &#x3D; 2.4</td>
+</tr>
+<tr>
+<td>布尔型</td>
+<td>c &#x3D; True    &#x2F;    d &#x3D; False, 首字母必须大写</td>
+</tr>
+<tr>
+<td>字符串型</td>
+<td>e &#x3D; “I love you three thousand “</td>
+</tr>
+<tr>
+<td>空值型</td>
+<td>f &#x3D; None    ，定义一个变量时不知道取何值可以先用空值代替</td>
+</tr>
+</tbody></table>
+<p>type()函数可以返回变量的类型，例如print(type(a))。</p>
+<h2 id="交互模式"><a href="#交互模式" class="headerlink" title="交互模式"></a>交互模式</h2><p>命令行模式和交互模式，后者特点是读一行执行一行。</p>
+<p>交互模式不需要创建Python文件就可以运行，且不需要print就可以看到返回结果，但所有输入的指令都不会保存。</p>
+<p>Windows下进入cmd输入python3即可进入，退出按Ctrl+d或者输入quit()。</p>
+<h2 id="用户输入"><a href="#用户输入" class="headerlink" title="用户输入"></a>用户输入</h2><p>input()，返回结果均为字符串,需要用一个变量接收。</p>
+<pre><code class="language-python">age = int(input(&quot;请输入年龄：&quot;)) #强制类型转换
+#注：print不能直接打印数字，需要转换为str类型才可
+print(&quot;年龄是：&quot;+ str(age))
+</code></pre>
+<h2 id="条件判断-嵌套-逻辑运算"><a href="#条件判断-嵌套-逻辑运算" class="headerlink" title="条件判断&#x2F;嵌套&#x2F;逻辑运算"></a>条件判断&#x2F;嵌套&#x2F;逻辑运算</h2><pre><code class="language-python">if [条件]:
+    .....
+else :
+    .....
+</code></pre>
+<p>多种条件用elif，最后需要一个else结尾。</p>
+<pre><code class="language-python">mood_index = int(input(&quot;对象今天的心情指数是：&quot;))
+if mood_index&gt;=60:
+    print(&quot;去吧，就决定是你了，Pikachu!&quot;)
+else:
+    print(&quot;洗洗睡吧布鲁斯&quot;)
+</code></pre>
+<p>条件语句可以嵌套。</p>
+<pre><code class="language-python">user_height = float(input(&quot;输入你的身高（单位：m）：&quot;))
+user_BMI = user_weight / (user_heght)**2
+print(&quot;您的BMI值为：&quot;+ str(user_BMI))
+
+if user_BMI &lt;= 18.5:
+    print(&quot;此BMI值属于偏瘦范围。&quot;)
+elif 18.5 &lt; user_BMI &lt;= 25:
+    print(&quot;此BMI值属于正常范围。&quot;)
+elif 25 &lt; user_BMI &lt;= 30:
+    print(&quot;此BMI值属于偏胖范围。&quot;)
+else：
+	print(&quot;此BMI值属于肥胖范围。&quot;)
+</code></pre>
+<h3 id="逻辑运算"><a href="#逻辑运算" class="headerlink" title="逻辑运算"></a>逻辑运算</h3><p>Python的逻辑运算包括三个，与、或、非，对应and  or  not。</p>
+<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><p>Python的列表与C语言中的数组类似，但是不限数据元素的类型。一个列表用[]表示,列表是可变的</p>
+<pre><code class="language-python">a_list = [&quot;hello&quot;,&quot;world&quot;]
+a_list.append(&quot;hi&quot;)  #向列表末尾插入数据，这个方法会直接改变原列表，因此不需要再赋值
+a_list.remove(&quot;hi&quot;)  #移除某个元素
+a_list.append(6.66)
+a_list.append(True)
+a_list.append(None)
+</code></pre>
+<p>对象.方法名(…)</p>
+<p>函数(对象)，如len(a_list)</p>
+<p>列表可以存放不同类型数据, 如果想获得某个位置上的元素，可以使用索引，索引也可更新列表</p>
+<pre><code class="language-python">print(a_list[0]) #索引从0开始
+a_list[1] = &quot;tom&quot;
+</code></pre>
+<p>常用的函数有min(),max(),sorted()</p>
+<pre><code class="language-python">price = [100,899,565,992,78]
+min_price = min(price)
+max_price = max(price)
+print(sorted(price))  #默认升序排列
+</code></pre>
+<h2 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h2><p>字典用于储存键值对，键用于查找值，字典用{“key”:”value”}表示，键值对之间以逗号分隔，键的类型必须是不可变的。Python提供一个不可变但很像列表的数据结构：元组（tuple），用()表示，元组不能用append和remove等方法，可以用于字典中需要多个值确定一个键的场景，可把整个元组作为一个键。</p>
+<p>字典和列表一样是可变的</p>
+<p>确定一个键值对是否在字典中，可用 “键” in 字典 确定，返回结果为True或False</p>
+<pre><code class="language-python">contact = {&quot;tom&quot;:&quot;123456&quot;,&quot;jerry&quot;:&quot;456789&quot;}
+#插入/更新键值对
+contact[&quot;jackie&quot;] = &quot;565656&quot;
+#删除键值对
+del contact[&quot;tom&quot;]
+#统计键值对数量
+len(contact)
+#查询某个键对应的值
+print(contact[jackie])
+</code></pre>
+<p>Python的字典有三个方法</p>
+<pre><code>字典名.keys()返回所有键
+字典名.values()返回所有值
+字典名.items()返回所有键值对
+</code></pre>
+<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><h3 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h3><pre><code class="language-python">for 变量名  in  可迭代对象 :
+	# 对每个变量做一些事情
+    # ......
+</code></pre>
+<p>可迭代对象包括列表，字典</p>
+<p>for可与range结合，需要注意结束值不再循环的范围内，例如</p>
+<pre><code class="language-python">range(5,10) #5为起始值，10为结束值
+for i in range(5,10)
+# i不会被赋10的值
+range(5,10,2)  #第三个参数表示步长，也就是每次跨几个数字，默认为1
+for i in range(len(list))  #range()只有一个参数时，i会被先赋值为0，结束值为range中的值
+	print(list[i])
+
+# 计算1到100的和
+total = 0
+for i in range(1,101)
+	total = total + i
+print(total)
+
+#字典结合for循环,找出体温异常的人
+temperature_dict = {&quot;1&quot;:36.4,&quot;2&quot;:37.4,&quot;3&quot;:36.2}
+for id,temperature in temperature_dict.items():  #相当于把元组第一个值赋值给id，第二个值赋值给temperature
+    if temperature &gt;= 38
+    	print(id)
+# 注：字典名.items()在for循环时变量会被赋值为键和值组成的元组
+</code></pre>
+<h3 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h3><p>for循环在有明确循环次数的时候更好用，while在循环次数未知的情况下更好用</p>
+<pre><code class="language-python"># 求用户输入数字的平均值
+total = 0
+count = 0
+user_input = input(&quot;请输入数字，输入q终止程序:&quot;)
+while user_input != &quot;q&quot;
+	num = float(user_input)    #要注意循环体内的顺序，防止第一次输入无效的bug
+    total += num 
+    count += 1
+    user_input = input(&quot;请输入数字，输入q终止程序:&quot;)
+if count == 0 :
+	result = 0
+else:
+    result = total/count
+print(&quot;输入数字的平均值为：&quot; + str(result))   # 字符串拼接的前提是都是字符串，所以需要str()做强制类型转换
+</code></pre>
+<h2 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h2><p>主要使用f-string，在字符串前加f，花括号中的内容会被直接求值</p>
+<pre><code class="language-python">name = &quot;laowang&quot;
+year = &quot;虎&quot;
+message_content = f&quot;金{year}贺岁，金{year}敲门，给{name}拜年啦&quot;
+</code></pre>
+<p>format方法，有两种形式,第一种根据位置</p>
+<pre><code class="language-python">name = &quot;laowang&quot;
+year = &quot;虎&quot;
+message_content = &quot;金{0}贺岁，金{0}敲门，给{1}拜年啦&quot;.format(year,name)
+</code></pre>
+<p>第二种根据关键字</p>
+<pre><code class="language-python">name = &quot;laowang&quot;
+year = &quot;虎&quot;
+message_content = &quot;金{current_year}贺岁，金{current_year}敲门，给{receiver_name}拜年啦&quot;.format(current_year=year,receiver_name=name)
+</code></pre>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><pre><code class="language-python">def 函数名(参数1，参数2...):
+    ....
+</code></pre>
+<p>如果函数没有写return语句，默认返回为None</p>
+<pre><code class="language-python">height = float(input(&quot;输入身高：&quot;))
+weight = float(input(&quot;输入体重：&quot;))
+
+def calculate_BMI(height,weight):
+    BMI = weight / height ** 2
+    if BMI &lt;= 18:
+        catrgory = &quot;偏瘦&quot;
+    	#print(&quot;你的BMI分类为：偏瘦&quot;)
+    elif 18.5 &lt; BMI and BMI &lt;= 25:
+        catrgory = &quot;正常&quot;
+    	#print(&quot;你的BMI分类为：正常&quot;)
+    elif 25&lt; BMI and BMI &lt;= 30:
+        catrgory = &quot;偏胖&quot;
+    	#print(&quot;你的BMI分类为：偏胖&quot;)
+    else:
+        catrgory = &quot;肥胖&quot;
+       # print(&quot;你的BMI分类为：肥胖&quot;)
+    print(f&quot;你的BMI分类为:{category}&quot;)
+    return BMI
+</code></pre>
+<h3 id="引入其他模块"><a href="#引入其他模块" class="headerlink" title="引入其他模块"></a>引入其他模块</h3><pre><code class="language-python"># 第一种方法 import语句
+import 模块名
+模块名.方法名(参数...)
+模块名.变量名(参数...)
+
+# 第二种方法 from...import...语句
+方法名.(参数...)
+不加上模块名就能使用
+
+# 第三种方法 from...import *
+引入模块的所有内容，一般不推荐使用
+</code></pre>
+<h3 id="面向对象编程"><a href="#面向对象编程" class="headerlink" title="面向对象编程"></a>面向对象编程</h3><p>类是创建对象的模板，对象是类的实例。类的三个特点：封装，继承，多态</p>
+<p>封装：使用类的人只通过外部接口调用方法，而不知道实现细节</p>
+<p>继承：允许创建有层次的类（父类，子类）</p>
+<p>多态：同样的接口，依据对象具体类的不同，实现方式也不同</p>
+<h2 id="类"><a href="#类" class="headerlink" title="类"></a>类</h2><p>Python创建类时使用pascal风格命名，即首字母大写分隔单词，类名后跟冒号</p>
+<p>类有一个特殊的方法叫构造函数，主要作用是定义实例对象的属性，必须被命名为_init_(self)：</p>
+<p>构造函数第一个参数是一直被占用的，用于表示对象自身，约定成俗称为self。类的属性都写在构造函数中</p>
+<pre><code class="language-python">class CuteCat:
+    # 注意构造函数前后的下划线都是两个
+    def __init__(self,cat_name,cat_age,cat_color):  
+        self.name = cat_name
+        self.age = cat_age
+        self.color =  cat_color
+     
+    def speak(self):
+        print(&quot;喵&quot; * self.age)
+     
+    def think(self,content):
+        print(f&quot;小猫{self.name}在思考{content}...&quot;)
+
+cat1 = CuteCat(&quot;Tom&quot;,2,&quot;orange&quot;)
+cat1.think(&quot;去抓沙发还是睡觉&quot;)
+print(f&quot;小猫{cat1.name}的年龄是{cat1.age}岁，花色是{cat1.color}&quot;)
+</code></pre>
+<p>python的方法第一个参数也为self,后跟传递的参数</p>
+<pre><code class="language-python">class Student:
+    def __init__(self, name, id):
+        self.name = name
+        self.id = id
+        self.grade_chinese = 0
+        self.grade_math = 0
+        self.grade_english = 0
+    
+    def set_grade(self, grade_chinese, grade_math, grade_english):
+        self.grade_chinese = grade_chinese
+        self.grade_math = grade_math
+        self.grade_english = grade_english
+        print(f&quot;学生{self.name}的语文成绩是{self.grade_chinese},数学成绩是{self.grade_math},英语成绩是{self.grade_english}&quot;)
+        
+jerry = Student(&quot;jerry&quot;,&quot;001&quot;)
+jerry.set_grade(90,95,85)
+</code></pre>
+<h3 id="类的继承"><a href="#类的继承" class="headerlink" title="类的继承"></a>类的继承</h3><p>子类可以用super关键字继承父类的方法</p>
+<pre><code class="language-python">class employee:
+    def __init__(self,name,id):
+        self.name = name
+        self.id = id
+        
+    def print_info(self):
+        print(f&quot;员工姓名:{self.name},员工编号:{self.id}&quot;)
+        
+    def calculate_monthly_pay(self):
+        pass
+    
+    # 子类继承父类，写法是 class B(A):   B是子类，A是父类
+class FullTimeEmployee(employee):
+    def __init__(self,name,id,monthly_salary):
+        super().__init__(name,id)           # 子类可以用super关键字调用父类的构造函数
+        self.monthly_salary = monthly_salary
+        
+    def calculate_monthly_pay(self):
+        return self.monthly_salary
+    
+class PartTimeEmployee(employee):
+    def __init__(self,name,id,daily_salary,work_days):
+        super().__init__(name,id)
+        self.daily_ssalary = daily_salary
+        self.work_days = work_days
+        
+    def calculate_monthly_pay(self):
+        return self.daily_salary * self.work_days
+</code></pre>
+<h2 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h2><h3 id="读取"><a href="#读取" class="headerlink" title="读取"></a>读取</h3><p>open()函数，用于打开目标文件，有三个参数</p>
+<ol>
+<li>文件路径，可以是绝对\ 相对路径</li>
+<li>表示读取模式，可以取”r”或”w”，表示读和写;”a”表示附加内容，会在原文件后面跟上新内容</li>
+<li>encoding &#x3D; “…” 指定以什么编码读取文件</li>
+</ol>
+<p>read()函数，用于读取目标文件内容，默认情况下会阅读全部内容并以字符串返回文件内容，同一文件第二次调用read()时就会返回空，目标文件最好是txt格式</p>
+<pre><code class="language-python">f = open(&quot;./data.txt&quot;,&quot;r&quot;,encoding=&quot;utf-8&quot;)
+print(f.read(10))      #读第1到10字节的文件内容
+</code></pre>
+<p>readline()函数，一次读取一行，常与while循环搭配使用</p>
+<pre><code class="language-python">f = open(&quot;./data.txt&quot;,&quot;r&quot;,encoding=&quot;utf-8&quot;)
+line = f.readline()  #读第一行
+while line != &quot;&quot;:    #判断当前行是否为空
+    print(line)       #不为空就打印当前行
+    line = f.readline()   #读取下一行
+f.close()   #释放资源
+</code></pre>
+<p>readlines()，读取全部内容，并返回每行组成的字符串列表，常与for循环搭配使用</p>
+<pre><code class="language-python">f = open(&quot;./data.txt&quot;,&quot;r&quot;,encoding=&quot;utf-8&quot;)
+lines = f.readlines()     #把每行内容存储到列表里
+for line in lines:        #遍历每行内容
+    print(line)
+f.close()
+</code></pre>
+<p>读取完以后要用close()释放资源，也可以在代码前加上with ,后面跟上as f:  ,就不需要再close，但原代码要缩进</p>
+<pre><code class="language-python">with f = open(&quot;./data.txt&quot;,&quot;r&quot;,encoding=&quot;utf-8&quot;) as f:
+	lines = f.readlines()     #把每行内容存储到列表里
+	for line in lines:        #遍历每行内容
+    	print(line)
+</code></pre>
+<h3 id="写入"><a href="#写入" class="headerlink" title="写入"></a>写入</h3><p>“w”模式在写以前会把原文件清空，谨慎使用</p>
+<p>write()函数可以追加内容，默认不会换行</p>
+<p>open()的模式要为”w”或”a”,如果原文件不存在Python会创建一个新文件，这两种模式下均不能读取文件内容；要同时进行读和写，就需要把模式设为”r+”，且write的内容会追加在原文件后</p>
+<pre><code class="language-python">with open(&quot;./poem.txt&quot;,&quot;w&quot;,encoding=&quot;utf-8&quot;) as f:
+    f.write(&quot;床前明月光，疑是地上霜。\n举头望明月，低头思故乡。\n&quot;)
+    
+    
+with open(&quot;./poem.txt&quot;,&quot;a&quot;,encoding=&quot;utf-8&quot;) as f:
+    f.write(&quot;hello,world&quot;)
+</code></pre>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><p>通过try&#x2F;except语句捕捉异常，try后的代码块放容易报错的代码，except后跟异常的名字</p>
+<p>except后跟明确的异常类型，如果不知道异常类型就什么都不写</p>
+<p>else后跟没有错误时会运行的代码</p>
+<p>finally后的内容不管程序错误与否都会执行</p>
+<pre><code class="language-python">try:
+    user_weight = float(input(&quot;输入体重:&quot;))
+    user_height = float(input(&quot;输入身高:&quot;))
+    user_BMI = user_weight / user_height ** 2
+except ValueError:
+    print(&quot;输入不合理数字&quot;)
+except ZeroDivisionError:
+    print(&quot;身高不能为0&quot;)
+except:
+    print(&quot;发生未知错误&quot;)
+else:
+    print(&quot;您的BMi值为：&quot;+ str(user_BMI))
+finally:
+    print(&quot;程序结束运行&quot;)
+</code></pre>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>assert，即断言，后跟布尔表达式（值为True或False的表达式），出现异常时终止程序运行。</p>
+<p>unittest库，用于单元测试，即对软件中最小的可测试单元进行验证，比如验证某函数输出是否符合预期。</p>
+<pre><code class="language-python"># 定义my_caculator.py
+def my_adder(x,y):
+    return x+y
+</code></pre>
+<pre><code class="language-python"># 测试代码test_my_calulator.py
+import unittest
+from my_calculator import my_adder
+
+class TestMyAdder(unittest.TestCase):
+    def test_positive_with_positive(self):
+        ...
+        
+    def test_nagative_with_positive(self):
+        ...
+</code></pre>
+<p>在测试类下面写测试用例，每个测试用例是一个方法，要注意测试用例必须以test开头Python才能识别。</p>
+<pre><code class="language-python">import unittest
+from my_calculator import my_adder
+
+class TestMyAdder(unittest.TestCase):
+    def test_positive_with_positive(self):
+        self.assertEqual(my_adder(5,3),8)
+        
+    def test_nagative_with_positive(self):
+        self.assertEqual(my_adder(-5,3),-2)
+</code></pre>
+<p>为防止assert中断整个程序运行，可以使用assertEqual()方法，括号内跟布尔表达式。</p>
+<p>在终端使用python -m unittest，python就会自动执行测试用例。</p>
+<p>测试结果有几个点就代表有几个测试用例，点代表测试通过，F表示未通过。</p>
+<h2 id="高阶和匿名函数"><a href="#高阶和匿名函数" class="headerlink" title="高阶和匿名函数"></a>高阶和匿名函数</h2><p>函数可以传入另一个函数作为参数使用，把函数作为参数的函数叫高阶函数，作为参数的函数直接用函数名，不需要跟括号和参数。</p>
+<pre><code class="language-python">def calculate_square(num):
+    return num*num
+
+def calculate_cube(num):
+    return num*num*num
+
+def calculate_plus_10(num):
+    return num + 10
+
+# 每次都定义这些函数太麻烦了，这些函数构成简单而且基本只使用一次，这种情况就可以考虑Lambda表达式
+
+def calculate_and_print(num,calculator,formatter):
+    result = calculator(num)
+    formatter(num,result)
+    
+def print_with-vertical_bar(num,result):
+    print(f&quot;&quot;&quot;
+    |数字参数|{nmu}|
+    |计算结果|{result}|&quot;&quot;&quot;)
+    
+calcuate_and_print(7,calculate_times_5,print_with_vertical_bar)
+</code></pre>
+<p>匿名函数不需要指定名称，也可称为Lambda，格式如下：</p>
+<pre><code class="language-python">lambda num1,num2 : num1+num2
+关键字   函数参数    函数返回的表达式
+</code></pre>
+<p>匿名函数可作为高阶函数的参数传入，也可直接调用，格式如下：</p>
+<pre><code class="language-python">(lambda num1,num2: num1+num2)(2,3)
+</code></pre>
+<p>匿名函数后无法跟多个语句或表达式，只能用于比较简单的场景。</p>
 ]]></content>
+      <categories>
+        <category>编程语言</category>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>编程</tag>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>OpenSpec 与 Specify 入门：规范驱动开发让 AI 不再幻觉</title>
+    <url>/2026/04/21/OpenSpec-%E4%B8%8E-Specify-%E5%85%A5%E9%97%A8%EF%BC%9A%E8%A7%84%E8%8C%83%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%A9-AI-%E4%B8%8D%E5%86%8D%E5%B9%BB%E8%A7%89/</url>
+    <content><![CDATA[<blockquote>
+<p>一句话摘要：本文介绍规范驱动开发（Spec-Driven Development）的理念，对比 OpenSpec 与 Specify（GitHub Spec Kit）两款工具的差异，并给出各自的安装和使用方式，帮你让 AI 编程助手从”拍脑袋写代码”变成”按规范施工”。</p>
+</blockquote>
+<h2 id="背景与问题"><a href="#背景与问题" class="headerlink" title="背景与问题"></a>背景与问题</h2><p>用 Claude Code、Cursor 或 GitHub Copilot 写代码久了，你一定会遇到一个经典场景：</p>
+<p>你告诉 AI “给我加一个用户认证功能”，它唰唰唰生成了一堆代码。看起来没问题，但跑起来发现：</p>
+<ul>
+<li>密码用了明文存储，而不是 bcrypt</li>
+<li>JWT Token 没有设置过期时间</li>
+<li>登录接口的返回结构跟现有 API 完全不统一</li>
+</ul>
+<p>你让它改，它改了 A 又破坏了 B。三个回合下来，你的上下文窗口爆了，AI 开始”失忆”，甚至把刚才修好的地方又改回去了。</p>
+<p>这就是 <strong>AI 幻觉</strong> 在工程层面的表现：AI 没有”全局观”，它只根据你当前的提示和有限的上下文做局部最优解，而不是按照整个项目的规范来执行。</p>
+<p><strong>规范驱动开发（Spec-Driven Development）</strong> 就是来解决这个问题的。核心思路很简单：在让 AI 写代码之前，先让它（或你自己）写一份<strong>规范文档（Spec）</strong>，把要做什么、怎么做、做到什么标准说清楚。AI 后续的所有代码生成，都严格基于这份规范，而不是凭空发挥。</p>
+<h2 id="核心原理"><a href="#核心原理" class="headerlink" title="核心原理"></a>核心原理</h2><p>Spec 驱动开发借鉴了建筑行业的施工图纸逻辑：</p>
+<ul>
+<li><strong>没有图纸</strong>，工人（AI）只能凭经验搭积木，搭完发现承重墙位置不对，拆了重来。</li>
+<li><strong>有了图纸</strong>，工人按图施工，监理（你）按图验收，每一道工序都有据可查。</li>
+</ul>
+<p>在技术实现上，Spec 驱动开发引入了一个关键机制：<strong>Delta Spec（差异规范）</strong>。每一次功能变更都被显式标注为 <code>ADDED</code>（新增）、<code>MODIFIED</code>（修改）或 <code>REMOVED</code>（删除），而不是直接覆盖原有代码。这迫使 AI（和人类）在动手之前，先想清楚变更对现有系统的影响。</p>
+<h2 id="工具简介：OpenSpec-与-Specify"><a href="#工具简介：OpenSpec-与-Specify" class="headerlink" title="工具简介：OpenSpec 与 Specify"></a>工具简介：OpenSpec 与 Specify</h2><p>目前生态中最成熟的两款 Spec 驱动开发工具分别是 <strong>OpenSpec</strong> 和 <strong>Specify</strong>（GitHub Spec Kit 的命令行工具）。</p>
+<h3 id="OpenSpec"><a href="#OpenSpec" class="headerlink" title="OpenSpec"></a>OpenSpec</h3><p>OpenSpec 由 Fission AI 开源，定位是<strong>现有项目（Brownfield）的增量变更管理</strong>。它采用轻量级的三阶段工作流：<strong>提案（Proposal）→ 应用（Apply）→ 归档（Archive）</strong>。</p>
+<p>安装方式（需要 Node.js 18+）：</p>
+<pre><code class="language-bash">npm install -g @fission-ai/openspec
+</code></pre>
+<p>初始化项目：</p>
+<pre><code class="language-bash">openspec init --tools claude
+</code></pre>
+<p>执行后会在项目根目录生成 <code>openspec/</code> 文件夹：</p>
+<pre><code>openspec/
+├── specs/          # 当前系统的权威规范（Source of Truth）
+├── changes/        # 每个功能的变更提案
+│   └── {feature}/
+│       ├── proposal.md   # 变更提案
+│       ├── tasks.md      # 任务清单
+│       └── delta/        # 差异规范（ADDED/MODIFIED/REMOVED）
+└── project.md      # 项目概述
+</code></pre>
+<p>在 Claude Code 中使用 OpenSpec 的典型流程：</p>
+<pre><code class="language-bash"># 1. 创建新功能提案
+/opsx:new user-auth
+
+# 2. AI 根据 proposal.md 编写代码
+/opsx:apply
+
+# 3. 验证实现是否符合规范
+/opsx:verify
+
+# 4. 归档，将 delta 合并回主规范
+/opsx:archive
+</code></pre>
+<h3 id="Specify（GitHub-Spec-Kit）"><a href="#Specify（GitHub-Spec-Kit）" class="headerlink" title="Specify（GitHub Spec Kit）"></a>Specify（GitHub Spec Kit）</h3><p>Specify 是 GitHub 官方推出的 Spec Kit 的命令行入口，定位是<strong>从零开始的新项目（Greenfield）</strong>。它采用更严格的五阶段工作流：<strong>原则（Principles）→ 规范（Specification）→ 计划（Plan）→ 任务（Tasks）→ 实现（Implement）</strong>。</p>
+<p>安装方式（需要 uv）：</p>
+<pre><code class="language-bash">uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+</code></pre>
+<p>初始化项目：</p>
+<pre><code class="language-bash">specify init my-project --ai claude
+</code></pre>
+<p>在 Claude Code 中使用 Specify 的典型流程：</p>
+<pre><code class="language-bash"># 1. 定义系统规范
+/speckit.specify
+
+# 2. 生成实施计划
+/speckit.plan
+
+# 3. 拆解任务清单
+/speckit.tasks
+
+# 4. 按任务实现代码
+/speckit.implement
+</code></pre>
+<h2 id="核心区别对比"><a href="#核心区别对比" class="headerlink" title="核心区别对比"></a>核心区别对比</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>OpenSpec</th>
+<th>Specify（Spec Kit）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>出品方</strong></td>
+<td>Fission AI</td>
+<td>GitHub</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>现有项目迭代（Brownfield）</td>
+<td>从零开发新项目（Greenfield）</td>
+</tr>
+<tr>
+<td><strong>安装方式</strong></td>
+<td><code>npm install -g @fission-ai/openspec</code></td>
+<td><code>uv tool install specify-cli</code></td>
+</tr>
+<tr>
+<td><strong>规范体量</strong></td>
+<td>~250 行（轻量）</td>
+<td>~800 行（全面）</td>
+</tr>
+<tr>
+<td><strong>流程阶段</strong></td>
+<td>3 阶段：提案 → 应用 → 归档</td>
+<td>5 阶段：原则 → 规范 → 计划 → 任务 → 实现</td>
+</tr>
+<tr>
+<td><strong>变更追踪</strong></td>
+<td>Delta Spec + 归档历史</td>
+<td>无内置变更隔离机制</td>
+</tr>
+<tr>
+<td><strong>自由度</strong></td>
+<td>非线性，可随时回改提案</td>
+<td>线性流程，需按步骤执行</td>
+</tr>
+<tr>
+<td><strong>Token 消耗</strong></td>
+<td>较低</td>
+<td>较高</td>
+</tr>
+</tbody></table>
+<p>简单记忆法：</p>
+<ul>
+<li><strong>已有代码库，做功能迭代或 Bug 修复</strong> → 选 OpenSpec。它的 Delta Spec 机制天然适合”在现有大厦里装修”。</li>
+<li><strong>从零开始新项目，需要完整架构设计</strong> → 选 Specify。它的五阶段流程能帮你把地基打牢。</li>
+</ul>
+<h2 id="实战：用-OpenSpec-给现有项目加一个缓存层"><a href="#实战：用-OpenSpec-给现有项目加一个缓存层" class="headerlink" title="实战：用 OpenSpec 给现有项目加一个缓存层"></a>实战：用 OpenSpec 给现有项目加一个缓存层</h2><p>假设你有一个 FastAPI 项目，想用 OpenSpec 规范驱动的方式给所有列表查询接口加上 Redis 缓存。</p>
+<h3 id="步骤-1：初始化-OpenSpec"><a href="#步骤-1：初始化-OpenSpec" class="headerlink" title="步骤 1：初始化 OpenSpec"></a>步骤 1：初始化 OpenSpec</h3><pre><code class="language-bash"># 在项目根目录执行
+openspec init --tools claude
+</code></pre>
+<h3 id="步骤-2：创建变更提案"><a href="#步骤-2：创建变更提案" class="headerlink" title="步骤 2：创建变更提案"></a>步骤 2：创建变更提案</h3><pre><code class="language-bash">/opsx:new add-redis-cache
+</code></pre>
+<p>Claude Code 会在 <code>openspec/changes/add-redis-cache/</code> 下生成 <code>proposal.md</code>，内容类似：</p>
+<pre><code class="language-markdown"># Proposal: Add Redis Cache for List Endpoints
+
+## 目标
+为所有列表查询接口添加 Redis 缓存，减少数据库压力。
+
+## Delta Spec
+
+### ADDED
+- `app/core/cache.py`：Redis 连接管理与缓存装饰器
+- `app/dependencies/cache.py`：FastAPI Depends 缓存注入
+
+### MODIFIED
+- `app/api/items.py`：`list_items()` 增加缓存读取逻辑
+- `app/api/users.py`：`list_users()` 增加缓存读取逻辑
+
+### REMOVED
+- 无
+
+## 验收标准
+- 首次请求命中数据库，二次请求命中 Redis（&lt; 5ms）
+- 缓存过期时间统一为 300 秒
+- 所有缓存 key 带前缀 `fastapi:list:`
+</code></pre>
+<h3 id="步骤-3：应用规范"><a href="#步骤-3：应用规范" class="headerlink" title="步骤 3：应用规范"></a>步骤 3：应用规范</h3><pre><code class="language-bash">/opsx:apply
+</code></pre>
+<p>Claude Code 读取 <code>proposal.md</code> 和 Delta Spec，只修改 <code>MODIFIED</code> 中指定的文件，只新增 <code>ADDED</code> 中指定的文件。不会碰其他无关代码。</p>
+<h3 id="步骤-4：验证与归档"><a href="#步骤-4：验证与归档" class="headerlink" title="步骤 4：验证与归档"></a>步骤 4：验证与归档</h3><pre><code class="language-bash">/opsx:verify
+/opsck:archive
+</code></pre>
+<p>验证通过后，OpenSpec 会把这次的 Delta Spec 合并到 <code>openspec/specs/</code> 下的主规范中，变更历史永久保留。</p>
+<h2 id="实战：用-Specify-从零搭建一个任务队列服务"><a href="#实战：用-Specify-从零搭建一个任务队列服务" class="headerlink" title="实战：用 Specify 从零搭建一个任务队列服务"></a>实战：用 Specify 从零搭建一个任务队列服务</h2><p>假设你要从零开始一个 Celery + Redis 的任务队列服务。</p>
+<h3 id="步骤-1：初始化项目"><a href="#步骤-1：初始化项目" class="headerlink" title="步骤 1：初始化项目"></a>步骤 1：初始化项目</h3><pre><code class="language-bash">specify init task-service --ai claude
+cd task-service
+</code></pre>
+<h3 id="步骤-2：定义规范"><a href="#步骤-2：定义规范" class="headerlink" title="步骤 2：定义规范"></a>步骤 2：定义规范</h3><pre><code class="language-bash">/speckit.specify
+</code></pre>
+<p>你需要告诉 AI 系统的核心约束，例如：</p>
+<pre><code>- 使用 FastAPI 作为 Web 框架
+- 使用 Celery + Redis 作为任务队列
+- 所有任务必须支持重试，最大重试 3 次
+- 任务状态必须持久化到 PostgreSQL
+</code></pre>
+<p>Specify 会生成一份完整的系统规范文档（<code>specs/specification.md</code>），包含数据模型、API 接口、任务定义等。</p>
+<h3 id="步骤-3：生成计划与任务"><a href="#步骤-3：生成计划与任务" class="headerlink" title="步骤 3：生成计划与任务"></a>步骤 3：生成计划与任务</h3><pre><code class="language-bash">/speckit.plan
+/speckit.tasks
+</code></pre>
+<p>AI 会把规范拆解成可执行的任务清单（<code>tasks.md</code>），例如：</p>
+<pre><code class="language-markdown">- [ ] 搭建 FastAPI 项目骨架
+- [ ] 配置 Celery 与 Redis 连接
+- [ ] 定义任务模型与数据库表
+- [ ] 实现任务提交接口
+- [ ] 实现任务状态查询接口
+- [ ] 编写单元测试
+</code></pre>
+<h3 id="步骤-4：按任务实现"><a href="#步骤-4：按任务实现" class="headerlink" title="步骤 4：按任务实现"></a>步骤 4：按任务实现</h3><pre><code class="language-bash">/speckit.implement
+</code></pre>
+<p>AI 按照 <code>tasks.md</code> 逐项实现，每完成一项打勾。你可以随时暂停、回退或调整规范。</p>
+<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><h3 id="❌-错误做法：把-OpenSpec-和-Specify-混着用"><a href="#❌-错误做法：把-OpenSpec-和-Specify-混着用" class="headerlink" title="❌ 错误做法：把 OpenSpec 和 Specify 混着用"></a>❌ 错误做法：把 OpenSpec 和 Specify 混着用</h3><p>有人觉得 OpenSpec 的 Delta 机制好，Specify 的规范全面，于是两个都装。结果同一个项目里既有 <code>openspec/</code> 又有 <code>specs/</code> 目录，AI 完全懵掉，不知道应该遵循哪份规范。</p>
+<p>✅ <strong>正确做法</strong>：一个项目只选一个工具。Brownfield 选 OpenSpec，Greenfield 选 Specify，不要混用。</p>
+<h3 id="❌-错误做法：规范写得太细，成了”伪代码文学”"><a href="#❌-错误做法：规范写得太细，成了”伪代码文学”" class="headerlink" title="❌ 错误做法：规范写得太细，成了”伪代码文学”"></a>❌ 错误做法：规范写得太细，成了”伪代码文学”</h3><p>有人写 Spec 时把每一行代码都描述出来，比如”第 1 行 import redis，第 2 行定义函数…”，结果规范本身几百行，AI 的上下文窗口被吃光，代码生成质量反而下降。</p>
+<p>✅ <strong>正确做法</strong>：规范只描述<strong>做什么</strong>和<strong>验收标准</strong>，不描述<strong>怎么做</strong>。把实现细节留给 AI。OpenSpec 推荐的 ~250 行规范体量是经过验证的甜点。</p>
+<h3 id="❌-错误做法：归档后删掉-changes-目录"><a href="#❌-错误做法：归档后删掉-changes-目录" class="headerlink" title="❌ 错误做法：归档后删掉 changes/ 目录"></a>❌ 错误做法：归档后删掉 <code>changes/</code> 目录</h3><p>OpenSpec 的 <code>changes/</code> 目录归档后会被移动到 <code>changes/archive/</code>，这是刻意设计的。有人为了”整洁”直接删掉，结果变更历史丢失，后续排查问题无据可查。</p>
+<p>✅ <strong>正确做法</strong>：保留归档目录，它是项目的变更日志。如果确实需要清理，只删已合并到主规范且超过半年的旧归档。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>规范驱动开发不是给 AI 上枷锁，而是给它一张<strong>施工图纸</strong>。OpenSpec 和 Specify 是两张不同场景的图纸：前者轻量灵活，适合在现有项目里做增量变更；后者全面严谨，适合从零搭建新项目。</p>
+<p><strong>下一步可以学什么</strong>：</p>
+<ul>
+<li>把 OpenSpec 或 Specify 集成到你的 CI&#x2F;CD 流程中，实现”规范变更必须审批，代码实现必须匹配规范”</li>
+<li>探索 Maestro 等工具，将 Spec 驱动开发与多 Agent 协作结合</li>
+<li>在团队内推行 Spec Review（规范评审），把代码评审前移一层</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://intent-driven.dev/knowledge/openspec/">OpenSpec 官方文档</a></li>
+<li><a href="https://github.com/github/spec-kit">GitHub Spec Kit 仓库</a></li>
+<li><a href="https://intent-driven.dev/knowledge/spec-kit-vs-openspec/">Spec Kit vs OpenSpec 对比分析</a></li>
+<li><a href="https://juejin.cn/post/7603781883974385683">OpenSpec 与 Spec Kit 使用对比（掘金）</a></li>
+<li><a href="https://dev.to/newbe36524/the-hallucination-problem-of-ai-programming-assistants-how-to-implement-specification-driven-2i2j">The Hallucination Problem of AI Programming Assistants（Dev.to）</a></li>
+</ul>
+]]></content>
+      <tags>
+        <tag>AI</tag>
+        <tag>Spec-Driven Development</tag>
+        <tag>Claude Code</tag>
+        <tag>Cursor</tag>
+        <tag>工程实践</tag>
+      </tags>
   </entry>
   <entry>
     <title>Redis 缓存三大问题：穿透、雪崩、击穿的原理与 Python 解法</title>
@@ -1923,460 +2600,406 @@ await db.execute(update_article)    # 数据库更新
       </tags>
   </entry>
   <entry>
-    <title>Python入门学习笔记</title>
-    <url>/2026/03/26/Python%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[<h2 id="print用法"><a href="#print用法" class="headerlink" title="print用法"></a>print用法</h2><p>转义符\，跟在\后面的引号不会被认为是语法结构的一部分</p>
-<pre><code class="language-python">print(&quot;He said \&quot;Let\&#39;s go\&quot;&quot;)  #转义符
-print(&quot;Hello&quot;+&quot; world&quot;+&quot;!&quot;)    #字符串拼接
-</code></pre>
-<p>\n 表示换行</p>
-<p>三引号 ‘‘‘‘’’’’或‘‘‘’’’都可，在三引号中换行会当作内容的换行，不是代码语句的结束。</p>
-<pre><code class="language-python">print(&quot;&quot;&quot;君问归期未有期，巴山夜雨涨秋池。
-何当共剪西窗烛，却话巴山夜雨时。 &quot;&quot;&quot;)
-</code></pre>
-<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>变量是用来存储或指代值的，变量不能以数字开头，变量用等号(&#x3D;)赋值。</p>
-<p>变量也可以给变量赋值</p>
-<pre><code class="language-python">greet = &quot;您好，吃了吗您&quot;
-greet_chinese = greet
-greet_english = &quot;Hey you what&#39;s up&quot;
-greet = greet_english
-print(greet + &quot;老王&quot;)
-print(greet_english + &quot;Alex&quot;)
-</code></pre>
-<p>变量取名应该易于理解和记忆，Python的变量命名约定为全部小写，不同单词用下划线分割开，例如user_name，原本空格的地方全部用下划线连接，变量名大小写敏感，且不能占据关键字，例如print。</p>
-<h2 id="python数学运算"><a href="#python数学运算" class="headerlink" title="python数学运算"></a>python数学运算</h2><table>
+    <title>SQLAlchemy 2.0 + Alembic：数据库建模与版本迁移</title>
+    <url>/2026/04/21/SQLAlchemy-2-0-Alembic%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E6%A8%A1%E4%B8%8E%E7%89%88%E6%9C%AC%E8%BF%81%E7%A7%BB/</url>
+    <content><![CDATA[<blockquote>
+<p>本文是《FastAPI 实战》系列第 3 篇。<a href="#">查看系列目录</a></p>
+</blockquote>
+<p>前两篇我们搞定了路由和依赖注入，但一个正经的后端服务离不开数据库。在 Python 生态里，SQLAlchemy 几乎是 ORM 的事实标准，而 Alembic 则是它的官方迁移工具。但网上的 SQLAlchemy 教程大多是 1.x 的老写法，你照着抄很可能会踩坑——因为 2.0 的 API 变化非常大。</p>
+<blockquote>
+<p>一句话摘要：从零搭建一套基于 SQLAlchemy 2.0 + Alembic 的异步数据库层，涵盖模型定义、关系映射、CRUD、迁移脚本和版本回滚，帮你避开新旧版本混用的坑。</p>
+</blockquote>
+<hr>
+<h2 id="背景与问题"><a href="#背景与问题" class="headerlink" title="背景与问题"></a>背景与问题</h2><p>假设你要做一个博客系统，有用户、文章、标签三张表。用户和文章是一对多关系（一个用户写多篇文章），文章和标签是多对多关系（一篇文章多个标签，一个标签下多篇文章）。</p>
+<p>不用 ORM，你得手写 <code>CREATE TABLE</code>、<code>INSERT</code>、<code>SELECT</code>、<code>JOIN</code>，还得维护字段类型变更时的表结构同步。字段加一列、改个长度，都要手动写 <code>ALTER TABLE</code> 并在各个环境执行——这在大团队协作里简直是灾难。</p>
+<p><strong>ORM（Object-Relational Mapping）</strong> 的核心价值是：用 Python 类来定义表结构，用对象操作代替手写 SQL，同时让数据库 schema 的变更可追溯、可回滚。</p>
+<p>SQLAlchemy 2.0 相比 1.x 有几个关键变化，也是很多人踩坑的原因：</p>
+<table>
 <thead>
 <tr>
-<th>加</th>
-<th>+</th>
+<th>变化点</th>
+<th>1.x 写法</th>
+<th>2.0 写法</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>减</td>
-<td>-</td>
+<td>查询语法</td>
+<td><code>session.query(User).all()</code></td>
+<td><code>session.execute(select(User)).scalars().all()</code></td>
 </tr>
 <tr>
-<td>乘</td>
-<td>*</td>
+<td>异步支持</td>
+<td>需要 <code>asyncalchemy</code> 等第三方包</td>
+<td>原生支持 <code>AsyncSession</code></td>
 </tr>
 <tr>
-<td>除</td>
-<td>&#x2F;</td>
+<td>模型基类</td>
+<td><code>declarative_base()</code> 返回一个基类</td>
+<td><code>DeclarativeBase</code> 作为基类，模型直接继承</td>
 </tr>
 <tr>
-<td>乘方</td>
-<td>**</td>
+<td>字段定义</td>
+<td><code>Column(Integer, primary_key=True)</code></td>
+<td><code>mapped_column(Integer, primary_key=True)</code></td>
+</tr>
+<tr>
+<td>关系定义</td>
+<td><code>relationship(&quot;Post&quot;, backref=&quot;author&quot;)</code></td>
+<td><code>relationship(&quot;Post&quot;, back_populates=&quot;author&quot;)</code></td>
 </tr>
 </tbody></table>
-<p>更高阶的运算需要用到math库。</p>
-<pre><code class="language-python">import math
+<p>如果你在网上搜到的教程还在用 <code>query()</code> 和 <code>Column()</code>，那基本就是旧版——<strong>不要抄</strong>。</p>
+<hr>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>你需要 Python 3.10+，安装以下依赖：</p>
+<pre><code class="language-bash">pip install sqlalchemy[asyncio] alembic asyncpg pydantic
+</code></pre>
+<ul>
+<li><code>sqlalchemy[asyncio]</code>：SQLAlchemy 2.0，带异步扩展</li>
+<li><code>alembic</code>：官方迁移工具</li>
+<li><code>asyncpg</code>：PostgreSQL 的异步驱动（推荐生产用；本地测试可用 <code>aiosqlite</code>）</li>
+<li><code>pydantic</code>：用于数据校验（FastAPI 已自带）</li>
+</ul>
+<p>本地快速测试用 SQLite：</p>
+<pre><code class="language-bash">pip install aiosqlite
+</code></pre>
+<hr>
+<h2 id="实战代码"><a href="#实战代码" class="headerlink" title="实战代码"></a>实战代码</h2><h3 id="第一步：定义数据模型"><a href="#第一步：定义数据模型" class="headerlink" title="第一步：定义数据模型"></a>第一步：定义数据模型</h3><p>我们先定义三张表，同时展示一对多和多对多关系。</p>
+<pre><code class="language-python"># app/models.py
+from datetime import datetime
+from typing import List, Optional
 
-#一元二次方程求根公式
-a=1
-b=9
-c=20
-delta = b ** 2 - 4 * a * c
-print((-b + math.sqrt(delta)) / (2 * a))
-print((-b - math.sqrt(delta)) / (2 * a))
+from sqlalchemy import ForeignKey, Table, Column, String, Text, DateTime
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-&quot;&quot;&quot;
-多行注释
-&quot;&quot;&quot;
+
+class Base(DeclarativeBase):
+    pass
+
+
+# 多对多关联表
+article_tag = Table(
+    &quot;article_tag&quot;,
+    Base.metadata,
+    Column(&quot;article_id&quot;, ForeignKey(&quot;articles.id&quot;), primary_key=True),
+    Column(&quot;tag_id&quot;, ForeignKey(&quot;tags.id&quot;), primary_key=True),
+)
+
+
+class User(Base):
+    __tablename__ = &quot;users&quot;
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(String(50), unique=True, index=True)
+    email: Mapped[str] = mapped_column(String(120), unique=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    # 一对多：一个用户有多篇文章
+    articles: Mapped[List[&quot;Article&quot;]] = relationship(
+        back_populates=&quot;author&quot;, cascade=&quot;all, delete-orphan&quot;
+    )
+
+
+class Article(Base):
+    __tablename__ = &quot;articles&quot;
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(200))
+    content: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    author_id: Mapped[int] = mapped_column(ForeignKey(&quot;users.id&quot;))
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    # 一对多反向引用
+    author: Mapped[&quot;User&quot;] = relationship(back_populates=&quot;articles&quot;)
+
+    # 多对多：一篇文章多个标签
+    tags: Mapped[List[&quot;Tag&quot;]] = relationship(
+        secondary=article_tag, back_populates=&quot;articles&quot;
+    )
+
+
+class Tag(Base):
+    __tablename__ = &quot;tags&quot;
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(50), unique=True, index=True)
+
+    # 多对多反向引用
+    articles: Mapped[List[&quot;Article&quot;]] = relationship(
+        secondary=article_tag, back_populates=&quot;tags&quot;
+    )
 </code></pre>
-<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><table>
-<thead>
-<tr>
-<th>整型</th>
-<th>a &#x3D; 1</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>浮点型</td>
-<td>b &#x3D; 2.4</td>
-</tr>
-<tr>
-<td>布尔型</td>
-<td>c &#x3D; True    &#x2F;    d &#x3D; False, 首字母必须大写</td>
-</tr>
-<tr>
-<td>字符串型</td>
-<td>e &#x3D; “I love you three thousand “</td>
-</tr>
-<tr>
-<td>空值型</td>
-<td>f &#x3D; None    ，定义一个变量时不知道取何值可以先用空值代替</td>
-</tr>
-</tbody></table>
-<p>type()函数可以返回变量的类型，例如print(type(a))。</p>
-<h2 id="交互模式"><a href="#交互模式" class="headerlink" title="交互模式"></a>交互模式</h2><p>命令行模式和交互模式，后者特点是读一行执行一行。</p>
-<p>交互模式不需要创建Python文件就可以运行，且不需要print就可以看到返回结果，但所有输入的指令都不会保存。</p>
-<p>Windows下进入cmd输入python3即可进入，退出按Ctrl+d或者输入quit()。</p>
-<h2 id="用户输入"><a href="#用户输入" class="headerlink" title="用户输入"></a>用户输入</h2><p>input()，返回结果均为字符串,需要用一个变量接收。</p>
-<pre><code class="language-python">age = int(input(&quot;请输入年龄：&quot;)) #强制类型转换
-#注：print不能直接打印数字，需要转换为str类型才可
-print(&quot;年龄是：&quot;+ str(age))
+<p>几个值得注意的点：</p>
+<ul>
+<li><code>Mapped[T]</code> 是 2.0 的类型注解写法，IDE 能自动补全，也能在 <code>mypy</code> 类型检查时报错。</li>
+<li><code>mapped_column()</code> 替代了旧版的 <code>Column()</code>。</li>
+<li><code>relationship(back_populates=...)</code> 替代了 <code>backref</code>，双向关系需要两边都写，虽然啰嗦但更明确。</li>
+<li><code>cascade=&quot;all, delete-orphan&quot;</code> 表示删除用户时，他的文章也会被级联删除——<strong>谨慎使用</strong>，业务上可能不允许。</li>
+</ul>
+<h3 id="第二步：配置异步-Session"><a href="#第二步：配置异步-Session" class="headerlink" title="第二步：配置异步 Session"></a>第二步：配置异步 Session</h3><p>SQLAlchemy 2.0 原生支持异步，关键在于 <code>create_async_engine</code> + <code>async_sessionmaker</code>。</p>
+<pre><code class="language-python"># app/db.py
+import os
+from contextlib import asynccontextmanager
+
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+
+DATABASE_URL = os.getenv(&quot;DATABASE_URL&quot;, &quot;sqlite+aiosqlite:///./blog.db&quot;)
+
+engine = create_async_engine(DATABASE_URL, echo=False)
+AsyncSessionLocal = async_sessionmaker(
+    engine, class_=AsyncSession, expire_on_commit=False
+)
+
+
+async def get_db() -&gt; AsyncSession:
+    &quot;&quot;&quot;FastAPI Depends 用的 Session 生成器。&quot;&quot;&quot;
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+        finally:
+            await session.close()
+
+
+@asynccontextmanager
+async def get_db_context():
+    &quot;&quot;&quot;上下文管理器版本，适合脚本和测试。&quot;&quot;&quot;
+    async with AsyncSessionLocal() as session:
+        yield session
 </code></pre>
-<h2 id="条件判断-嵌套-逻辑运算"><a href="#条件判断-嵌套-逻辑运算" class="headerlink" title="条件判断&#x2F;嵌套&#x2F;逻辑运算"></a>条件判断&#x2F;嵌套&#x2F;逻辑运算</h2><pre><code class="language-python">if [条件]:
-    .....
-else :
-    .....
+<p><code>expire_on_commit=False</code> 很重要：默认情况下 <code>commit()</code> 后对象会被”过期”，下次访问会触发懒加载。异步环境下懒加载会报错（因为对象绑定的是已关闭的 Session），关闭过期机制可以避免这个问题。</p>
+<h3 id="第三步：CRUD-操作"><a href="#第三步：CRUD-操作" class="headerlink" title="第三步：CRUD 操作"></a>第三步：CRUD 操作</h3><p>下面展示最常用的增删改查，以及关联查询。</p>
+<pre><code class="language-python"># app/crud.py
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
+
+from app.db import get_db_context
+from app.models import User, Article, Tag
+
+
+async def create_user(username: str, email: str) -&gt; User:
+    async with get_db_context() as db:
+        user = User(username=username, email=email)
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)  # 获取自增 ID
+        return user
+
+
+async def get_user_with_articles(user_id: int) -&gt; User | None:
+    async with get_db_context() as db:
+        result = await db.execute(
+            select(User)
+            .where(User.id == user_id)
+            .options(selectinload(User.articles))
+        )
+        return result.scalar_one_or_none()
+
+
+async def create_article(title: str, content: str, author_id: int, tag_names: list[str]) -&gt; Article:
+    async with get_db_context() as db:
+        # 查找或创建标签
+        tags = []
+        for name in tag_names:
+            result = await db.execute(select(Tag).where(Tag.name == name))
+            tag = result.scalar_one_or_none()
+            if tag is None:
+                tag = Tag(name=name)
+                db.add(tag)
+            tags.append(tag)
+
+        article = Article(
+            title=title,
+            content=content,
+            author_id=author_id,
+            tags=tags,
+        )
+        db.add(article)
+        await db.commit()
+        await db.refresh(article)
+        return article
+
+
+async def list_articles(skip: int = 0, limit: int = 10) -&gt; list[Article]:
+    async with get_db_context() as db:
+        result = await db.execute(
+            select(Article)
+            .offset(skip)
+            .limit(limit)
+            .order_by(Article.created_at.desc())
+        )
+        return result.scalars().all()
 </code></pre>
-<p>多种条件用elif，最后需要一个else结尾。</p>
-<pre><code class="language-python">mood_index = int(input(&quot;对象今天的心情指数是：&quot;))
-if mood_index&gt;=60:
-    print(&quot;去吧，就决定是你了，Pikachu!&quot;)
+<p><strong>关联查询</strong>需要特别注意：如果你 <code>select(User)</code> 后直接访问 <code>user.articles</code>，异步环境下会抛 <code>MissingGreenlet</code> 错误。解决办法是在查询时用 <code>options(selectinload(User.articles))</code> 预加载关联数据。</p>
+<h3 id="第四步：在-FastAPI-中集成"><a href="#第四步：在-FastAPI-中集成" class="headerlink" title="第四步：在 FastAPI 中集成"></a>第四步：在 FastAPI 中集成</h3><pre><code class="language-python"># main.py
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.db import get_db
+from app.crud import create_user, get_user_with_articles
+from app.schemas import UserCreate, UserResponse
+
+app = FastAPI()
+
+
+@app.post(&quot;/users&quot;, response_model=UserResponse, status_code=201)
+async def register_user(payload: UserCreate, db: AsyncSession = Depends(get_db)):
+    &quot;&quot;&quot;注册新用户。&quot;&quot;&quot;
+    user = await create_user(payload.username, payload.email)
+    return user
+
+
+@app.get(&quot;/users/{user_id}&quot;, response_model=UserResponse)
+async def read_user(user_id: int, db: AsyncSession = Depends(get_db)):
+    &quot;&quot;&quot;获取用户信息及文章列表。&quot;&quot;&quot;
+    user = await get_user_with_articles(user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
+    return user
+</code></pre>
+<p>注意 <code>create_user</code> 内部用了 <code>get_db_context()</code>（自己开 Session），而接口层用 <code>Depends(get_db)</code>（FastAPI 注入 Session）。两者不要混用——否则会出现”Session 嵌套”的诡异问题。</p>
+<h3 id="第五步：Alembic-迁移"><a href="#第五步：Alembic-迁移" class="headerlink" title="第五步：Alembic 迁移"></a>第五步：Alembic 迁移</h3><p>初始化 Alembic：</p>
+<pre><code class="language-bash">alembic init alembic
+</code></pre>
+<p>这会生成 <code>alembic/</code> 目录和 <code>alembic.ini</code>。接下来修改两个关键文件。</p>
+<p><strong>修改 <code>alembic/env.py</code></strong>，让它知道你的异步引擎：</p>
+<pre><code class="language-python"># alembic/env.py
+import asyncio
+from sqlalchemy.ext.asyncio import create_async_engine
+
+from app.models import Base  # 导入你的模型基类
+from app.db import DATABASE_URL
+
+config = context.config
+config.set_main_option(&quot;sqlalchemy.url&quot;, DATABASE_URL)
+
+target_metadata = Base.metadata
+
+
+def run_migrations_offline():
+    url = config.get_main_option(&quot;sqlalchemy.url&quot;)
+    context.configure(
+        url=url,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        dialect_opts={&quot;paramstyle&quot;: &quot;named&quot;},
+    )
+    with context.begin_transaction():
+        context.run_migrations()
+
+
+async def run_migrations_online():
+    connectable = create_async_engine(DATABASE_URL)
+    async with connectable.connect() as connection:
+        await connection.run_sync(do_run_migrations)
+    await connectable.dispose()
+
+
+def do_run_migrations(connection):
+    context.configure(connection=connection, target_metadata=target_metadata)
+    with context.begin_transaction():
+        context.run_migrations()
+
+
+if context.is_offline_mode():
+    run_migrations_offline()
 else:
-    print(&quot;洗洗睡吧布鲁斯&quot;)
+    asyncio.run(run_migrations_online())
 </code></pre>
-<p>条件语句可以嵌套。</p>
-<pre><code class="language-python">user_height = float(input(&quot;输入你的身高（单位：m）：&quot;))
-user_BMI = user_weight / (user_heght)**2
-print(&quot;您的BMI值为：&quot;+ str(user_BMI))
-
-if user_BMI &lt;= 18.5:
-    print(&quot;此BMI值属于偏瘦范围。&quot;)
-elif 18.5 &lt; user_BMI &lt;= 25:
-    print(&quot;此BMI值属于正常范围。&quot;)
-elif 25 &lt; user_BMI &lt;= 30:
-    print(&quot;此BMI值属于偏胖范围。&quot;)
-else：
-	print(&quot;此BMI值属于肥胖范围。&quot;)
+<p><strong>生成迁移脚本</strong>：</p>
+<pre><code class="language-bash">alembic revision --autogenerate -m &quot;init_models&quot;
 </code></pre>
-<h3 id="逻辑运算"><a href="#逻辑运算" class="headerlink" title="逻辑运算"></a>逻辑运算</h3><p>Python的逻辑运算包括三个，与、或、非，对应and  or  not。</p>
-<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><p>Python的列表与C语言中的数组类似，但是不限数据元素的类型。一个列表用[]表示,列表是可变的</p>
-<pre><code class="language-python">a_list = [&quot;hello&quot;,&quot;world&quot;]
-a_list.append(&quot;hi&quot;)  #向列表末尾插入数据，这个方法会直接改变原列表，因此不需要再赋值
-a_list.remove(&quot;hi&quot;)  #移除某个元素
-a_list.append(6.66)
-a_list.append(True)
-a_list.append(None)
+<p>这条命令会对比当前数据库 schema 和 <code>Base.metadata</code>，自动生成 <code>CREATE TABLE</code> 语句。</p>
+<p><strong>执行迁移</strong>：</p>
+<pre><code class="language-bash">alembic upgrade head
 </code></pre>
-<p>对象.方法名(…)</p>
-<p>函数(对象)，如len(a_list)</p>
-<p>列表可以存放不同类型数据, 如果想获得某个位置上的元素，可以使用索引，索引也可更新列表</p>
-<pre><code class="language-python">print(a_list[0]) #索引从0开始
-a_list[1] = &quot;tom&quot;
+<p><strong>回滚到上一个版本</strong>：</p>
+<pre><code class="language-bash">alembic downgrade -1
 </code></pre>
-<p>常用的函数有min(),max(),sorted()</p>
-<pre><code class="language-python">price = [100,899,565,992,78]
-min_price = min(price)
-max_price = max(price)
-print(sorted(price))  #默认升序排列
+<p><strong>回滚到特定版本</strong>：</p>
+<pre><code class="language-bash">alembic downgrade 8f3a2b1c4d5e  # revision ID
 </code></pre>
-<h2 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h2><p>字典用于储存键值对，键用于查找值，字典用{“key”:”value”}表示，键值对之间以逗号分隔，键的类型必须是不可变的。Python提供一个不可变但很像列表的数据结构：元组（tuple），用()表示，元组不能用append和remove等方法，可以用于字典中需要多个值确定一个键的场景，可把整个元组作为一个键。</p>
-<p>字典和列表一样是可变的</p>
-<p>确定一个键值对是否在字典中，可用 “键” in 字典 确定，返回结果为True或False</p>
-<pre><code class="language-python">contact = {&quot;tom&quot;:&quot;123456&quot;,&quot;jerry&quot;:&quot;456789&quot;}
-#插入/更新键值对
-contact[&quot;jackie&quot;] = &quot;565656&quot;
-#删除键值对
-del contact[&quot;tom&quot;]
-#统计键值对数量
-len(contact)
-#查询某个键对应的值
-print(contact[jackie])
+<h3 id="第六步：多环境配置"><a href="#第六步：多环境配置" class="headerlink" title="第六步：多环境配置"></a>第六步：多环境配置</h3><p>实际项目里，开发、测试、生产用的数据库地址不同。不要在 <code>env.py</code> 里硬编码，用环境变量：</p>
+<pre><code class="language-bash"># .env
+DATABASE_URL=postgresql+asyncpg://user:pass@localhost/blog_dev
 </code></pre>
-<p>Python的字典有三个方法</p>
-<pre><code>字典名.keys()返回所有键
-字典名.values()返回所有值
-字典名.items()返回所有键值对
+<p>在 <code>alembic.ini</code> 中，把 <code>sqlalchemy.url</code> 留空或写占位符，然后在 <code>env.py</code> 中读取环境变量：</p>
+<pre><code class="language-python">import os
+DATABASE_URL = os.getenv(&quot;DATABASE_URL&quot;, &quot;sqlite+aiosqlite:///./blog.db&quot;)
+config.set_main_option(&quot;sqlalchemy.url&quot;, DATABASE_URL)
 </code></pre>
-<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><h3 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h3><pre><code class="language-python">for 变量名  in  可迭代对象 :
-	# 对每个变量做一些事情
-    # ......
+<p>如果你需要同时支持<strong>异步驱动</strong>（<code>asyncpg</code>）和<strong>同步驱动</strong>（<code>psycopg2</code>），可以在 <code>.env</code> 里定义两个 URL，迁移时 Alembic 需要同步引擎，运行时用异步引擎。</p>
+<h3 id="第七步：推荐的项目目录结构"><a href="#第七步：推荐的项目目录结构" class="headerlink" title="第七步：推荐的项目目录结构"></a>第七步：推荐的项目目录结构</h3><pre><code>project/
+├── alembic/                  # Alembic 迁移目录
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions/             # 迁移脚本
+├── app/
+│   ├── __init__.py
+│   ├── main.py               # FastAPI 入口
+│   ├── models.py             # SQLAlchemy 模型
+│   ├── schemas.py            # Pydantic 模型
+│   ├── crud.py               # 数据库操作封装
+│   ├── db.py                 # 引擎和 Session 工厂
+│   └── api/
+│       └── users.py          # 路由拆分
+├── .env                      # 环境变量（勿提交到 Git）
+├── alembic.ini
+├── requirements.txt
+└── pyproject.toml
 </code></pre>
-<p>可迭代对象包括列表，字典</p>
-<p>for可与range结合，需要注意结束值不再循环的范围内，例如</p>
-<pre><code class="language-python">range(5,10) #5为起始值，10为结束值
-for i in range(5,10)
-# i不会被赋10的值
-range(5,10,2)  #第三个参数表示步长，也就是每次跨几个数字，默认为1
-for i in range(len(list))  #range()只有一个参数时，i会被先赋值为0，结束值为range中的值
-	print(list[i])
-
-# 计算1到100的和
-total = 0
-for i in range(1,101)
-	total = total + i
-print(total)
-
-#字典结合for循环,找出体温异常的人
-temperature_dict = {&quot;1&quot;:36.4,&quot;2&quot;:37.4,&quot;3&quot;:36.2}
-for id,temperature in temperature_dict.items():  #相当于把元组第一个值赋值给id，第二个值赋值给temperature
-    if temperature &gt;= 38
-    	print(id)
-# 注：字典名.items()在for循环时变量会被赋值为键和值组成的元组
+<hr>
+<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><p><strong>❌ 错误：混用 <code>query()</code> 和 <code>execute()</code>，或者旧版 <code>Column()</code> 和新版 <code>mapped_column()</code></strong></p>
+<p>有些教程写 <code>session.query(User).filter(...)</code>，但 2.0 的异步 Session 没有 <code>query()</code> 方法。你应该用 <code>session.execute(select(...))</code>。</p>
+<p>同样，<code>Column(Integer, primary_key=True)</code> 在 2.0 的 <code>Mapped</code> 类型系统下不会被类型检查器正确识别，必须用 <code>mapped_column(Integer, primary_key=True)</code>。</p>
+<p>✅ <strong>正确做法</strong>：全项目统一使用 SQLAlchemy 2.0 的 <code>select()</code> + <code>execute()</code> + <code>mapped_column()</code> + <code>Mapped[T]</code> 写法。</p>
+<hr>
+<p><strong>❌ 错误：异步环境下访问未预加载的关联属性</strong></p>
+<pre><code class="language-python"># 错误示范
+user = await db.get(User, 1)
+for article in user.articles:  # 这里会抛 MissingGreenlet！
+    print(article.title)
 </code></pre>
-<h3 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h3><p>for循环在有明确循环次数的时候更好用，while在循环次数未知的情况下更好用</p>
-<pre><code class="language-python"># 求用户输入数字的平均值
-total = 0
-count = 0
-user_input = input(&quot;请输入数字，输入q终止程序:&quot;)
-while user_input != &quot;q&quot;
-	num = float(user_input)    #要注意循环体内的顺序，防止第一次输入无效的bug
-    total += num 
-    count += 1
-    user_input = input(&quot;请输入数字，输入q终止程序:&quot;)
-if count == 0 :
-	result = 0
-else:
-    result = total/count
-print(&quot;输入数字的平均值为：&quot; + str(result))   # 字符串拼接的前提是都是字符串，所以需要str()做强制类型转换
+<p>异步引擎不支持懒加载（lazy loading），因为关联查询需要一次新的数据库请求，但原 Session 已经关闭了。</p>
+<p>✅ <strong>正确做法</strong>：查询时显式预加载关联数据。</p>
+<pre><code class="language-python">result = await db.execute(
+    select(User).options(selectinload(User.articles))
+)
+user = result.scalar_one()
 </code></pre>
-<h2 id="格式化字符串"><a href="#格式化字符串" class="headerlink" title="格式化字符串"></a>格式化字符串</h2><p>主要使用f-string，在字符串前加f，花括号中的内容会被直接求值</p>
-<pre><code class="language-python">name = &quot;laowang&quot;
-year = &quot;虎&quot;
-message_content = f&quot;金{year}贺岁，金{year}敲门，给{name}拜年啦&quot;
+<p>或者如果你只需要一两个关联字段，用 <code>joinedload()</code> 做 <code>JOIN</code> 查询，比 <code>selectinload()</code> 的二次查询更高效。</p>
+<hr>
+<p><strong>❌ 错误：忘记 <code>await db.commit()</code>，以为 <code>add()</code> 会自动提交</strong></p>
+<pre><code class="language-python"># 错误示范
+db.add(user)
+# 没有 commit，数据根本没写进去！
 </code></pre>
-<p>format方法，有两种形式,第一种根据位置</p>
-<pre><code class="language-python">name = &quot;laowang&quot;
-year = &quot;虎&quot;
-message_content = &quot;金{0}贺岁，金{0}敲门，给{1}拜年啦&quot;.format(year,name)
-</code></pre>
-<p>第二种根据关键字</p>
-<pre><code class="language-python">name = &quot;laowang&quot;
-year = &quot;虎&quot;
-message_content = &quot;金{current_year}贺岁，金{current_year}敲门，给{receiver_name}拜年啦&quot;.format(current_year=year,receiver_name=name)
-</code></pre>
-<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><pre><code class="language-python">def 函数名(参数1，参数2...):
-    ....
-</code></pre>
-<p>如果函数没有写return语句，默认返回为None</p>
-<pre><code class="language-python">height = float(input(&quot;输入身高：&quot;))
-weight = float(input(&quot;输入体重：&quot;))
-
-def calculate_BMI(height,weight):
-    BMI = weight / height ** 2
-    if BMI &lt;= 18:
-        catrgory = &quot;偏瘦&quot;
-    	#print(&quot;你的BMI分类为：偏瘦&quot;)
-    elif 18.5 &lt; BMI and BMI &lt;= 25:
-        catrgory = &quot;正常&quot;
-    	#print(&quot;你的BMI分类为：正常&quot;)
-    elif 25&lt; BMI and BMI &lt;= 30:
-        catrgory = &quot;偏胖&quot;
-    	#print(&quot;你的BMI分类为：偏胖&quot;)
-    else:
-        catrgory = &quot;肥胖&quot;
-       # print(&quot;你的BMI分类为：肥胖&quot;)
-    print(f&quot;你的BMI分类为:{category}&quot;)
-    return BMI
-</code></pre>
-<h3 id="引入其他模块"><a href="#引入其他模块" class="headerlink" title="引入其他模块"></a>引入其他模块</h3><pre><code class="language-python"># 第一种方法 import语句
-import 模块名
-模块名.方法名(参数...)
-模块名.变量名(参数...)
-
-# 第二种方法 from...import...语句
-方法名.(参数...)
-不加上模块名就能使用
-
-# 第三种方法 from...import *
-引入模块的所有内容，一般不推荐使用
-</code></pre>
-<h3 id="面向对象编程"><a href="#面向对象编程" class="headerlink" title="面向对象编程"></a>面向对象编程</h3><p>类是创建对象的模板，对象是类的实例。类的三个特点：封装，继承，多态</p>
-<p>封装：使用类的人只通过外部接口调用方法，而不知道实现细节</p>
-<p>继承：允许创建有层次的类（父类，子类）</p>
-<p>多态：同样的接口，依据对象具体类的不同，实现方式也不同</p>
-<h2 id="类"><a href="#类" class="headerlink" title="类"></a>类</h2><p>Python创建类时使用pascal风格命名，即首字母大写分隔单词，类名后跟冒号</p>
-<p>类有一个特殊的方法叫构造函数，主要作用是定义实例对象的属性，必须被命名为_init_(self)：</p>
-<p>构造函数第一个参数是一直被占用的，用于表示对象自身，约定成俗称为self。类的属性都写在构造函数中</p>
-<pre><code class="language-python">class CuteCat:
-    # 注意构造函数前后的下划线都是两个
-    def __init__(self,cat_name,cat_age,cat_color):  
-        self.name = cat_name
-        self.age = cat_age
-        self.color =  cat_color
-     
-    def speak(self):
-        print(&quot;喵&quot; * self.age)
-     
-    def think(self,content):
-        print(f&quot;小猫{self.name}在思考{content}...&quot;)
-
-cat1 = CuteCat(&quot;Tom&quot;,2,&quot;orange&quot;)
-cat1.think(&quot;去抓沙发还是睡觉&quot;)
-print(f&quot;小猫{cat1.name}的年龄是{cat1.age}岁，花色是{cat1.color}&quot;)
-</code></pre>
-<p>python的方法第一个参数也为self,后跟传递的参数</p>
-<pre><code class="language-python">class Student:
-    def __init__(self, name, id):
-        self.name = name
-        self.id = id
-        self.grade_chinese = 0
-        self.grade_math = 0
-        self.grade_english = 0
-    
-    def set_grade(self, grade_chinese, grade_math, grade_english):
-        self.grade_chinese = grade_chinese
-        self.grade_math = grade_math
-        self.grade_english = grade_english
-        print(f&quot;学生{self.name}的语文成绩是{self.grade_chinese},数学成绩是{self.grade_math},英语成绩是{self.grade_english}&quot;)
-        
-jerry = Student(&quot;jerry&quot;,&quot;001&quot;)
-jerry.set_grade(90,95,85)
-</code></pre>
-<h3 id="类的继承"><a href="#类的继承" class="headerlink" title="类的继承"></a>类的继承</h3><p>子类可以用super关键字继承父类的方法</p>
-<pre><code class="language-python">class employee:
-    def __init__(self,name,id):
-        self.name = name
-        self.id = id
-        
-    def print_info(self):
-        print(f&quot;员工姓名:{self.name},员工编号:{self.id}&quot;)
-        
-    def calculate_monthly_pay(self):
-        pass
-    
-    # 子类继承父类，写法是 class B(A):   B是子类，A是父类
-class FullTimeEmployee(employee):
-    def __init__(self,name,id,monthly_salary):
-        super().__init__(name,id)           # 子类可以用super关键字调用父类的构造函数
-        self.monthly_salary = monthly_salary
-        
-    def calculate_monthly_pay(self):
-        return self.monthly_salary
-    
-class PartTimeEmployee(employee):
-    def __init__(self,name,id,daily_salary,work_days):
-        super().__init__(name,id)
-        self.daily_ssalary = daily_salary
-        self.work_days = work_days
-        
-    def calculate_monthly_pay(self):
-        return self.daily_salary * self.work_days
-</code></pre>
-<h2 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h2><h3 id="读取"><a href="#读取" class="headerlink" title="读取"></a>读取</h3><p>open()函数，用于打开目标文件，有三个参数</p>
-<ol>
-<li>文件路径，可以是绝对\ 相对路径</li>
-<li>表示读取模式，可以取”r”或”w”，表示读和写;”a”表示附加内容，会在原文件后面跟上新内容</li>
-<li>encoding &#x3D; “…” 指定以什么编码读取文件</li>
-</ol>
-<p>read()函数，用于读取目标文件内容，默认情况下会阅读全部内容并以字符串返回文件内容，同一文件第二次调用read()时就会返回空，目标文件最好是txt格式</p>
-<pre><code class="language-python">f = open(&quot;./data.txt&quot;,&quot;r&quot;,encoding=&quot;utf-8&quot;)
-print(f.read(10))      #读第1到10字节的文件内容
-</code></pre>
-<p>readline()函数，一次读取一行，常与while循环搭配使用</p>
-<pre><code class="language-python">f = open(&quot;./data.txt&quot;,&quot;r&quot;,encoding=&quot;utf-8&quot;)
-line = f.readline()  #读第一行
-while line != &quot;&quot;:    #判断当前行是否为空
-    print(line)       #不为空就打印当前行
-    line = f.readline()   #读取下一行
-f.close()   #释放资源
-</code></pre>
-<p>readlines()，读取全部内容，并返回每行组成的字符串列表，常与for循环搭配使用</p>
-<pre><code class="language-python">f = open(&quot;./data.txt&quot;,&quot;r&quot;,encoding=&quot;utf-8&quot;)
-lines = f.readlines()     #把每行内容存储到列表里
-for line in lines:        #遍历每行内容
-    print(line)
-f.close()
-</code></pre>
-<p>读取完以后要用close()释放资源，也可以在代码前加上with ,后面跟上as f:  ,就不需要再close，但原代码要缩进</p>
-<pre><code class="language-python">with f = open(&quot;./data.txt&quot;,&quot;r&quot;,encoding=&quot;utf-8&quot;) as f:
-	lines = f.readlines()     #把每行内容存储到列表里
-	for line in lines:        #遍历每行内容
-    	print(line)
-</code></pre>
-<h3 id="写入"><a href="#写入" class="headerlink" title="写入"></a>写入</h3><p>“w”模式在写以前会把原文件清空，谨慎使用</p>
-<p>write()函数可以追加内容，默认不会换行</p>
-<p>open()的模式要为”w”或”a”,如果原文件不存在Python会创建一个新文件，这两种模式下均不能读取文件内容；要同时进行读和写，就需要把模式设为”r+”，且write的内容会追加在原文件后</p>
-<pre><code class="language-python">with open(&quot;./poem.txt&quot;,&quot;w&quot;,encoding=&quot;utf-8&quot;) as f:
-    f.write(&quot;床前明月光，疑是地上霜。\n举头望明月，低头思故乡。\n&quot;)
-    
-    
-with open(&quot;./poem.txt&quot;,&quot;a&quot;,encoding=&quot;utf-8&quot;) as f:
-    f.write(&quot;hello,world&quot;)
-</code></pre>
-<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><p>通过try&#x2F;except语句捕捉异常，try后的代码块放容易报错的代码，except后跟异常的名字</p>
-<p>except后跟明确的异常类型，如果不知道异常类型就什么都不写</p>
-<p>else后跟没有错误时会运行的代码</p>
-<p>finally后的内容不管程序错误与否都会执行</p>
-<pre><code class="language-python">try:
-    user_weight = float(input(&quot;输入体重:&quot;))
-    user_height = float(input(&quot;输入身高:&quot;))
-    user_BMI = user_weight / user_height ** 2
-except ValueError:
-    print(&quot;输入不合理数字&quot;)
-except ZeroDivisionError:
-    print(&quot;身高不能为0&quot;)
-except:
-    print(&quot;发生未知错误&quot;)
-else:
-    print(&quot;您的BMi值为：&quot;+ str(user_BMI))
-finally:
-    print(&quot;程序结束运行&quot;)
-</code></pre>
-<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>assert，即断言，后跟布尔表达式（值为True或False的表达式），出现异常时终止程序运行。</p>
-<p>unittest库，用于单元测试，即对软件中最小的可测试单元进行验证，比如验证某函数输出是否符合预期。</p>
-<pre><code class="language-python"># 定义my_caculator.py
-def my_adder(x,y):
-    return x+y
-</code></pre>
-<pre><code class="language-python"># 测试代码test_my_calulator.py
-import unittest
-from my_calculator import my_adder
-
-class TestMyAdder(unittest.TestCase):
-    def test_positive_with_positive(self):
-        ...
-        
-    def test_nagative_with_positive(self):
-        ...
-</code></pre>
-<p>在测试类下面写测试用例，每个测试用例是一个方法，要注意测试用例必须以test开头Python才能识别。</p>
-<pre><code class="language-python">import unittest
-from my_calculator import my_adder
-
-class TestMyAdder(unittest.TestCase):
-    def test_positive_with_positive(self):
-        self.assertEqual(my_adder(5,3),8)
-        
-    def test_nagative_with_positive(self):
-        self.assertEqual(my_adder(-5,3),-2)
-</code></pre>
-<p>为防止assert中断整个程序运行，可以使用assertEqual()方法，括号内跟布尔表达式。</p>
-<p>在终端使用python -m unittest，python就会自动执行测试用例。</p>
-<p>测试结果有几个点就代表有几个测试用例，点代表测试通过，F表示未通过。</p>
-<h2 id="高阶和匿名函数"><a href="#高阶和匿名函数" class="headerlink" title="高阶和匿名函数"></a>高阶和匿名函数</h2><p>函数可以传入另一个函数作为参数使用，把函数作为参数的函数叫高阶函数，作为参数的函数直接用函数名，不需要跟括号和参数。</p>
-<pre><code class="language-python">def calculate_square(num):
-    return num*num
-
-def calculate_cube(num):
-    return num*num*num
-
-def calculate_plus_10(num):
-    return num + 10
-
-# 每次都定义这些函数太麻烦了，这些函数构成简单而且基本只使用一次，这种情况就可以考虑Lambda表达式
-
-def calculate_and_print(num,calculator,formatter):
-    result = calculator(num)
-    formatter(num,result)
-    
-def print_with-vertical_bar(num,result):
-    print(f&quot;&quot;&quot;
-    |数字参数|{nmu}|
-    |计算结果|{result}|&quot;&quot;&quot;)
-    
-calcuate_and_print(7,calculate_times_5,print_with_vertical_bar)
-</code></pre>
-<p>匿名函数不需要指定名称，也可称为Lambda，格式如下：</p>
-<pre><code class="language-python">lambda num1,num2 : num1+num2
-关键字   函数参数    函数返回的表达式
-</code></pre>
-<p>匿名函数可作为高阶函数的参数传入，也可直接调用，格式如下：</p>
-<pre><code class="language-python">(lambda num1,num2: num1+num2)(2,3)
-</code></pre>
-<p>匿名函数后无法跟多个语句或表达式，只能用于比较简单的场景。</p>
+<p>SQLAlchemy 的 <code>add()</code> 只是把对象放入 Session 的”待处理队列”，真正的 INSERT 发生在 <code>commit()</code> 时。</p>
+<p>✅ <strong>正确做法</strong>：增删改后必须 <code>await db.commit()</code>，需要自增 ID 时再加 <code>await db.refresh(obj)</code>。</p>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>SQLAlchemy 2.0 的 <code>Mapped</code> 类型系统和原生异步支持，让 Python ORM 终于跟上了现代类型安全编程的潮流。配合 Alembic，你可以用一套代码同时管理模型定义和 schema 迁移，团队协同时不再需要手动同步 <code>ALTER TABLE</code>。</p>
+<p>下一步可以学什么：</p>
+<ul>
+<li>学习 <strong>Pydantic v2</strong> 的 <code>model_validator</code> 和 <code>computed_field</code>，在 schemas 层做更复杂的业务校验</li>
+<li>了解 <strong>数据库连接池</strong> 调优（<code>pool_size</code>、<code>max_overflow</code>），为高并发做准备</li>
+<li>为 CRUD 层写 <strong>pytest-asyncio</strong> 测试，用 <code>aiosqlite</code> 做内存数据库测试</li>
+</ul>
+<hr>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://docs.sqlalchemy.org/en/20/">SQLAlchemy 2.0 官方文档</a></li>
+<li><a href="https://alembic.sqlalchemy.org/en/latest/tutorial.html">Alembic 官方教程</a></li>
+<li><a href="https://fastapi.tiangolo.com/tutorial/sql-databases/">FastAPI SQLAlchemy 官方示例</a></li>
+<li>上一篇：<a href="/2026/04/15/FastAPI-%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/">FastAPI 实战（二）：依赖注入与中间件</a></li>
+<li>下一篇：JWT 认证系统完整实现（持续更新中）</li>
+</ul>
 ]]></content>
       <categories>
-        <category>编程语言</category>
-        <category>Python</category>
+        <category>FastAPI 实战</category>
       </categories>
       <tags>
+        <tag>FastAPI</tag>
         <tag>Python</tag>
-        <tag>编程</tag>
-        <tag>学习笔记</tag>
+        <tag>SQLAlchemy</tag>
+        <tag>Alembic</tag>
+        <tag>数据库</tag>
       </tags>
   </entry>
   <entry>
@@ -3005,413 +3628,10 @@ WHERE TABLE_SCHEMA = &#39;mydb&#39;;
         <category>MySQL</category>
       </categories>
       <tags>
-        <tag>MySQL</tag>
         <tag>数据库</tag>
+        <tag>MySQL</tag>
         <tag>SQL</tag>
         <tag>速查表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SQLAlchemy 2.0 + Alembic：数据库建模与版本迁移</title>
-    <url>/2026/04/21/SQLAlchemy-2-0-Alembic%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E6%A8%A1%E4%B8%8E%E7%89%88%E6%9C%AC%E8%BF%81%E7%A7%BB/</url>
-    <content><![CDATA[<blockquote>
-<p>本文是《FastAPI 实战》系列第 3 篇。<a href="#">查看系列目录</a></p>
-</blockquote>
-<p>前两篇我们搞定了路由和依赖注入，但一个正经的后端服务离不开数据库。在 Python 生态里，SQLAlchemy 几乎是 ORM 的事实标准，而 Alembic 则是它的官方迁移工具。但网上的 SQLAlchemy 教程大多是 1.x 的老写法，你照着抄很可能会踩坑——因为 2.0 的 API 变化非常大。</p>
-<blockquote>
-<p>一句话摘要：从零搭建一套基于 SQLAlchemy 2.0 + Alembic 的异步数据库层，涵盖模型定义、关系映射、CRUD、迁移脚本和版本回滚，帮你避开新旧版本混用的坑。</p>
-</blockquote>
-<hr>
-<h2 id="背景与问题"><a href="#背景与问题" class="headerlink" title="背景与问题"></a>背景与问题</h2><p>假设你要做一个博客系统，有用户、文章、标签三张表。用户和文章是一对多关系（一个用户写多篇文章），文章和标签是多对多关系（一篇文章多个标签，一个标签下多篇文章）。</p>
-<p>不用 ORM，你得手写 <code>CREATE TABLE</code>、<code>INSERT</code>、<code>SELECT</code>、<code>JOIN</code>，还得维护字段类型变更时的表结构同步。字段加一列、改个长度，都要手动写 <code>ALTER TABLE</code> 并在各个环境执行——这在大团队协作里简直是灾难。</p>
-<p><strong>ORM（Object-Relational Mapping）</strong> 的核心价值是：用 Python 类来定义表结构，用对象操作代替手写 SQL，同时让数据库 schema 的变更可追溯、可回滚。</p>
-<p>SQLAlchemy 2.0 相比 1.x 有几个关键变化，也是很多人踩坑的原因：</p>
-<table>
-<thead>
-<tr>
-<th>变化点</th>
-<th>1.x 写法</th>
-<th>2.0 写法</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>查询语法</td>
-<td><code>session.query(User).all()</code></td>
-<td><code>session.execute(select(User)).scalars().all()</code></td>
-</tr>
-<tr>
-<td>异步支持</td>
-<td>需要 <code>asyncalchemy</code> 等第三方包</td>
-<td>原生支持 <code>AsyncSession</code></td>
-</tr>
-<tr>
-<td>模型基类</td>
-<td><code>declarative_base()</code> 返回一个基类</td>
-<td><code>DeclarativeBase</code> 作为基类，模型直接继承</td>
-</tr>
-<tr>
-<td>字段定义</td>
-<td><code>Column(Integer, primary_key=True)</code></td>
-<td><code>mapped_column(Integer, primary_key=True)</code></td>
-</tr>
-<tr>
-<td>关系定义</td>
-<td><code>relationship(&quot;Post&quot;, backref=&quot;author&quot;)</code></td>
-<td><code>relationship(&quot;Post&quot;, back_populates=&quot;author&quot;)</code></td>
-</tr>
-</tbody></table>
-<p>如果你在网上搜到的教程还在用 <code>query()</code> 和 <code>Column()</code>，那基本就是旧版——<strong>不要抄</strong>。</p>
-<hr>
-<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>你需要 Python 3.10+，安装以下依赖：</p>
-<pre><code class="language-bash">pip install sqlalchemy[asyncio] alembic asyncpg pydantic
-</code></pre>
-<ul>
-<li><code>sqlalchemy[asyncio]</code>：SQLAlchemy 2.0，带异步扩展</li>
-<li><code>alembic</code>：官方迁移工具</li>
-<li><code>asyncpg</code>：PostgreSQL 的异步驱动（推荐生产用；本地测试可用 <code>aiosqlite</code>）</li>
-<li><code>pydantic</code>：用于数据校验（FastAPI 已自带）</li>
-</ul>
-<p>本地快速测试用 SQLite：</p>
-<pre><code class="language-bash">pip install aiosqlite
-</code></pre>
-<hr>
-<h2 id="实战代码"><a href="#实战代码" class="headerlink" title="实战代码"></a>实战代码</h2><h3 id="第一步：定义数据模型"><a href="#第一步：定义数据模型" class="headerlink" title="第一步：定义数据模型"></a>第一步：定义数据模型</h3><p>我们先定义三张表，同时展示一对多和多对多关系。</p>
-<pre><code class="language-python"># app/models.py
-from datetime import datetime
-from typing import List, Optional
-
-from sqlalchemy import ForeignKey, Table, Column, String, Text, DateTime
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-
-
-class Base(DeclarativeBase):
-    pass
-
-
-# 多对多关联表
-article_tag = Table(
-    &quot;article_tag&quot;,
-    Base.metadata,
-    Column(&quot;article_id&quot;, ForeignKey(&quot;articles.id&quot;), primary_key=True),
-    Column(&quot;tag_id&quot;, ForeignKey(&quot;tags.id&quot;), primary_key=True),
-)
-
-
-class User(Base):
-    __tablename__ = &quot;users&quot;
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(50), unique=True, index=True)
-    email: Mapped[str] = mapped_column(String(120), unique=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-
-    # 一对多：一个用户有多篇文章
-    articles: Mapped[List[&quot;Article&quot;]] = relationship(
-        back_populates=&quot;author&quot;, cascade=&quot;all, delete-orphan&quot;
-    )
-
-
-class Article(Base):
-    __tablename__ = &quot;articles&quot;
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    title: Mapped[str] = mapped_column(String(200))
-    content: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    author_id: Mapped[int] = mapped_column(ForeignKey(&quot;users.id&quot;))
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-
-    # 一对多反向引用
-    author: Mapped[&quot;User&quot;] = relationship(back_populates=&quot;articles&quot;)
-
-    # 多对多：一篇文章多个标签
-    tags: Mapped[List[&quot;Tag&quot;]] = relationship(
-        secondary=article_tag, back_populates=&quot;articles&quot;
-    )
-
-
-class Tag(Base):
-    __tablename__ = &quot;tags&quot;
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(50), unique=True, index=True)
-
-    # 多对多反向引用
-    articles: Mapped[List[&quot;Article&quot;]] = relationship(
-        secondary=article_tag, back_populates=&quot;tags&quot;
-    )
-</code></pre>
-<p>几个值得注意的点：</p>
-<ul>
-<li><code>Mapped[T]</code> 是 2.0 的类型注解写法，IDE 能自动补全，也能在 <code>mypy</code> 类型检查时报错。</li>
-<li><code>mapped_column()</code> 替代了旧版的 <code>Column()</code>。</li>
-<li><code>relationship(back_populates=...)</code> 替代了 <code>backref</code>，双向关系需要两边都写，虽然啰嗦但更明确。</li>
-<li><code>cascade=&quot;all, delete-orphan&quot;</code> 表示删除用户时，他的文章也会被级联删除——<strong>谨慎使用</strong>，业务上可能不允许。</li>
-</ul>
-<h3 id="第二步：配置异步-Session"><a href="#第二步：配置异步-Session" class="headerlink" title="第二步：配置异步 Session"></a>第二步：配置异步 Session</h3><p>SQLAlchemy 2.0 原生支持异步，关键在于 <code>create_async_engine</code> + <code>async_sessionmaker</code>。</p>
-<pre><code class="language-python"># app/db.py
-import os
-from contextlib import asynccontextmanager
-
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-
-DATABASE_URL = os.getenv(&quot;DATABASE_URL&quot;, &quot;sqlite+aiosqlite:///./blog.db&quot;)
-
-engine = create_async_engine(DATABASE_URL, echo=False)
-AsyncSessionLocal = async_sessionmaker(
-    engine, class_=AsyncSession, expire_on_commit=False
-)
-
-
-async def get_db() -&gt; AsyncSession:
-    &quot;&quot;&quot;FastAPI Depends 用的 Session 生成器。&quot;&quot;&quot;
-    async with AsyncSessionLocal() as session:
-        try:
-            yield session
-        finally:
-            await session.close()
-
-
-@asynccontextmanager
-async def get_db_context():
-    &quot;&quot;&quot;上下文管理器版本，适合脚本和测试。&quot;&quot;&quot;
-    async with AsyncSessionLocal() as session:
-        yield session
-</code></pre>
-<p><code>expire_on_commit=False</code> 很重要：默认情况下 <code>commit()</code> 后对象会被”过期”，下次访问会触发懒加载。异步环境下懒加载会报错（因为对象绑定的是已关闭的 Session），关闭过期机制可以避免这个问题。</p>
-<h3 id="第三步：CRUD-操作"><a href="#第三步：CRUD-操作" class="headerlink" title="第三步：CRUD 操作"></a>第三步：CRUD 操作</h3><p>下面展示最常用的增删改查，以及关联查询。</p>
-<pre><code class="language-python"># app/crud.py
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
-
-from app.db import get_db_context
-from app.models import User, Article, Tag
-
-
-async def create_user(username: str, email: str) -&gt; User:
-    async with get_db_context() as db:
-        user = User(username=username, email=email)
-        db.add(user)
-        await db.commit()
-        await db.refresh(user)  # 获取自增 ID
-        return user
-
-
-async def get_user_with_articles(user_id: int) -&gt; User | None:
-    async with get_db_context() as db:
-        result = await db.execute(
-            select(User)
-            .where(User.id == user_id)
-            .options(selectinload(User.articles))
-        )
-        return result.scalar_one_or_none()
-
-
-async def create_article(title: str, content: str, author_id: int, tag_names: list[str]) -&gt; Article:
-    async with get_db_context() as db:
-        # 查找或创建标签
-        tags = []
-        for name in tag_names:
-            result = await db.execute(select(Tag).where(Tag.name == name))
-            tag = result.scalar_one_or_none()
-            if tag is None:
-                tag = Tag(name=name)
-                db.add(tag)
-            tags.append(tag)
-
-        article = Article(
-            title=title,
-            content=content,
-            author_id=author_id,
-            tags=tags,
-        )
-        db.add(article)
-        await db.commit()
-        await db.refresh(article)
-        return article
-
-
-async def list_articles(skip: int = 0, limit: int = 10) -&gt; list[Article]:
-    async with get_db_context() as db:
-        result = await db.execute(
-            select(Article)
-            .offset(skip)
-            .limit(limit)
-            .order_by(Article.created_at.desc())
-        )
-        return result.scalars().all()
-</code></pre>
-<p><strong>关联查询</strong>需要特别注意：如果你 <code>select(User)</code> 后直接访问 <code>user.articles</code>，异步环境下会抛 <code>MissingGreenlet</code> 错误。解决办法是在查询时用 <code>options(selectinload(User.articles))</code> 预加载关联数据。</p>
-<h3 id="第四步：在-FastAPI-中集成"><a href="#第四步：在-FastAPI-中集成" class="headerlink" title="第四步：在 FastAPI 中集成"></a>第四步：在 FastAPI 中集成</h3><pre><code class="language-python"># main.py
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.db import get_db
-from app.crud import create_user, get_user_with_articles
-from app.schemas import UserCreate, UserResponse
-
-app = FastAPI()
-
-
-@app.post(&quot;/users&quot;, response_model=UserResponse, status_code=201)
-async def register_user(payload: UserCreate, db: AsyncSession = Depends(get_db)):
-    &quot;&quot;&quot;注册新用户。&quot;&quot;&quot;
-    user = await create_user(payload.username, payload.email)
-    return user
-
-
-@app.get(&quot;/users/{user_id}&quot;, response_model=UserResponse)
-async def read_user(user_id: int, db: AsyncSession = Depends(get_db)):
-    &quot;&quot;&quot;获取用户信息及文章列表。&quot;&quot;&quot;
-    user = await get_user_with_articles(user_id)
-    if user is None:
-        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
-    return user
-</code></pre>
-<p>注意 <code>create_user</code> 内部用了 <code>get_db_context()</code>（自己开 Session），而接口层用 <code>Depends(get_db)</code>（FastAPI 注入 Session）。两者不要混用——否则会出现”Session 嵌套”的诡异问题。</p>
-<h3 id="第五步：Alembic-迁移"><a href="#第五步：Alembic-迁移" class="headerlink" title="第五步：Alembic 迁移"></a>第五步：Alembic 迁移</h3><p>初始化 Alembic：</p>
-<pre><code class="language-bash">alembic init alembic
-</code></pre>
-<p>这会生成 <code>alembic/</code> 目录和 <code>alembic.ini</code>。接下来修改两个关键文件。</p>
-<p><strong>修改 <code>alembic/env.py</code></strong>，让它知道你的异步引擎：</p>
-<pre><code class="language-python"># alembic/env.py
-import asyncio
-from sqlalchemy.ext.asyncio import create_async_engine
-
-from app.models import Base  # 导入你的模型基类
-from app.db import DATABASE_URL
-
-config = context.config
-config.set_main_option(&quot;sqlalchemy.url&quot;, DATABASE_URL)
-
-target_metadata = Base.metadata
-
-
-def run_migrations_offline():
-    url = config.get_main_option(&quot;sqlalchemy.url&quot;)
-    context.configure(
-        url=url,
-        target_metadata=target_metadata,
-        literal_binds=True,
-        dialect_opts={&quot;paramstyle&quot;: &quot;named&quot;},
-    )
-    with context.begin_transaction():
-        context.run_migrations()
-
-
-async def run_migrations_online():
-    connectable = create_async_engine(DATABASE_URL)
-    async with connectable.connect() as connection:
-        await connection.run_sync(do_run_migrations)
-    await connectable.dispose()
-
-
-def do_run_migrations(connection):
-    context.configure(connection=connection, target_metadata=target_metadata)
-    with context.begin_transaction():
-        context.run_migrations()
-
-
-if context.is_offline_mode():
-    run_migrations_offline()
-else:
-    asyncio.run(run_migrations_online())
-</code></pre>
-<p><strong>生成迁移脚本</strong>：</p>
-<pre><code class="language-bash">alembic revision --autogenerate -m &quot;init_models&quot;
-</code></pre>
-<p>这条命令会对比当前数据库 schema 和 <code>Base.metadata</code>，自动生成 <code>CREATE TABLE</code> 语句。</p>
-<p><strong>执行迁移</strong>：</p>
-<pre><code class="language-bash">alembic upgrade head
-</code></pre>
-<p><strong>回滚到上一个版本</strong>：</p>
-<pre><code class="language-bash">alembic downgrade -1
-</code></pre>
-<p><strong>回滚到特定版本</strong>：</p>
-<pre><code class="language-bash">alembic downgrade 8f3a2b1c4d5e  # revision ID
-</code></pre>
-<h3 id="第六步：多环境配置"><a href="#第六步：多环境配置" class="headerlink" title="第六步：多环境配置"></a>第六步：多环境配置</h3><p>实际项目里，开发、测试、生产用的数据库地址不同。不要在 <code>env.py</code> 里硬编码，用环境变量：</p>
-<pre><code class="language-bash"># .env
-DATABASE_URL=postgresql+asyncpg://user:pass@localhost/blog_dev
-</code></pre>
-<p>在 <code>alembic.ini</code> 中，把 <code>sqlalchemy.url</code> 留空或写占位符，然后在 <code>env.py</code> 中读取环境变量：</p>
-<pre><code class="language-python">import os
-DATABASE_URL = os.getenv(&quot;DATABASE_URL&quot;, &quot;sqlite+aiosqlite:///./blog.db&quot;)
-config.set_main_option(&quot;sqlalchemy.url&quot;, DATABASE_URL)
-</code></pre>
-<p>如果你需要同时支持<strong>异步驱动</strong>（<code>asyncpg</code>）和<strong>同步驱动</strong>（<code>psycopg2</code>），可以在 <code>.env</code> 里定义两个 URL，迁移时 Alembic 需要同步引擎，运行时用异步引擎。</p>
-<h3 id="第七步：推荐的项目目录结构"><a href="#第七步：推荐的项目目录结构" class="headerlink" title="第七步：推荐的项目目录结构"></a>第七步：推荐的项目目录结构</h3><pre><code>project/
-├── alembic/                  # Alembic 迁移目录
-│   ├── env.py
-│   ├── script.py.mako
-│   └── versions/             # 迁移脚本
-├── app/
-│   ├── __init__.py
-│   ├── main.py               # FastAPI 入口
-│   ├── models.py             # SQLAlchemy 模型
-│   ├── schemas.py            # Pydantic 模型
-│   ├── crud.py               # 数据库操作封装
-│   ├── db.py                 # 引擎和 Session 工厂
-│   └── api/
-│       └── users.py          # 路由拆分
-├── .env                      # 环境变量（勿提交到 Git）
-├── alembic.ini
-├── requirements.txt
-└── pyproject.toml
-</code></pre>
-<hr>
-<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><p><strong>❌ 错误：混用 <code>query()</code> 和 <code>execute()</code>，或者旧版 <code>Column()</code> 和新版 <code>mapped_column()</code></strong></p>
-<p>有些教程写 <code>session.query(User).filter(...)</code>，但 2.0 的异步 Session 没有 <code>query()</code> 方法。你应该用 <code>session.execute(select(...))</code>。</p>
-<p>同样，<code>Column(Integer, primary_key=True)</code> 在 2.0 的 <code>Mapped</code> 类型系统下不会被类型检查器正确识别，必须用 <code>mapped_column(Integer, primary_key=True)</code>。</p>
-<p>✅ <strong>正确做法</strong>：全项目统一使用 SQLAlchemy 2.0 的 <code>select()</code> + <code>execute()</code> + <code>mapped_column()</code> + <code>Mapped[T]</code> 写法。</p>
-<hr>
-<p><strong>❌ 错误：异步环境下访问未预加载的关联属性</strong></p>
-<pre><code class="language-python"># 错误示范
-user = await db.get(User, 1)
-for article in user.articles:  # 这里会抛 MissingGreenlet！
-    print(article.title)
-</code></pre>
-<p>异步引擎不支持懒加载（lazy loading），因为关联查询需要一次新的数据库请求，但原 Session 已经关闭了。</p>
-<p>✅ <strong>正确做法</strong>：查询时显式预加载关联数据。</p>
-<pre><code class="language-python">result = await db.execute(
-    select(User).options(selectinload(User.articles))
-)
-user = result.scalar_one()
-</code></pre>
-<p>或者如果你只需要一两个关联字段，用 <code>joinedload()</code> 做 <code>JOIN</code> 查询，比 <code>selectinload()</code> 的二次查询更高效。</p>
-<hr>
-<p><strong>❌ 错误：忘记 <code>await db.commit()</code>，以为 <code>add()</code> 会自动提交</strong></p>
-<pre><code class="language-python"># 错误示范
-db.add(user)
-# 没有 commit，数据根本没写进去！
-</code></pre>
-<p>SQLAlchemy 的 <code>add()</code> 只是把对象放入 Session 的”待处理队列”，真正的 INSERT 发生在 <code>commit()</code> 时。</p>
-<p>✅ <strong>正确做法</strong>：增删改后必须 <code>await db.commit()</code>，需要自增 ID 时再加 <code>await db.refresh(obj)</code>。</p>
-<hr>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>SQLAlchemy 2.0 的 <code>Mapped</code> 类型系统和原生异步支持，让 Python ORM 终于跟上了现代类型安全编程的潮流。配合 Alembic，你可以用一套代码同时管理模型定义和 schema 迁移，团队协同时不再需要手动同步 <code>ALTER TABLE</code>。</p>
-<p>下一步可以学什么：</p>
-<ul>
-<li>学习 <strong>Pydantic v2</strong> 的 <code>model_validator</code> 和 <code>computed_field</code>，在 schemas 层做更复杂的业务校验</li>
-<li>了解 <strong>数据库连接池</strong> 调优（<code>pool_size</code>、<code>max_overflow</code>），为高并发做准备</li>
-<li>为 CRUD 层写 <strong>pytest-asyncio</strong> 测试，用 <code>aiosqlite</code> 做内存数据库测试</li>
-</ul>
-<hr>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="https://docs.sqlalchemy.org/en/20/">SQLAlchemy 2.0 官方文档</a></li>
-<li><a href="https://alembic.sqlalchemy.org/en/latest/tutorial.html">Alembic 官方教程</a></li>
-<li><a href="https://fastapi.tiangolo.com/tutorial/sql-databases/">FastAPI SQLAlchemy 官方示例</a></li>
-<li>上一篇：<a href="/2026/04/15/FastAPI-%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/">FastAPI 实战（二）：依赖注入与中间件</a></li>
-<li>下一篇：JWT 认证系统完整实现（持续更新中）</li>
-</ul>
-]]></content>
-      <categories>
-        <category>FastAPI 实战</category>
-      </categories>
-      <tags>
-        <tag>FastAPI</tag>
-        <tag>Python</tag>
-        <tag>数据库</tag>
-        <tag>SQLAlchemy</tag>
-        <tag>Alembic</tag>
       </tags>
   </entry>
   <entry>

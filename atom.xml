@@ -9,7 +9,26 @@
   <link href="https://baymax0101.github.io/atom.xml" rel="self"/>
   <rights>All rights reserved 2026, baymax0101</rights>
   <title>Hexo</title>
-  <updated>2026-04-21T02:31:05.293Z</updated>
+  <updated>2026-04-21T07:38:19.658Z</updated>
+  <entry>
+    <author>
+      <name>baymax0101</name>
+    </author>
+    <category term="AI" scheme="https://baymax0101.github.io/tags/AI/"/>
+    <category term="Spec-Driven Development" scheme="https://baymax0101.github.io/tags/Spec-Driven-Development/"/>
+    <category term="Claude Code" scheme="https://baymax0101.github.io/tags/Claude-Code/"/>
+    <category term="Cursor" scheme="https://baymax0101.github.io/tags/Cursor/"/>
+    <category term="工程实践" scheme="https://baymax0101.github.io/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/"/>
+    <id>https://baymax0101.github.io/2026/04/21/OpenSpec-%E4%B8%8E-Specify-%E5%85%A5%E9%97%A8%EF%BC%9A%E8%A7%84%E8%8C%83%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%A9-AI-%E4%B8%8D%E5%86%8D%E5%B9%BB%E8%A7%89/</id>
+    <link href="https://baymax0101.github.io/2026/04/21/OpenSpec-%E4%B8%8E-Specify-%E5%85%A5%E9%97%A8%EF%BC%9A%E8%A7%84%E8%8C%83%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%A9-AI-%E4%B8%8D%E5%86%8D%E5%B9%BB%E8%A7%89/"/>
+    <published>2026-04-21T07:34:06.000Z</published>
+    <summary>
+      <![CDATA[<blockquote>
+<p>一句话摘要：本文介绍规范驱动开发（Spec-Driven Development）的理念，对比 OpenSpec 与 Specify（GitHub Spec Kit）两款工具的差异，并给出各自的安装和使用方式，帮你让 AI 编程助手从”拍脑袋写代码]]>
+    </summary>
+    <title>OpenSpec 与 Specify 入门：规范驱动开发让 AI 不再幻觉</title>
+    <updated>2026-04-21T07:38:19.658Z</updated>
+  </entry>
   <entry>
     <author>
       <name>baymax0101</name>
@@ -17,9 +36,9 @@
     <category term="FastAPI 实战" scheme="https://baymax0101.github.io/categories/FastAPI-%E5%AE%9E%E6%88%98/"/>
     <category term="FastAPI" scheme="https://baymax0101.github.io/tags/FastAPI/"/>
     <category term="Python" scheme="https://baymax0101.github.io/tags/Python/"/>
-    <category term="数据库" scheme="https://baymax0101.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     <category term="SQLAlchemy" scheme="https://baymax0101.github.io/tags/SQLAlchemy/"/>
     <category term="Alembic" scheme="https://baymax0101.github.io/tags/Alembic/"/>
+    <category term="数据库" scheme="https://baymax0101.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     <id>https://baymax0101.github.io/2026/04/21/SQLAlchemy-2-0-Alembic%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E6%A8%A1%E4%B8%8E%E7%89%88%E6%9C%AC%E8%BF%81%E7%A7%BB/</id>
     <link href="https://baymax0101.github.io/2026/04/21/SQLAlchemy-2-0-Alembic%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E6%A8%A1%E4%B8%8E%E7%89%88%E6%9C%AC%E8%BF%81%E7%A7%BB/"/>
     <published>2026-04-21T02:25:47.000Z</published>
@@ -228,8 +247,8 @@
     </author>
     <category term="数据库" scheme="https://baymax0101.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     <category term="MySQL" scheme="https://baymax0101.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/"/>
-    <category term="MySQL" scheme="https://baymax0101.github.io/tags/MySQL/"/>
     <category term="数据库" scheme="https://baymax0101.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <category term="MySQL" scheme="https://baymax0101.github.io/tags/MySQL/"/>
     <category term="SQL" scheme="https://baymax0101.github.io/tags/SQL/"/>
     <category term="速查表" scheme="https://baymax0101.github.io/tags/%E9%80%9F%E6%9F%A5%E8%A1%A8/"/>
     <id>https://baymax0101.github.io/2026/03/25/Y%E5%88%86%E9%92%9F%E9%80%9F%E6%88%90MYSQL/</id>
