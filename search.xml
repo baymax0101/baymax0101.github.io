@@ -1,6 +1,363 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>AI 核心概念串讲：从 Token 到 Agent，一篇文章讲清大模型生态</title>
+    <url>/2026/04/21/AI-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%B2%E8%AE%B2/</url>
+    <content><![CDATA[<blockquote>
+<p>一句话摘要：用 9 个核心概念和大量生活类比，帮你从零构建对现代 AI 系统的完整认知框架，不再被 Token、Prompt、Agent 等术语绕晕。</p>
+</blockquote>
+<h2 id="背景与问题"><a href="#背景与问题" class="headerlink" title="背景与问题"></a>背景与问题</h2><p>过去一年，AI 领域的概念像雨后春笋一样往外冒。你刚搞懂什么叫 ChatGPT，市场上又出了 Claude、Gemini；你刚学会写 Prompt，工程师们又在讨论 Tool Calling、RAG、Agent。更别说 MCP、Harness、多模态这些看起来很高大上的词。</p>
+<p>更头疼的是，很多教程要么太浅（只告诉你”Prompt 就是给 AI 的指令”），要么太深（一上来就给你讲 Transformer 的注意力矩阵）。你读完之后，每个词都认识，但它们之间是什么关系？数据是怎么流动的？为什么要有这么多层抽象？——依然是一团浆糊。</p>
+<p>本文要做的，就是帮你把这团浆糊梳理成一张<strong>清晰的地图</strong>。我们不讲数学公式，不贴代码，只用生活化的类比和系统化的逻辑，带你从最底层的信息单位开始，一步步走到最上层的智能系统。读完之后，你会明白：这些概念不是孤立存在的，它们像积木一样，一块块拼出了今天你能用到的各种 AI 产品。</p>
+<hr>
+<h2 id="核心概念全景图"><a href="#核心概念全景图" class="headerlink" title="核心概念全景图"></a>核心概念全景图</h2><p>在深入每个概念之前，先给你一张”地图”，让你知道我们要去哪里：</p>
+<pre><code>Layer 5 (质量保障)  →  Harness（测试框架）
+                        ↑
+Layer 4 (系统整合)  →  Agent（智能体）+ Skills（技能）
+                        ↑
+Layer 3 (能力扩展)  →  Tool（工具调用）+ MCP（协议标准）
+                        ↑
+Layer 2 (交互控制)  →  Prompt（提示词）+ Context（上下文）
+                        ↑
+Layer 1 (信息地基)  →  LLM（大模型）+ Token（信息原子）
+</code></pre>
+<p>这五层从下到上，正好对应了 AI 系统从”能思考”到”能做事”再到”做得可靠”的完整进化路径。接下来我们逐层拆解。</p>
+<hr>
+<h2 id="第一层：地基——信息是如何被-AI-理解的"><a href="#第一层：地基——信息是如何被-AI-理解的" class="headerlink" title="第一层：地基——信息是如何被 AI 理解的"></a>第一层：地基——信息是如何被 AI 理解的</h2><h3 id="1-LLM（大语言模型）：一个读过全人类图书馆的”猜词高手”"><a href="#1-LLM（大语言模型）：一个读过全人类图书馆的”猜词高手”" class="headerlink" title="1. LLM（大语言模型）：一个读过全人类图书馆的”猜词高手”"></a>1. LLM（大语言模型）：一个读过全人类图书馆的”猜词高手”</h3><p><strong>LLM（Large Language Model）</strong> 是整个 AI 大厦的地基。但很多人对它有一个误解：以为它”理解”了语言，像人一样思考。其实不是。</p>
+<p>更准确的说法是：<strong>LLM 是一个超级厉害的”猜词高手”</strong>。它通过阅读万亿级别的文本（相当于读完了全人类图书馆的好几轮），记住了词语之间的统计规律。当你给它一个句子开头，它做的唯一一件事就是——<strong>猜下一个词出现概率最大的是哪个</strong>。</p>
+<p>这个过程有点像你玩”成语接龙”或者”歌词接龙”：听到”天青色等烟雨”，你脱口而出”而我在等你”，不是因为你真的在等谁，而是因为你听过太多次这首歌，大脑里的统计规律告诉你，下一个词大概率是这个。</p>
+<p>LLM 做的就是这件事，只不过它的”大脑”有上千亿个参数，读过的书比你多几亿倍，所以猜得极其准确，准确到看起来像是”思考”。</p>
+<p><strong>三个关键特性你需要知道：</strong></p>
+<ul>
+<li><p><strong>涌现（Emergence）</strong>：当模型参数突破某个阈值（比如 600 亿左右），它会突然展现出训练时没专门教过的能力——比如数学推理、写代码、做翻译。这就像是水分子多了会形成波浪，单个水分子没有”波浪”这个属性，但足够多的水分子聚在一起就有了。涌现是今天 LLM 如此强大的核心原因。</p>
+</li>
+<li><p><strong>非确定性</strong>：同样的输入，LLM 每次输出可能略有不同。这是因为它在”猜词”时会加入一点随机性——就像你有时候也会犹豫”这个词好还是那个词好”。这个特性让 AI 有创造力，但也意味着它可能”胡说八道”。</p>
+</li>
+<li><p><strong>知识截止</strong>：LLM 的训练数据有截止日期（比如 GPT-4 的知识截止到 2024 年初）。它不知道今天的新闻，不知道你公司内部的文档，甚至不知道昨天发生了什么事。这个缺陷很重要，因为它直接催生了后面要讲到的 Tool 和 RAG 技术。</p>
+</li>
+</ul>
+<h3 id="2-Token：AI-世界里的”信息原子”"><a href="#2-Token：AI-世界里的”信息原子”" class="headerlink" title="2. Token：AI 世界里的”信息原子”"></a>2. Token：AI 世界里的”信息原子”</h3><p>如果你以为 AI 像人类一样一个字一个字地阅读，那就大错特错了。在 LLM 眼中，文字不是”字”，而是 <strong>Token</strong>。</p>
+<p><strong>Token 是什么？</strong> 你可以把它理解为 AI 处理信息的最小单位。它不一定等于一个字或一个单词，而是模型在训练时自己”发明”的一种文本切分方式。</p>
+<p>举个例子：</p>
+<ul>
+<li>英文中，<code>unbelievable</code> 可能被切成 <code>un</code> + <code>believ</code> + <code>able</code> 三个 Token</li>
+<li>中文中，”人工智能”可能被切成”人工”+”智能”两个 Token，也可能是一个 Token</li>
+<li>一个标点符号、一个空格，都可能单独是一个 Token</li>
+</ul>
+<p><strong>为什么 Token 很重要？</strong></p>
+<p>第一，<strong>它决定了 AI 的”视野”</strong>。模型一次能处理的 Token 数量是有限的（比如 4K、32K、128K），这叫”上下文窗口”。如果你的文档太长，超过了这个窗口，AI 就会”看不见”前面的内容——就像你背一篇太长的课文，背到后面忘了前面。</p>
+<p>第二，<strong>它是计费的单位</strong>。你调用 OpenAI API 时，账单上写的不是”多少个字”，而是”多少 Token”。一般来说，1 个汉字 ≈ 1<del>1.5 个 Token，1 个英文单词 ≈ 1</del>2 个 Token。所以你写中文 Prompt 可能比英文更”划算”一点。</p>
+<p>第三，<strong>它影响了模型对语言的理解</strong>。因为 Token 的切分方式是在训练中自动学习的，不同语言、不同领域的 Token 效率不一样。这也是为什么同样的模型，处理中文和英文的效果可能有差异。</p>
+<hr>
+<h2 id="第二层：交互——如何与这个”猜词高手”对话"><a href="#第二层：交互——如何与这个”猜词高手”对话" class="headerlink" title="第二层：交互——如何与这个”猜词高手”对话"></a>第二层：交互——如何与这个”猜词高手”对话</h2><p>有了地基，接下来我们要解决一个问题：怎么让 LLM 按照我们的意愿输出？这就涉及到两个核心概念：Context 和 Prompt。</p>
+<h3 id="3-Context（上下文）：AI-的”临时记忆”"><a href="#3-Context（上下文）：AI-的”临时记忆”" class="headerlink" title="3. Context（上下文）：AI 的”临时记忆”"></a>3. Context（上下文）：AI 的”临时记忆”</h3><p><strong>Context</strong> 指的是模型在生成当前回复时，能够”看到”的所有信息。它包括：</p>
+<ul>
+<li>你之前说的所有话</li>
+<li>它自己之前回复的所有话</li>
+<li>你上传的文件内容</li>
+<li>系统预设的指令（比如”你是一个乐于助人的助手”）</li>
+</ul>
+<p>你可以把 Context 理解为 AI 的<strong>临时工作记忆</strong>。它在回答你这个问题的时候，会把所有这些信息摊在桌面上参考。但一旦开启新对话，这张桌子就被清空了，它什么都不记得——这就是为什么你新开一个聊天窗口，AI 会”失忆”。</p>
+<p><strong>上下文窗口（Context Window）</strong> 是 Context 的物理上限。如果一个模型的窗口是 128K Token，而你们的对话加起来超过了这个长度，模型就会开始”遗忘”最早的内容。不是删除，而是它在生成每个词时，注意力会更多地放在最近的 Token 上，远处的 Token 影响越来越小。</p>
+<p>这里有一个很巧妙的机制叫<strong>注意力机制（Attention）</strong>。你可以想象成：当你读一封很长的邮件，你不会对每个字都给予同样的关注——你会重点看人名、日期、关键结论。AI 也是如此，它在处理 Context 时，会给不同的 Token 分配不同的”关注度权重”，从而聚焦于当前最相关的信息。</p>
+<p><strong>一个实用的技巧</strong>：如果你要让 AI 处理长文档，最好把最重要的指令放在<strong>开头和结尾</strong>。因为中间的内容最容易被”注意力”忽略——这就像是老师批改作文，开头和结尾印象最深刻。</p>
+<h3 id="4-Prompt（提示词）：操控”猜词高手”的遥控器"><a href="#4-Prompt（提示词）：操控”猜词高手”的遥控器" class="headerlink" title="4. Prompt（提示词）：操控”猜词高手”的遥控器"></a>4. Prompt（提示词）：操控”猜词高手”的遥控器</h3><p>如果说 LLM 是一个猜词高手，那 <strong>Prompt</strong> 就是你给它的”题目描述”。同样的猜词能力，题目描述得好，它就能写出莎士比亚级别的散文；描述得不好，它就可能胡言乱语。</p>
+<p>Prompt 的本质，是在<strong>配置模型的生成状态</strong>。你可以把它理解为一种”软性编程”——不用写代码，而是用自然语言来设定规则、提供背景、指定格式。</p>
+<p><strong>好的 Prompt 通常包含这几个部分：</strong></p>
+<ol>
+<li><strong>角色设定</strong>：”你是一位资深 Python 后端工程师”——这会让模型激活与 Python、后端相关的知识区域。</li>
+<li><strong>任务描述</strong>：清晰地说出你要它做什么。</li>
+<li><strong>输入数据</strong>：提供需要处理的内容。</li>
+<li><strong>输出格式</strong>：告诉它你希望以什么形式输出（JSON、Markdown、表格、代码块等）。</li>
+<li><strong>约束条件</strong>：”不要超过 200 字”、”不要使用专业术语”等。</li>
+</ol>
+<p><strong>思维链（Chain of Thought, CoT）</strong> 是 Prompt 工程中最重要技巧之一。它的核心思想很简单：在 Prompt 里加上一句”请一步步思考”或者”请展示你的推理过程”。</p>
+<p>为什么这很有效？还记得吗，LLM 是一个”猜词高手”。当你要求它”一步步思考”时，它会把中间的推理步骤也生成出来，写在 Context 里。这些中间步骤就像”路标”，引导着后续的生成走向正确的方向。实验证明，这个简单的技巧能让数学题的准确率提升 30% 以上。</p>
+<p><strong>一个常见的误区</strong>：很多人觉得 Prompt 写得越长越详细越好。其实不是。过于冗长的 Prompt 会挤占 Context 空间，而且模型容易”抓不住重点”。好的 Prompt 是<strong>精确、结构化、有层次</strong>的，而不是堆砌关键词。</p>
+<hr>
+<h2 id="第三层：赋能——让-AI-从”空谈”到”实干”"><a href="#第三层：赋能——让-AI-从”空谈”到”实干”" class="headerlink" title="第三层：赋能——让 AI 从”空谈”到”实干”"></a>第三层：赋能——让 AI 从”空谈”到”实干”</h2><p>LLM 有两个致命的先天缺陷：<strong>知识滞后</strong>（不知道训练之后发生的事）和<strong>计算不可靠</strong>（数学题可能算错）。Tool（工具调用）就是为了弥补这两个缺陷而生的。</p>
+<h3 id="5-Tool（工具调用）：给-AI-装上”手脚”"><a href="#5-Tool（工具调用）：给-AI-装上”手脚”" class="headerlink" title="5. Tool（工具调用）：给 AI 装上”手脚”"></a>5. Tool（工具调用）：给 AI 装上”手脚”</h3><p><strong>Tool</strong> 允许 LLM 在需要时，调用外部程序来完成任务。</p>
+<p>想象这样一个场景：你问 AI”今天北京天气怎么样”。LLM 本身不知道今天天气——它的知识有截止日期。但如果我们给它配备一个”查询天气”的工具，事情就不一样了：</p>
+<ol>
+<li>你问：”今天北京天气怎么样？”</li>
+<li>LLM 分析后意识到：我需要实时天气数据，但我不知道。</li>
+<li>LLM 生成一个<strong>工具调用请求</strong>：”请调用 weather_query 工具，参数 city&#x3D;北京”。</li>
+<li>程序执行这个工具，拿到天气数据：”晴，25°C”。</li>
+<li>数据被塞回 Context，LLM 基于这个真实数据生成回答：”今天北京天气晴朗，气温 25 度，适合出门。”</li>
+</ol>
+<p>这个流程的精妙之处在于：<strong>LLM 只负责”决定要不要调用工具”和”理解调用结果”，实际的计算和数据获取由外部程序完成</strong>。这就好比一个 CEO 不需要自己会写代码，但他要知道什么时候该叫程序员来帮忙。</p>
+<p>常见的 Tool 类型包括：</p>
+<ul>
+<li><strong>搜索工具</strong>：让 AI 能查最新资讯（弥补知识滞后）</li>
+<li><strong>计算工具</strong>：让 AI 调用 Python&#x2F;JavaScript 执行精确计算（弥补计算不可靠）</li>
+<li><strong>数据库查询</strong>：让 AI 能查企业内部数据</li>
+<li><strong>API 调用</strong>：让 AI 能操作第三方服务（发邮件、订机票、创建日程）</li>
+</ul>
+<p>Tool 的出现，是 AI 从”聊天玩具”走向”生产工具”的关键分水岭。</p>
+<h3 id="6-MCP（模型上下文协议）：AI-世界的”USB-接口”"><a href="#6-MCP（模型上下文协议）：AI-世界的”USB-接口”" class="headerlink" title="6. MCP（模型上下文协议）：AI 世界的”USB 接口”"></a>6. MCP（模型上下文协议）：AI 世界的”USB 接口”</h3><p>Tool 很强大，但很快就出现了一个问题：<strong>每家厂商的工具接口都不一样</strong>。</p>
+<p>OpenAI 有自己的 Function Calling 格式，Anthropic 有另一种格式，Google 又是一种。如果你想让 AI 连接你的 GitHub、Slack、Notion，每个平台你都要写一套适配代码。这就像十年前，每个手机品牌都有自己的充电接口，出差得带一堆充电器。</p>
+<p><strong>MCP（Model Context Protocol，模型上下文协议）</strong> 就是来解决这个问题的。它是由 Anthropic 发起的一个开放标准，相当于 AI 界的 <strong>USB-C 接口</strong>。</p>
+<p>MCP 的核心思想是：<strong>只要你的数据源或工具遵循 MCP 协议，任何支持 MCP 的 AI 客户端都能直接连接，无需额外适配</strong>。</p>
+<p>打个比方：</p>
+<ul>
+<li>以前：你想让 AI 读你的 GitHub 仓库 → 写 GitHub API 适配代码 → 写 OpenAI Function 格式 → 调试</li>
+<li>现在：GitHub 提供一个 MCP Server → 你的 AI 客户端直接连接 → 开箱即用</li>
+</ul>
+<p>MCP 标准化了三个核心能力：</p>
+<ol>
+<li><strong>Resources（资源）</strong>：AI 能读取的数据（文件、数据库记录、API 响应）</li>
+<li><strong>Tools（工具）</strong>：AI 能调用的功能（发送消息、创建文件、执行命令）</li>
+<li><strong>Prompts（提示模板）</strong>：预定义的 Prompt 模板，方便复用</li>
+</ol>
+<p>MCP 的出现意味着 AI 工具生态正在从”野蛮生长”走向”标准化”。对开发者来说，这意味着接入成本大幅降低；对用户来说，这意味着 AI 能做的事会爆发式增长。</p>
+<hr>
+<h2 id="第四层：系统——从”回答问题”到”完成任务”"><a href="#第四层：系统——从”回答问题”到”完成任务”" class="headerlink" title="第四层：系统——从”回答问题”到”完成任务”"></a>第四层：系统——从”回答问题”到”完成任务”</h2><p>当 LLM 配上 Tool，再套上一个”思考-行动-观察”的循环，它就进化成了 <strong>Agent</strong>。</p>
+<h3 id="7-Agent（智能体）：一个能自主干活的”数字员工”"><a href="#7-Agent（智能体）：一个能自主干活的”数字员工”" class="headerlink" title="7. Agent（智能体）：一个能自主干活的”数字员工”"></a>7. Agent（智能体）：一个能自主干活的”数字员工”</h3><p><strong>Agent</strong> 是 2024 年以来 AI 领域最火的概念之一。但很多人对它的理解有偏差：Agent 不是某种新技术，而是一种<strong>新的系统架构</strong>——让 LLM 在一个循环中自主决策、调用工具、观察结果、调整策略。</p>
+<p>传统的 AI 交互是”一问一答”：你问一个问题，它答一次，对话结束。</p>
+<p>Agent 的交互是”目标驱动”：你给它一个模糊的目标，它会自己拆解成多个步骤，一步步执行，直到完成。</p>
+<p>举个例子。你说：”帮我调研一下近三年内新能源汽车行业的发展趋势，写一份简要报告。”</p>
+<p>一个 Agent 的处理流程可能是这样的：</p>
+<pre><code>Step 1: 规划 → 拆解目标：需要查政策、查销量数据、查技术趋势、查主要玩家
+Step 2: 行动 → 调用搜索工具，查&quot;2023-2025 新能源汽车政策&quot;
+Step 3: 观察 → 阅读搜索结果，提取关键信息
+Step 4: 思考 → &quot;政策部分有了，还需要销量数据&quot;
+Step 5: 行动 → 调用搜索工具，查&quot;2023-2025 新能源汽车销量统计&quot;
+Step 6: 观察 → 整理销量趋势
+Step 7: 思考 → &quot;还需要看看技术方向，比如固态电池、自动驾驶&quot;
+Step 8: 行动 → 调用搜索工具...
+...（循环继续）
+Step N: 整合 → 把所有信息组织成报告格式，输出给用户
+</code></pre>
+<p>注意这个过程中的关键点：<strong>LLM 不仅是在生成文本，它还在做决策</strong>——决定下一步该搜索什么、什么时候信息够了可以写报告、报告的结构怎么安排。</p>
+<p><strong>自反思（Self-reflection）</strong> 是高级 Agent 的重要能力。如果某个工具调用失败了（比如搜索引擎返回了错误结果），Agent 会意识到这一点，然后尝试修正策略——换关键词重新搜索，或者换一个工具。这就像是一个有工作经验的员工，遇到问题不会傻等，而是自己想办法解决。</p>
+<p>当然，今天的 Agent 还远没有达到”完全自主”的程度。它们经常会在循环里”迷路”——反复调用同一个工具、陷入死循环、或者产生不切实际的计划。这也是为什么 Agent 目前更适合做<strong>有明确边界、可验证步骤</strong>的任务，而不是完全开放的”你看着办”。</p>
+<h3 id="8-Agent-Skills（技能）：让”数字员工”专业化"><a href="#8-Agent-Skills（技能）：让”数字员工”专业化" class="headerlink" title="8. Agent Skills（技能）：让”数字员工”专业化"></a>8. Agent Skills（技能）：让”数字员工”专业化</h3><p>一个通用的 Agent 什么都能做一点，但什么都不精。如果要让它在特定领域表现更好，就需要给它配置 <strong>Skills（技能）</strong>。</p>
+<p><strong>Skill 本质上是一套预定义的”工具 + Prompt 模板 + 执行流程”的组合</strong>。你可以把它理解为岗位培训手册：一个财务分析师需要掌握的技能（读报表、算指标、写分析），和一个前端工程师需要的技能（读代码、调样式、写组件）完全不同。</p>
+<p>举个例子：</p>
+<ul>
+<li><strong>“数据分析 Skill”</strong>：包含读取 CSV 的工具、数据清洗的 Prompt 模板、常用统计方法的调用流程</li>
+<li><strong>“代码审查 Skill”</strong>：包含静态分析工具、代码风格检查规则、常见 Bug 模式的识别 Prompt</li>
+<li><strong>“客户服务 Skill”</strong>：包含查询订单状态的工具、退换货政策知识库、安抚客户情绪的话术模板</li>
+</ul>
+<p>通过给 Agent 配置不同的 Skills，我们可以快速”培养”出针对不同场景的专业化智能体，而不需要重新训练底层模型。这大大降低了定制 AI 系统的成本和门槛。</p>
+<hr>
+<h2 id="第五层：质量——如何让-AI-系统靠谱地运行"><a href="#第五层：质量——如何让-AI-系统靠谱地运行" class="headerlink" title="第五层：质量——如何让 AI 系统靠谱地运行"></a>第五层：质量——如何让 AI 系统靠谱地运行</h2><p>好了，现在你有了一套能思考、能调用工具、能自主执行的 AI 系统。但还有一个大问题：<strong>它靠谱吗？</strong></p>
+<p>别忘了 LLM 的核心特性——<strong>非确定性</strong>。它可能这次答对了，下次就错了；可能给 A 用户一个答案，给 B 用户另一个答案。在生产环境中，这种不确定性是致命的。</p>
+<h3 id="9-Harness（测试框架）：AI-系统的”质检部”"><a href="#9-Harness（测试框架）：AI-系统的”质检部”" class="headerlink" title="9. Harness（测试框架）：AI 系统的”质检部”"></a>9. Harness（测试框架）：AI 系统的”质检部”</h3><p><strong>Harness</strong> 指的是对 AI 系统进行评估、测试和监控的一整套机制。它是确保 AI 从”实验室玩具”变成”工业级产品”的关键。</p>
+<p>Harness 包含三个层面的工作：</p>
+<p><strong>1. 基准测试（Benchmark）</strong></p>
+<p>就像学生要考试一样，AI 也要考试。Benchmark 就是 AI 界的”标准化考试”。常见的 Benchmark 包括：</p>
+<ul>
+<li><strong>MMLU</strong>：测试模型在各个学科的知识掌握程度</li>
+<li><strong>HumanEval</strong>：测试模型写代码的能力</li>
+<li><strong>GSM8K</strong>：测试数学推理能力</li>
+<li><strong>自定义 Benchmark</strong>：针对你的业务场景设计的测试集（比如”客服场景下 100 个常见问题的回答质量”）</li>
+</ul>
+<p>Benchmark 的意义在于<strong>量化</strong>。它让你能客观地说”这个模型在这个任务上得分 85，那个模型得分 72”，而不是凭感觉说”好像这个更好”。</p>
+<p><strong>2. 生产环境监控</strong></p>
+<p>Benchmark 是在”考试环境”中测的，但真实世界更复杂。生产环境的 Harness 负责持续监控 AI 的实际表现：</p>
+<ul>
+<li>回复是否符合预期的格式？（比如要求输出 JSON，它真的输出合法 JSON 了吗？）</li>
+<li>回复是否包含有害内容？（涉黄、涉暴、歧视性言论）</li>
+<li>工具调用是否正确？（有没有该调用的时候没调用，或者调用了错误的参数？）</li>
+<li>延迟是否在可接受范围内？</li>
+</ul>
+<p><strong>3. 对齐与纠偏</strong></p>
+<p>当 Harness 发现问题后，需要有一套机制来”纠偏”。这可能包括：</p>
+<ul>
+<li>优化 Prompt，让模型更稳定地输出正确格式</li>
+<li>调整工具调用的参数或逻辑</li>
+<li>在关键路径上增加规则校验（比如 AI 生成的 SQL 必须先经过语法检查）</li>
+<li>收集用户反馈，形成”问题案例库”，持续迭代</li>
+</ul>
+<p>Harness 的存在提醒我们一个重要的事实：<strong>AI 系统不是”部署了就完了”，它需要像传统软件一样，持续测试、监控、迭代</strong>。而且因为 AI 的非确定性，这套质检流程甚至比传统软件更复杂、更重要。</p>
+<hr>
+<h2 id="常见误区：新手最容易踩的坑"><a href="#常见误区：新手最容易踩的坑" class="headerlink" title="常见误区：新手最容易踩的坑"></a>常见误区：新手最容易踩的坑</h2><p>在结束之前，我想澄清几个常见的误解：</p>
+<p><strong>❌ 误区一：LLM 越大数据量越好，所以我把所有资料都塞进 Prompt</strong><br>✅ <strong>正确做法</strong>：Context 有长度限制，而且”信息过载”会让模型抓不住重点。只放最相关的信息，必要时用 RAG（检索增强生成）先筛选再输入。</p>
+<p><strong>❌ 误区二：Agent 就是更聪明的 AI，有了 Agent 就不需要人了</strong><br>✅ <strong>正确做法</strong>：Agent 的”自主”是有限的。它适合有明确步骤、可验证结果的任务，但在需要创造力、伦理判断、复杂人际沟通的场合，人类依然是不可替代的。Agent 的最佳定位是”辅助”，不是”替代”。</p>
+<p><strong>❌ 误区三：Prompt 工程就是写更好的”咒语”，骗 AI 说出我想要的答案</strong><br>✅ <strong>正确做法</strong>：Prompt 工程的本质是<strong>清晰的沟通</strong>。你不是在”骗”AI，你是在帮它缩小”猜词”的范围，让它更准确地激活相关知识区域。好的 Prompt 是精确的、结构化的、可复用的。</p>
+<p><strong>❌ 误区四：MCP 是某个公司的专有技术，用了会被绑定</strong><br>✅ <strong>正确做法</strong>：MCP 是一个<strong>开放协议</strong>，由 Anthropic 发起但任何人都可以实现。它类似于 HTTP 协议——不是某个公司的产品，而是整个行业的公共基础设施。</p>
+<hr>
+<h2 id="总结：一张图看懂-AI-生态"><a href="#总结：一张图看懂-AI-生态" class="headerlink" title="总结：一张图看懂 AI 生态"></a>总结：一张图看懂 AI 生态</h2><p>让我们回到开头的那张”地图”，现在你应该能理解每一层的含义了：</p>
+<pre><code>Harness（测试框架）         ← 确保一切靠谱运行
+      ↑
+Agent + Skills（智能体+技能） ← 自主规划、执行任务
+      ↑
+Tool + MCP（工具+协议）      ← 连接外部世界，标准化接入
+      ↑
+Prompt + Context（提示+上下文）← 控制模型输出
+      ↑
+LLM + Token（模型+信息原子）  ← 提供核心推理能力
+</code></pre>
+<p>这套体系的核心逻辑是：</p>
+<ol>
+<li><strong>LLM</strong> 提供了原始的”猜词”能力，是整栋大厦的地基。</li>
+<li><strong>Token</strong> 和 <strong>Context</strong> 定义了信息处理的物理边界——AI 能”看”多远、以什么单位处理。</li>
+<li><strong>Prompt</strong> 是我们与 AI 交互的遥控器，决定了 AI 以什么状态、什么风格输出。</li>
+<li><strong>Tool</strong> 弥补了 AI 的先天缺陷，让它能查实时数据、做精确计算、操作外部系统。</li>
+<li><strong>MCP</strong> 让这一切连接变得标准化，不再是一家一个标准。</li>
+<li><strong>Agent</strong> 把所有组件编织进一个自主循环，让 AI 从”回答问题”进化到”完成任务”。</li>
+<li><strong>Skills</strong> 让 Agent 专业化，针对不同场景快速定制能力。</li>
+<li><strong>Harness</strong> 则是整套系统的安全带和质检部，确保它在生产环境中稳定、可靠、可控。</li>
+</ol>
+<p>未来的 AI 应用，竞争的核心不在”谁的模型更大”，而在<strong>谁能用这些组件搭出最稳定、最高效、最可靠的智能系统</strong>。理解这九个概念，你就已经站在了正确的起跑线上。</p>
+<p><strong>下一步可以学什么？</strong></p>
+<ul>
+<li>如果你想动手实践：学习 <strong>Prompt Engineering</strong> 和 <strong>Function Calling</strong>，用 OpenAI&#x2F;Claude API 做一个能查天气的聊天机器人</li>
+<li>如果你想深入系统架构：了解 <strong>RAG（检索增强生成）</strong> 和 <strong>向量数据库</strong>，让 AI 能基于你的私有知识库回答问题</li>
+<li>如果你想构建复杂应用：研究 <strong>LangChain &#x2F; LlamaIndex</strong> 等 Agent 框架，学习如何编排多步骤任务</li>
+</ul>
+<hr>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://platform.openai.com/tokenizer">OpenAI Tokenizer 工具</a> — 直观体验 Token 的切分方式</li>
+<li><a href="https://modelcontextprotocol.io/">Anthropic MCP 官方文档</a> — 了解 MCP 协议的细节和生态</li>
+<li><a href="https://www.promptingguide.ai/">Prompt Engineering Guide</a> — 系统学习 Prompt 工程技巧</li>
+<li><a href="https://python.langchain.com/">LangChain 官方文档</a> — Agent 开发的主流框架</li>
+</ul>
+]]></content>
+      <categories>
+        <category>AI工程</category>
+      </categories>
+      <tags>
+        <tag>AI</tag>
+        <tag>LLM</tag>
+        <tag>Prompt</tag>
+        <tag>Agent</tag>
+        <tag>RAG</tag>
+        <tag>MCP</tag>
+        <tag>Token</tag>
+        <tag>大模型</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>FASTAPI实战（一）：路由与请求处理</title>
+    <url>/2026/04/11/FASTAPI%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7%E5%AE%9E%E6%88%98%EF%BC%9A%E8%B7%AF%E7%94%B1%E4%B8%8E%E8%AF%B7%E6%B1%82%E5%A4%84%E7%90%86/</url>
+    <content><![CDATA[<p> FastAPI 之所以能火起来，最核心的原因就两个：性能炸裂，写法简洁。但是很多新手刚入门的时候，最容易踩坑的地方就是路由和请求处理。这篇文章，我会带你从零手写一个完整的 REST API，让你彻底搞懂 FastAPI 的路由系统。</p>
+<h2 id="1-问题背景"><a href="#1-问题背景" class="headerlink" title="1. 问题背景"></a>1. 问题背景</h2><p> 先说为什么路由这个概念这么重要。</p>
+<p> 现在的 Web 服务，本质上就是一个接收请求、返回响应的过程。用户通过 URL 访问你的服务，后端服务解析这个 URL，决定由哪个函数来处理这个请求，返回什么数据。这个「谁来处理」的机制，就是路由。</p>
+<p> FastAPI 的路由系统非常强大，它支持 HTTP 方法过滤、路径参数、查询参数、请求体自动解析等等。如果这些你都不会，那基本上就告别 FastAPI 了。</p>
+<p> 在之前的 Flask 时代，路由是一个一个手写的，代码一多就乱成一团。FastAPI 用装饰器的方式，把路由和函数绑定在一起，代码结构清晰太多了。这篇文章，我会用一个完整的用户管理接口作为示例，带你把 FastAPI 的路由学透。</p>
+<h2 id="2-原理分析"><a href="#2-原理分析" class="headerlink" title="2. 原理分析"></a>2. 原理分析</h2><p> FastAPI 的路由本质上是这样的一个匹配过程：收到一个 HTTP 请求之后，FastAPI 会依次遍历你定义的所有路由装饰器，找到第一个匹配的那个装饰器，然后执行它下面的函数，返回函数的返回值。</p>
+<p> 这个过程有几个关键点需要理解。</p>
+<p> 第一个是 HTTP 方法。GET、POST、PUT、DELETE 这些方法，代表了不同的操作类型。GET 是获取数据，POST 是创建数据，PUT 是更新数据，DELETE 是删除数据。如果你收到的请求方法和你定义的不匹配，FastAPI 会直接返回 405 Method Not Allowed。</p>
+<p> 第二个是路径参数。比如 <code>/users/{user_id}</code>，这个大括号里面的 user_id 就是路径参数。FastAPI 会把这个部分提取出来，作为参数传给处理函数。如果你访问 <code>/users/123</code>，那么 user_id 就是 123。</p>
+<p> 第三个是查询参数。比如 <code>/users?page=1&amp;size=10</code>，问号后面的部分就是查询参数。FastAPI 会自动把这些参数解析成函数参数，你只需要在函数参数后面加上默认参数就可以直接使用。</p>
+<p> 第四个是请求体。POST 和 PUT 请求通常会带一个请求体，这个请求体可以是 JSON、Form 表单或者文件。FastAPI 会根据你的类型注解自动解析，省去了手写解析代码的麻烦。</p>
+<p> 这四点就是 FastAPI 路由最核心的东西，下面我们直接上代码。</p>
+<h2 id="3-代码实现"><a href="#3-代码实现" class="headerlink" title="3. 代码实现"></a>3. 代码实现</h2><p> 首先安装 FastAPI 和 uvicorn：</p>
+<pre><code class="language-bash">pip install fastapi uvicorn
+</code></pre>
+<p> 然后写代码。这里实现了一个完整的用户管理接口，包括增删改查：</p>
+<pre><code class="language-python">from fastapi import FastAPI, HTTPException, Query, Path, Body
+from pydantic import BaseModel
+from typing import Optional, List
+from datetime import datetime
+
+app = FastAPI()
+
+# 用户数据模型
+class User(BaseModel):
+    id: Optional[int] = None
+    username: str
+    email: str
+    created_at: Optional[str] = None
+
+# 模拟数据库
+users_db = {}
+user_id_counter = 0
+
+# 创建用户
+@app.post(&quot;/users&quot;, response_model=User)
+def create_user(user: User):
+    global user_id_counter
+    user_id_counter += 1
+    user.id = user_id_counter
+    user.created_at = datetime.now().isoformat()
+    users_db[user_id_counter] = user
+    return user
+
+# 获取用户列表
+@app.get(&quot;/users&quot;, response_model=List[User])
+def get_users(
+    page: int = Query(1, ge=1, description=&quot;页码&quot;),
+    size: int = Query(10, ge=1, le=100, description=&quot;每页数量&quot;)
+):
+    start = (page - 1) * size
+    end = start + size
+    return list(users_db.values())[start:end]
+
+# 获取单个用户
+@app.get(&quot;/users/{user_id}&quot;, response_model=User)
+def get_user(user_id: int = Path(..., description=&quot;用户ID&quot;)):
+    if user_id not in users_db:
+        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
+    return users_db[user_id]
+
+# 更新用户
+@app.put(&quot;/users/{user_id}&quot;, response_model=User)
+def update_user(user_id: int, user: User):
+    if user_id not in users_db:
+        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
+    user.id = user_id
+    user.created_at = users_db[user_id].created_at
+    users_db[user_id] = user
+    return user
+
+# 删除用户
+@app.delete(&quot;/users/{user_id}&quot;)
+def delete_user(user_id: int):
+    if user_id not in users_db:
+        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
+    del users_db[user_id]
+    return {&quot;message&quot;: &quot;User deleted&quot;}
+
+if __name__ == &quot;__main__&quot;:
+    import uvicorn
+    uvicorn.run(app, host=&quot;0.0.0.0&quot;, port=8000)
+</code></pre>
+<p> User 是一个 Pydantic 模型，用来校验请求体的数据。users_db 是一个字典，模拟数据库。create_user 是创建用户，get_users 是获取用户列表，get_user 是获取单个用户，update_user 是更新用户，delete_user 是删除用户。</p>
+<p> 这里面有几个关键点。Query 用来定义查询参数，Path 用来定义路径参数，Body 用来解析请求体。HTTPException 用来抛出错误，response_model 用来定义返回数据的格式。</p>
+<p> 启动服务：</p>
+<pre><code class="language-bash">python main.py
+</code></pre>
+<p> 然后用 curl 测试：</p>
+<pre><code class="language-bash"># 创建用户
+curl -X POST &quot;http://localhost:8000/users&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;username&quot;: &quot;tom&quot;, &quot;email&quot;: &quot;tom@example.com&quot;}&#39;
+
+# 获取用户列表
+curl &quot;http://localhost:8000/users?page=1&amp;size=10&quot;
+
+# 获取单个用户
+curl &quot;http://localhost:8000/users/1&quot;
+
+# 更新用户
+curl -X PUT &quot;http://localhost:8000/users/1&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;username&quot;: &quot;tom Updated&quot;, &quot;email&quot;: &quot;tom.new@example.com&quot;}&#39;
+
+# 删除用户
+curl -X DELETE &quot;http://localhost:8000/users/1&quot;
+</code></pre>
+<h2 id="4-踩坑总结"><a href="#4-踩坑总结" class="headerlink" title="4. 踩坑总结"></a>4. 踩坑总结</h2><p> 最后说几个我踩过的坑。</p>
+<p> 第一个坑是路径参数的顺序。如果你定义了 <code>/users/{user_id}</code> 和 <code>/users/me</code> 这两个路由，必须把 <code>/users/me</code> 放在前面。否则 FastAPI 会把 me 当作 user_id 处理，永远匹配不到正确的路由。</p>
+<p> 第二个坑是类型注解。如果你没有给路径参数加类型注解，FastAPI 会把它当作字符串处理。如果你需要整数，就一定要加 <code>int</code> 类型注解。</p>
+<p> 第三个坑是必填参数。路径参数和查询参数默认都是必填的，如果你想让某个参数变成可选的，需要设置默认值，或者用 <code>Optional</code> 包装。</p>
+<p> 第四个坑是请求体的必填验证。Pydantic 模型中，如果某个字段没有默认值，那么这个字段就是必填的。如果你想让某个字段变成可选的，给它加个 None 作为默认值就可以了。</p>
+<p> 掌握了这四个坑， FastAPI 路由就入门了。</p>
+]]></content>
+      <categories>
+        <category>后端开发</category>
+      </categories>
+      <tags>
+        <tag>FastAPI</tag>
+        <tag>Python</tag>
+        <tag>后端开发</tag>
+        <tag>REST</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Celery 异步任务队列：定时任务与任务状态追踪</title>
     <url>/2026/04/21/Celery-%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1%E9%98%9F%E5%88%97%EF%BC%9A%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E4%B8%8E%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E8%BF%BD%E8%B8%AA/</url>
     <content><![CDATA[<blockquote>
@@ -434,492 +791,12 @@ services:
         <category>FastAPI 实战</category>
       </categories>
       <tags>
-        <tag>Celery</tag>
         <tag>FastAPI</tag>
         <tag>Python</tag>
+        <tag>Celery</tag>
         <tag>异步任务</tag>
         <tag>Redis</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>FASTAPI实战（一）：路由与请求处理</title>
-    <url>/2026/04/11/FASTAPI%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7%E5%AE%9E%E6%88%98%EF%BC%9A%E8%B7%AF%E7%94%B1%E4%B8%8E%E8%AF%B7%E6%B1%82%E5%A4%84%E7%90%86/</url>
-    <content><![CDATA[<p> FastAPI 之所以能火起来，最核心的原因就两个：性能炸裂，写法简洁。但是很多新手刚入门的时候，最容易踩坑的地方就是路由和请求处理。这篇文章，我会带你从零手写一个完整的 REST API，让你彻底搞懂 FastAPI 的路由系统。</p>
-<h2 id="1-问题背景"><a href="#1-问题背景" class="headerlink" title="1. 问题背景"></a>1. 问题背景</h2><p> 先说为什么路由这个概念这么重要。</p>
-<p> 现在的 Web 服务，本质上就是一个接收请求、返回响应的过程。用户通过 URL 访问你的服务，后端服务解析这个 URL，决定由哪个函数来处理这个请求，返回什么数据。这个「谁来处理」的机制，就是路由。</p>
-<p> FastAPI 的路由系统非常强大，它支持 HTTP 方法过滤、路径参数、查询参数、请求体自动解析等等。如果这些你都不会，那基本上就告别 FastAPI 了。</p>
-<p> 在之前的 Flask 时代，路由是一个一个手写的，代码一多就乱成一团。FastAPI 用装饰器的方式，把路由和函数绑定在一起，代码结构清晰太多了。这篇文章，我会用一个完整的用户管理接口作为示例，带你把 FastAPI 的路由学透。</p>
-<h2 id="2-原理分析"><a href="#2-原理分析" class="headerlink" title="2. 原理分析"></a>2. 原理分析</h2><p> FastAPI 的路由本质上是这样的一个匹配过程：收到一个 HTTP 请求之后，FastAPI 会依次遍历你定义的所有路由装饰器，找到第一个匹配的那个装饰器，然后执行它下面的函数，返回函数的返回值。</p>
-<p> 这个过程有几个关键点需要理解。</p>
-<p> 第一个是 HTTP 方法。GET、POST、PUT、DELETE 这些方法，代表了不同的操作类型。GET 是获取数据，POST 是创建数据，PUT 是更新数据，DELETE 是删除数据。如果你收到的请求方法和你定义的不匹配，FastAPI 会直接返回 405 Method Not Allowed。</p>
-<p> 第二个是路径参数。比如 <code>/users/{user_id}</code>，这个大括号里面的 user_id 就是路径参数。FastAPI 会把这个部分提取出来，作为参数传给处理函数。如果你访问 <code>/users/123</code>，那么 user_id 就是 123。</p>
-<p> 第三个是查询参数。比如 <code>/users?page=1&amp;size=10</code>，问号后面的部分就是查询参数。FastAPI 会自动把这些参数解析成函数参数，你只需要在函数参数后面加上默认参数就可以直接使用。</p>
-<p> 第四个是请求体。POST 和 PUT 请求通常会带一个请求体，这个请求体可以是 JSON、Form 表单或者文件。FastAPI 会根据你的类型注解自动解析，省去了手写解析代码的麻烦。</p>
-<p> 这四点就是 FastAPI 路由最核心的东西，下面我们直接上代码。</p>
-<h2 id="3-代码实现"><a href="#3-代码实现" class="headerlink" title="3. 代码实现"></a>3. 代码实现</h2><p> 首先安装 FastAPI 和 uvicorn：</p>
-<pre><code class="language-bash">pip install fastapi uvicorn
-</code></pre>
-<p> 然后写代码。这里实现了一个完整的用户管理接口，包括增删改查：</p>
-<pre><code class="language-python">from fastapi import FastAPI, HTTPException, Query, Path, Body
-from pydantic import BaseModel
-from typing import Optional, List
-from datetime import datetime
-
-app = FastAPI()
-
-# 用户数据模型
-class User(BaseModel):
-    id: Optional[int] = None
-    username: str
-    email: str
-    created_at: Optional[str] = None
-
-# 模拟数据库
-users_db = {}
-user_id_counter = 0
-
-# 创建用户
-@app.post(&quot;/users&quot;, response_model=User)
-def create_user(user: User):
-    global user_id_counter
-    user_id_counter += 1
-    user.id = user_id_counter
-    user.created_at = datetime.now().isoformat()
-    users_db[user_id_counter] = user
-    return user
-
-# 获取用户列表
-@app.get(&quot;/users&quot;, response_model=List[User])
-def get_users(
-    page: int = Query(1, ge=1, description=&quot;页码&quot;),
-    size: int = Query(10, ge=1, le=100, description=&quot;每页数量&quot;)
-):
-    start = (page - 1) * size
-    end = start + size
-    return list(users_db.values())[start:end]
-
-# 获取单个用户
-@app.get(&quot;/users/{user_id}&quot;, response_model=User)
-def get_user(user_id: int = Path(..., description=&quot;用户ID&quot;)):
-    if user_id not in users_db:
-        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
-    return users_db[user_id]
-
-# 更新用户
-@app.put(&quot;/users/{user_id}&quot;, response_model=User)
-def update_user(user_id: int, user: User):
-    if user_id not in users_db:
-        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
-    user.id = user_id
-    user.created_at = users_db[user_id].created_at
-    users_db[user_id] = user
-    return user
-
-# 删除用户
-@app.delete(&quot;/users/{user_id}&quot;)
-def delete_user(user_id: int):
-    if user_id not in users_db:
-        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
-    del users_db[user_id]
-    return {&quot;message&quot;: &quot;User deleted&quot;}
-
-if __name__ == &quot;__main__&quot;:
-    import uvicorn
-    uvicorn.run(app, host=&quot;0.0.0.0&quot;, port=8000)
-</code></pre>
-<p> User 是一个 Pydantic 模型，用来校验请求体的数据。users_db 是一个字典，模拟数据库。create_user 是创建用户，get_users 是获取用户列表，get_user 是获取单个用户，update_user 是更新用户，delete_user 是删除用户。</p>
-<p> 这里面有几个关键点。Query 用来定义查询参数，Path 用来定义路径参数，Body 用来解析请求体。HTTPException 用来抛出错误，response_model 用来定义返回数据的格式。</p>
-<p> 启动服务：</p>
-<pre><code class="language-bash">python main.py
-</code></pre>
-<p> 然后用 curl 测试：</p>
-<pre><code class="language-bash"># 创建用户
-curl -X POST &quot;http://localhost:8000/users&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d &#39;{&quot;username&quot;: &quot;tom&quot;, &quot;email&quot;: &quot;tom@example.com&quot;}&#39;
-
-# 获取用户列表
-curl &quot;http://localhost:8000/users?page=1&amp;size=10&quot;
-
-# 获取单个用户
-curl &quot;http://localhost:8000/users/1&quot;
-
-# 更新用户
-curl -X PUT &quot;http://localhost:8000/users/1&quot; \
-  -H &quot;Content-Type: application/json&quot; \
-  -d &#39;{&quot;username&quot;: &quot;tom Updated&quot;, &quot;email&quot;: &quot;tom.new@example.com&quot;}&#39;
-
-# 删除用户
-curl -X DELETE &quot;http://localhost:8000/users/1&quot;
-</code></pre>
-<h2 id="4-踩坑总结"><a href="#4-踩坑总结" class="headerlink" title="4. 踩坑总结"></a>4. 踩坑总结</h2><p> 最后说几个我踩过的坑。</p>
-<p> 第一个坑是路径参数的顺序。如果你定义了 <code>/users/{user_id}</code> 和 <code>/users/me</code> 这两个路由，必须把 <code>/users/me</code> 放在前面。否则 FastAPI 会把 me 当作 user_id 处理，永远匹配不到正确的路由。</p>
-<p> 第二个坑是类型注解。如果你没有给路径参数加类型注解，FastAPI 会把它当作字符串处理。如果你需要整数，就一定要加 <code>int</code> 类型注解。</p>
-<p> 第三个坑是必填参数。路径参数和查询参数默认都是必填的，如果你想让某个参数变成可选的，需要设置默认值，或者用 <code>Optional</code> 包装。</p>
-<p> 第四个坑是请求体的必填验证。Pydantic 模型中，如果某个字段没有默认值，那么这个字段就是必填的。如果你想让某个字段变成可选的，给它加个 None 作为默认值就可以了。</p>
-<p> 掌握了这四个坑， FastAPI 路由就入门了。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>AI 核心概念串讲：从 Token 到 Agent，一篇文章讲清大模型生态</title>
-    <url>/2026/04/21/AI-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%B2%E8%AE%B2/</url>
-    <content><![CDATA[<blockquote>
-<p>一句话摘要：用 9 个核心概念和大量生活类比，帮你从零构建对现代 AI 系统的完整认知框架，不再被 Token、Prompt、Agent 等术语绕晕。</p>
-</blockquote>
-<h2 id="背景与问题"><a href="#背景与问题" class="headerlink" title="背景与问题"></a>背景与问题</h2><p>过去一年，AI 领域的概念像雨后春笋一样往外冒。你刚搞懂什么叫 ChatGPT，市场上又出了 Claude、Gemini；你刚学会写 Prompt，工程师们又在讨论 Tool Calling、RAG、Agent。更别说 MCP、Harness、多模态这些看起来很高大上的词。</p>
-<p>更头疼的是，很多教程要么太浅（只告诉你”Prompt 就是给 AI 的指令”），要么太深（一上来就给你讲 Transformer 的注意力矩阵）。你读完之后，每个词都认识，但它们之间是什么关系？数据是怎么流动的？为什么要有这么多层抽象？——依然是一团浆糊。</p>
-<p>本文要做的，就是帮你把这团浆糊梳理成一张<strong>清晰的地图</strong>。我们不讲数学公式，不贴代码，只用生活化的类比和系统化的逻辑，带你从最底层的信息单位开始，一步步走到最上层的智能系统。读完之后，你会明白：这些概念不是孤立存在的，它们像积木一样，一块块拼出了今天你能用到的各种 AI 产品。</p>
-<hr>
-<h2 id="核心概念全景图"><a href="#核心概念全景图" class="headerlink" title="核心概念全景图"></a>核心概念全景图</h2><p>在深入每个概念之前，先给你一张”地图”，让你知道我们要去哪里：</p>
-<pre><code>Layer 5 (质量保障)  →  Harness（测试框架）
-                        ↑
-Layer 4 (系统整合)  →  Agent（智能体）+ Skills（技能）
-                        ↑
-Layer 3 (能力扩展)  →  Tool（工具调用）+ MCP（协议标准）
-                        ↑
-Layer 2 (交互控制)  →  Prompt（提示词）+ Context（上下文）
-                        ↑
-Layer 1 (信息地基)  →  LLM（大模型）+ Token（信息原子）
-</code></pre>
-<p>这五层从下到上，正好对应了 AI 系统从”能思考”到”能做事”再到”做得可靠”的完整进化路径。接下来我们逐层拆解。</p>
-<hr>
-<h2 id="第一层：地基——信息是如何被-AI-理解的"><a href="#第一层：地基——信息是如何被-AI-理解的" class="headerlink" title="第一层：地基——信息是如何被 AI 理解的"></a>第一层：地基——信息是如何被 AI 理解的</h2><h3 id="1-LLM（大语言模型）：一个读过全人类图书馆的”猜词高手”"><a href="#1-LLM（大语言模型）：一个读过全人类图书馆的”猜词高手”" class="headerlink" title="1. LLM（大语言模型）：一个读过全人类图书馆的”猜词高手”"></a>1. LLM（大语言模型）：一个读过全人类图书馆的”猜词高手”</h3><p><strong>LLM（Large Language Model）</strong> 是整个 AI 大厦的地基。但很多人对它有一个误解：以为它”理解”了语言，像人一样思考。其实不是。</p>
-<p>更准确的说法是：<strong>LLM 是一个超级厉害的”猜词高手”</strong>。它通过阅读万亿级别的文本（相当于读完了全人类图书馆的好几轮），记住了词语之间的统计规律。当你给它一个句子开头，它做的唯一一件事就是——<strong>猜下一个词出现概率最大的是哪个</strong>。</p>
-<p>这个过程有点像你玩”成语接龙”或者”歌词接龙”：听到”天青色等烟雨”，你脱口而出”而我在等你”，不是因为你真的在等谁，而是因为你听过太多次这首歌，大脑里的统计规律告诉你，下一个词大概率是这个。</p>
-<p>LLM 做的就是这件事，只不过它的”大脑”有上千亿个参数，读过的书比你多几亿倍，所以猜得极其准确，准确到看起来像是”思考”。</p>
-<p><strong>三个关键特性你需要知道：</strong></p>
-<ul>
-<li><p><strong>涌现（Emergence）</strong>：当模型参数突破某个阈值（比如 600 亿左右），它会突然展现出训练时没专门教过的能力——比如数学推理、写代码、做翻译。这就像是水分子多了会形成波浪，单个水分子没有”波浪”这个属性，但足够多的水分子聚在一起就有了。涌现是今天 LLM 如此强大的核心原因。</p>
-</li>
-<li><p><strong>非确定性</strong>：同样的输入，LLM 每次输出可能略有不同。这是因为它在”猜词”时会加入一点随机性——就像你有时候也会犹豫”这个词好还是那个词好”。这个特性让 AI 有创造力，但也意味着它可能”胡说八道”。</p>
-</li>
-<li><p><strong>知识截止</strong>：LLM 的训练数据有截止日期（比如 GPT-4 的知识截止到 2024 年初）。它不知道今天的新闻，不知道你公司内部的文档，甚至不知道昨天发生了什么事。这个缺陷很重要，因为它直接催生了后面要讲到的 Tool 和 RAG 技术。</p>
-</li>
-</ul>
-<h3 id="2-Token：AI-世界里的”信息原子”"><a href="#2-Token：AI-世界里的”信息原子”" class="headerlink" title="2. Token：AI 世界里的”信息原子”"></a>2. Token：AI 世界里的”信息原子”</h3><p>如果你以为 AI 像人类一样一个字一个字地阅读，那就大错特错了。在 LLM 眼中，文字不是”字”，而是 <strong>Token</strong>。</p>
-<p><strong>Token 是什么？</strong> 你可以把它理解为 AI 处理信息的最小单位。它不一定等于一个字或一个单词，而是模型在训练时自己”发明”的一种文本切分方式。</p>
-<p>举个例子：</p>
-<ul>
-<li>英文中，<code>unbelievable</code> 可能被切成 <code>un</code> + <code>believ</code> + <code>able</code> 三个 Token</li>
-<li>中文中，”人工智能”可能被切成”人工”+”智能”两个 Token，也可能是一个 Token</li>
-<li>一个标点符号、一个空格，都可能单独是一个 Token</li>
-</ul>
-<p><strong>为什么 Token 很重要？</strong></p>
-<p>第一，<strong>它决定了 AI 的”视野”</strong>。模型一次能处理的 Token 数量是有限的（比如 4K、32K、128K），这叫”上下文窗口”。如果你的文档太长，超过了这个窗口，AI 就会”看不见”前面的内容——就像你背一篇太长的课文，背到后面忘了前面。</p>
-<p>第二，<strong>它是计费的单位</strong>。你调用 OpenAI API 时，账单上写的不是”多少个字”，而是”多少 Token”。一般来说，1 个汉字 ≈ 1<del>1.5 个 Token，1 个英文单词 ≈ 1</del>2 个 Token。所以你写中文 Prompt 可能比英文更”划算”一点。</p>
-<p>第三，<strong>它影响了模型对语言的理解</strong>。因为 Token 的切分方式是在训练中自动学习的，不同语言、不同领域的 Token 效率不一样。这也是为什么同样的模型，处理中文和英文的效果可能有差异。</p>
-<hr>
-<h2 id="第二层：交互——如何与这个”猜词高手”对话"><a href="#第二层：交互——如何与这个”猜词高手”对话" class="headerlink" title="第二层：交互——如何与这个”猜词高手”对话"></a>第二层：交互——如何与这个”猜词高手”对话</h2><p>有了地基，接下来我们要解决一个问题：怎么让 LLM 按照我们的意愿输出？这就涉及到两个核心概念：Context 和 Prompt。</p>
-<h3 id="3-Context（上下文）：AI-的”临时记忆”"><a href="#3-Context（上下文）：AI-的”临时记忆”" class="headerlink" title="3. Context（上下文）：AI 的”临时记忆”"></a>3. Context（上下文）：AI 的”临时记忆”</h3><p><strong>Context</strong> 指的是模型在生成当前回复时，能够”看到”的所有信息。它包括：</p>
-<ul>
-<li>你之前说的所有话</li>
-<li>它自己之前回复的所有话</li>
-<li>你上传的文件内容</li>
-<li>系统预设的指令（比如”你是一个乐于助人的助手”）</li>
-</ul>
-<p>你可以把 Context 理解为 AI 的<strong>临时工作记忆</strong>。它在回答你这个问题的时候，会把所有这些信息摊在桌面上参考。但一旦开启新对话，这张桌子就被清空了，它什么都不记得——这就是为什么你新开一个聊天窗口，AI 会”失忆”。</p>
-<p><strong>上下文窗口（Context Window）</strong> 是 Context 的物理上限。如果一个模型的窗口是 128K Token，而你们的对话加起来超过了这个长度，模型就会开始”遗忘”最早的内容。不是删除，而是它在生成每个词时，注意力会更多地放在最近的 Token 上，远处的 Token 影响越来越小。</p>
-<p>这里有一个很巧妙的机制叫<strong>注意力机制（Attention）</strong>。你可以想象成：当你读一封很长的邮件，你不会对每个字都给予同样的关注——你会重点看人名、日期、关键结论。AI 也是如此，它在处理 Context 时，会给不同的 Token 分配不同的”关注度权重”，从而聚焦于当前最相关的信息。</p>
-<p><strong>一个实用的技巧</strong>：如果你要让 AI 处理长文档，最好把最重要的指令放在<strong>开头和结尾</strong>。因为中间的内容最容易被”注意力”忽略——这就像是老师批改作文，开头和结尾印象最深刻。</p>
-<h3 id="4-Prompt（提示词）：操控”猜词高手”的遥控器"><a href="#4-Prompt（提示词）：操控”猜词高手”的遥控器" class="headerlink" title="4. Prompt（提示词）：操控”猜词高手”的遥控器"></a>4. Prompt（提示词）：操控”猜词高手”的遥控器</h3><p>如果说 LLM 是一个猜词高手，那 <strong>Prompt</strong> 就是你给它的”题目描述”。同样的猜词能力，题目描述得好，它就能写出莎士比亚级别的散文；描述得不好，它就可能胡言乱语。</p>
-<p>Prompt 的本质，是在<strong>配置模型的生成状态</strong>。你可以把它理解为一种”软性编程”——不用写代码，而是用自然语言来设定规则、提供背景、指定格式。</p>
-<p><strong>好的 Prompt 通常包含这几个部分：</strong></p>
-<ol>
-<li><strong>角色设定</strong>：”你是一位资深 Python 后端工程师”——这会让模型激活与 Python、后端相关的知识区域。</li>
-<li><strong>任务描述</strong>：清晰地说出你要它做什么。</li>
-<li><strong>输入数据</strong>：提供需要处理的内容。</li>
-<li><strong>输出格式</strong>：告诉它你希望以什么形式输出（JSON、Markdown、表格、代码块等）。</li>
-<li><strong>约束条件</strong>：”不要超过 200 字”、”不要使用专业术语”等。</li>
-</ol>
-<p><strong>思维链（Chain of Thought, CoT）</strong> 是 Prompt 工程中最重要技巧之一。它的核心思想很简单：在 Prompt 里加上一句”请一步步思考”或者”请展示你的推理过程”。</p>
-<p>为什么这很有效？还记得吗，LLM 是一个”猜词高手”。当你要求它”一步步思考”时，它会把中间的推理步骤也生成出来，写在 Context 里。这些中间步骤就像”路标”，引导着后续的生成走向正确的方向。实验证明，这个简单的技巧能让数学题的准确率提升 30% 以上。</p>
-<p><strong>一个常见的误区</strong>：很多人觉得 Prompt 写得越长越详细越好。其实不是。过于冗长的 Prompt 会挤占 Context 空间，而且模型容易”抓不住重点”。好的 Prompt 是<strong>精确、结构化、有层次</strong>的，而不是堆砌关键词。</p>
-<hr>
-<h2 id="第三层：赋能——让-AI-从”空谈”到”实干”"><a href="#第三层：赋能——让-AI-从”空谈”到”实干”" class="headerlink" title="第三层：赋能——让 AI 从”空谈”到”实干”"></a>第三层：赋能——让 AI 从”空谈”到”实干”</h2><p>LLM 有两个致命的先天缺陷：<strong>知识滞后</strong>（不知道训练之后发生的事）和<strong>计算不可靠</strong>（数学题可能算错）。Tool（工具调用）就是为了弥补这两个缺陷而生的。</p>
-<h3 id="5-Tool（工具调用）：给-AI-装上”手脚”"><a href="#5-Tool（工具调用）：给-AI-装上”手脚”" class="headerlink" title="5. Tool（工具调用）：给 AI 装上”手脚”"></a>5. Tool（工具调用）：给 AI 装上”手脚”</h3><p><strong>Tool</strong> 允许 LLM 在需要时，调用外部程序来完成任务。</p>
-<p>想象这样一个场景：你问 AI”今天北京天气怎么样”。LLM 本身不知道今天天气——它的知识有截止日期。但如果我们给它配备一个”查询天气”的工具，事情就不一样了：</p>
-<ol>
-<li>你问：”今天北京天气怎么样？”</li>
-<li>LLM 分析后意识到：我需要实时天气数据，但我不知道。</li>
-<li>LLM 生成一个<strong>工具调用请求</strong>：”请调用 weather_query 工具，参数 city&#x3D;北京”。</li>
-<li>程序执行这个工具，拿到天气数据：”晴，25°C”。</li>
-<li>数据被塞回 Context，LLM 基于这个真实数据生成回答：”今天北京天气晴朗，气温 25 度，适合出门。”</li>
-</ol>
-<p>这个流程的精妙之处在于：<strong>LLM 只负责”决定要不要调用工具”和”理解调用结果”，实际的计算和数据获取由外部程序完成</strong>。这就好比一个 CEO 不需要自己会写代码，但他要知道什么时候该叫程序员来帮忙。</p>
-<p>常见的 Tool 类型包括：</p>
-<ul>
-<li><strong>搜索工具</strong>：让 AI 能查最新资讯（弥补知识滞后）</li>
-<li><strong>计算工具</strong>：让 AI 调用 Python&#x2F;JavaScript 执行精确计算（弥补计算不可靠）</li>
-<li><strong>数据库查询</strong>：让 AI 能查企业内部数据</li>
-<li><strong>API 调用</strong>：让 AI 能操作第三方服务（发邮件、订机票、创建日程）</li>
-</ul>
-<p>Tool 的出现，是 AI 从”聊天玩具”走向”生产工具”的关键分水岭。</p>
-<h3 id="6-MCP（模型上下文协议）：AI-世界的”USB-接口”"><a href="#6-MCP（模型上下文协议）：AI-世界的”USB-接口”" class="headerlink" title="6. MCP（模型上下文协议）：AI 世界的”USB 接口”"></a>6. MCP（模型上下文协议）：AI 世界的”USB 接口”</h3><p>Tool 很强大，但很快就出现了一个问题：<strong>每家厂商的工具接口都不一样</strong>。</p>
-<p>OpenAI 有自己的 Function Calling 格式，Anthropic 有另一种格式，Google 又是一种。如果你想让 AI 连接你的 GitHub、Slack、Notion，每个平台你都要写一套适配代码。这就像十年前，每个手机品牌都有自己的充电接口，出差得带一堆充电器。</p>
-<p><strong>MCP（Model Context Protocol，模型上下文协议）</strong> 就是来解决这个问题的。它是由 Anthropic 发起的一个开放标准，相当于 AI 界的 <strong>USB-C 接口</strong>。</p>
-<p>MCP 的核心思想是：<strong>只要你的数据源或工具遵循 MCP 协议，任何支持 MCP 的 AI 客户端都能直接连接，无需额外适配</strong>。</p>
-<p>打个比方：</p>
-<ul>
-<li>以前：你想让 AI 读你的 GitHub 仓库 → 写 GitHub API 适配代码 → 写 OpenAI Function 格式 → 调试</li>
-<li>现在：GitHub 提供一个 MCP Server → 你的 AI 客户端直接连接 → 开箱即用</li>
-</ul>
-<p>MCP 标准化了三个核心能力：</p>
-<ol>
-<li><strong>Resources（资源）</strong>：AI 能读取的数据（文件、数据库记录、API 响应）</li>
-<li><strong>Tools（工具）</strong>：AI 能调用的功能（发送消息、创建文件、执行命令）</li>
-<li><strong>Prompts（提示模板）</strong>：预定义的 Prompt 模板，方便复用</li>
-</ol>
-<p>MCP 的出现意味着 AI 工具生态正在从”野蛮生长”走向”标准化”。对开发者来说，这意味着接入成本大幅降低；对用户来说，这意味着 AI 能做的事会爆发式增长。</p>
-<hr>
-<h2 id="第四层：系统——从”回答问题”到”完成任务”"><a href="#第四层：系统——从”回答问题”到”完成任务”" class="headerlink" title="第四层：系统——从”回答问题”到”完成任务”"></a>第四层：系统——从”回答问题”到”完成任务”</h2><p>当 LLM 配上 Tool，再套上一个”思考-行动-观察”的循环，它就进化成了 <strong>Agent</strong>。</p>
-<h3 id="7-Agent（智能体）：一个能自主干活的”数字员工”"><a href="#7-Agent（智能体）：一个能自主干活的”数字员工”" class="headerlink" title="7. Agent（智能体）：一个能自主干活的”数字员工”"></a>7. Agent（智能体）：一个能自主干活的”数字员工”</h3><p><strong>Agent</strong> 是 2024 年以来 AI 领域最火的概念之一。但很多人对它的理解有偏差：Agent 不是某种新技术，而是一种<strong>新的系统架构</strong>——让 LLM 在一个循环中自主决策、调用工具、观察结果、调整策略。</p>
-<p>传统的 AI 交互是”一问一答”：你问一个问题，它答一次，对话结束。</p>
-<p>Agent 的交互是”目标驱动”：你给它一个模糊的目标，它会自己拆解成多个步骤，一步步执行，直到完成。</p>
-<p>举个例子。你说：”帮我调研一下近三年内新能源汽车行业的发展趋势，写一份简要报告。”</p>
-<p>一个 Agent 的处理流程可能是这样的：</p>
-<pre><code>Step 1: 规划 → 拆解目标：需要查政策、查销量数据、查技术趋势、查主要玩家
-Step 2: 行动 → 调用搜索工具，查&quot;2023-2025 新能源汽车政策&quot;
-Step 3: 观察 → 阅读搜索结果，提取关键信息
-Step 4: 思考 → &quot;政策部分有了，还需要销量数据&quot;
-Step 5: 行动 → 调用搜索工具，查&quot;2023-2025 新能源汽车销量统计&quot;
-Step 6: 观察 → 整理销量趋势
-Step 7: 思考 → &quot;还需要看看技术方向，比如固态电池、自动驾驶&quot;
-Step 8: 行动 → 调用搜索工具...
-...（循环继续）
-Step N: 整合 → 把所有信息组织成报告格式，输出给用户
-</code></pre>
-<p>注意这个过程中的关键点：<strong>LLM 不仅是在生成文本，它还在做决策</strong>——决定下一步该搜索什么、什么时候信息够了可以写报告、报告的结构怎么安排。</p>
-<p><strong>自反思（Self-reflection）</strong> 是高级 Agent 的重要能力。如果某个工具调用失败了（比如搜索引擎返回了错误结果），Agent 会意识到这一点，然后尝试修正策略——换关键词重新搜索，或者换一个工具。这就像是一个有工作经验的员工，遇到问题不会傻等，而是自己想办法解决。</p>
-<p>当然，今天的 Agent 还远没有达到”完全自主”的程度。它们经常会在循环里”迷路”——反复调用同一个工具、陷入死循环、或者产生不切实际的计划。这也是为什么 Agent 目前更适合做<strong>有明确边界、可验证步骤</strong>的任务，而不是完全开放的”你看着办”。</p>
-<h3 id="8-Agent-Skills（技能）：让”数字员工”专业化"><a href="#8-Agent-Skills（技能）：让”数字员工”专业化" class="headerlink" title="8. Agent Skills（技能）：让”数字员工”专业化"></a>8. Agent Skills（技能）：让”数字员工”专业化</h3><p>一个通用的 Agent 什么都能做一点，但什么都不精。如果要让它在特定领域表现更好，就需要给它配置 <strong>Skills（技能）</strong>。</p>
-<p><strong>Skill 本质上是一套预定义的”工具 + Prompt 模板 + 执行流程”的组合</strong>。你可以把它理解为岗位培训手册：一个财务分析师需要掌握的技能（读报表、算指标、写分析），和一个前端工程师需要的技能（读代码、调样式、写组件）完全不同。</p>
-<p>举个例子：</p>
-<ul>
-<li><strong>“数据分析 Skill”</strong>：包含读取 CSV 的工具、数据清洗的 Prompt 模板、常用统计方法的调用流程</li>
-<li><strong>“代码审查 Skill”</strong>：包含静态分析工具、代码风格检查规则、常见 Bug 模式的识别 Prompt</li>
-<li><strong>“客户服务 Skill”</strong>：包含查询订单状态的工具、退换货政策知识库、安抚客户情绪的话术模板</li>
-</ul>
-<p>通过给 Agent 配置不同的 Skills，我们可以快速”培养”出针对不同场景的专业化智能体，而不需要重新训练底层模型。这大大降低了定制 AI 系统的成本和门槛。</p>
-<hr>
-<h2 id="第五层：质量——如何让-AI-系统靠谱地运行"><a href="#第五层：质量——如何让-AI-系统靠谱地运行" class="headerlink" title="第五层：质量——如何让 AI 系统靠谱地运行"></a>第五层：质量——如何让 AI 系统靠谱地运行</h2><p>好了，现在你有了一套能思考、能调用工具、能自主执行的 AI 系统。但还有一个大问题：<strong>它靠谱吗？</strong></p>
-<p>别忘了 LLM 的核心特性——<strong>非确定性</strong>。它可能这次答对了，下次就错了；可能给 A 用户一个答案，给 B 用户另一个答案。在生产环境中，这种不确定性是致命的。</p>
-<h3 id="9-Harness（测试框架）：AI-系统的”质检部”"><a href="#9-Harness（测试框架）：AI-系统的”质检部”" class="headerlink" title="9. Harness（测试框架）：AI 系统的”质检部”"></a>9. Harness（测试框架）：AI 系统的”质检部”</h3><p><strong>Harness</strong> 指的是对 AI 系统进行评估、测试和监控的一整套机制。它是确保 AI 从”实验室玩具”变成”工业级产品”的关键。</p>
-<p>Harness 包含三个层面的工作：</p>
-<p><strong>1. 基准测试（Benchmark）</strong></p>
-<p>就像学生要考试一样，AI 也要考试。Benchmark 就是 AI 界的”标准化考试”。常见的 Benchmark 包括：</p>
-<ul>
-<li><strong>MMLU</strong>：测试模型在各个学科的知识掌握程度</li>
-<li><strong>HumanEval</strong>：测试模型写代码的能力</li>
-<li><strong>GSM8K</strong>：测试数学推理能力</li>
-<li><strong>自定义 Benchmark</strong>：针对你的业务场景设计的测试集（比如”客服场景下 100 个常见问题的回答质量”）</li>
-</ul>
-<p>Benchmark 的意义在于<strong>量化</strong>。它让你能客观地说”这个模型在这个任务上得分 85，那个模型得分 72”，而不是凭感觉说”好像这个更好”。</p>
-<p><strong>2. 生产环境监控</strong></p>
-<p>Benchmark 是在”考试环境”中测的，但真实世界更复杂。生产环境的 Harness 负责持续监控 AI 的实际表现：</p>
-<ul>
-<li>回复是否符合预期的格式？（比如要求输出 JSON，它真的输出合法 JSON 了吗？）</li>
-<li>回复是否包含有害内容？（涉黄、涉暴、歧视性言论）</li>
-<li>工具调用是否正确？（有没有该调用的时候没调用，或者调用了错误的参数？）</li>
-<li>延迟是否在可接受范围内？</li>
-</ul>
-<p><strong>3. 对齐与纠偏</strong></p>
-<p>当 Harness 发现问题后，需要有一套机制来”纠偏”。这可能包括：</p>
-<ul>
-<li>优化 Prompt，让模型更稳定地输出正确格式</li>
-<li>调整工具调用的参数或逻辑</li>
-<li>在关键路径上增加规则校验（比如 AI 生成的 SQL 必须先经过语法检查）</li>
-<li>收集用户反馈，形成”问题案例库”，持续迭代</li>
-</ul>
-<p>Harness 的存在提醒我们一个重要的事实：<strong>AI 系统不是”部署了就完了”，它需要像传统软件一样，持续测试、监控、迭代</strong>。而且因为 AI 的非确定性，这套质检流程甚至比传统软件更复杂、更重要。</p>
-<hr>
-<h2 id="常见误区：新手最容易踩的坑"><a href="#常见误区：新手最容易踩的坑" class="headerlink" title="常见误区：新手最容易踩的坑"></a>常见误区：新手最容易踩的坑</h2><p>在结束之前，我想澄清几个常见的误解：</p>
-<p><strong>❌ 误区一：LLM 越大数据量越好，所以我把所有资料都塞进 Prompt</strong><br>✅ <strong>正确做法</strong>：Context 有长度限制，而且”信息过载”会让模型抓不住重点。只放最相关的信息，必要时用 RAG（检索增强生成）先筛选再输入。</p>
-<p><strong>❌ 误区二：Agent 就是更聪明的 AI，有了 Agent 就不需要人了</strong><br>✅ <strong>正确做法</strong>：Agent 的”自主”是有限的。它适合有明确步骤、可验证结果的任务，但在需要创造力、伦理判断、复杂人际沟通的场合，人类依然是不可替代的。Agent 的最佳定位是”辅助”，不是”替代”。</p>
-<p><strong>❌ 误区三：Prompt 工程就是写更好的”咒语”，骗 AI 说出我想要的答案</strong><br>✅ <strong>正确做法</strong>：Prompt 工程的本质是<strong>清晰的沟通</strong>。你不是在”骗”AI，你是在帮它缩小”猜词”的范围，让它更准确地激活相关知识区域。好的 Prompt 是精确的、结构化的、可复用的。</p>
-<p><strong>❌ 误区四：MCP 是某个公司的专有技术，用了会被绑定</strong><br>✅ <strong>正确做法</strong>：MCP 是一个<strong>开放协议</strong>，由 Anthropic 发起但任何人都可以实现。它类似于 HTTP 协议——不是某个公司的产品，而是整个行业的公共基础设施。</p>
-<hr>
-<h2 id="总结：一张图看懂-AI-生态"><a href="#总结：一张图看懂-AI-生态" class="headerlink" title="总结：一张图看懂 AI 生态"></a>总结：一张图看懂 AI 生态</h2><p>让我们回到开头的那张”地图”，现在你应该能理解每一层的含义了：</p>
-<pre><code>Harness（测试框架）         ← 确保一切靠谱运行
-      ↑
-Agent + Skills（智能体+技能） ← 自主规划、执行任务
-      ↑
-Tool + MCP（工具+协议）      ← 连接外部世界，标准化接入
-      ↑
-Prompt + Context（提示+上下文）← 控制模型输出
-      ↑
-LLM + Token（模型+信息原子）  ← 提供核心推理能力
-</code></pre>
-<p>这套体系的核心逻辑是：</p>
-<ol>
-<li><strong>LLM</strong> 提供了原始的”猜词”能力，是整栋大厦的地基。</li>
-<li><strong>Token</strong> 和 <strong>Context</strong> 定义了信息处理的物理边界——AI 能”看”多远、以什么单位处理。</li>
-<li><strong>Prompt</strong> 是我们与 AI 交互的遥控器，决定了 AI 以什么状态、什么风格输出。</li>
-<li><strong>Tool</strong> 弥补了 AI 的先天缺陷，让它能查实时数据、做精确计算、操作外部系统。</li>
-<li><strong>MCP</strong> 让这一切连接变得标准化，不再是一家一个标准。</li>
-<li><strong>Agent</strong> 把所有组件编织进一个自主循环，让 AI 从”回答问题”进化到”完成任务”。</li>
-<li><strong>Skills</strong> 让 Agent 专业化，针对不同场景快速定制能力。</li>
-<li><strong>Harness</strong> 则是整套系统的安全带和质检部，确保它在生产环境中稳定、可靠、可控。</li>
-</ol>
-<p>未来的 AI 应用，竞争的核心不在”谁的模型更大”，而在<strong>谁能用这些组件搭出最稳定、最高效、最可靠的智能系统</strong>。理解这九个概念，你就已经站在了正确的起跑线上。</p>
-<p><strong>下一步可以学什么？</strong></p>
-<ul>
-<li>如果你想动手实践：学习 <strong>Prompt Engineering</strong> 和 <strong>Function Calling</strong>，用 OpenAI&#x2F;Claude API 做一个能查天气的聊天机器人</li>
-<li>如果你想深入系统架构：了解 <strong>RAG（检索增强生成）</strong> 和 <strong>向量数据库</strong>，让 AI 能基于你的私有知识库回答问题</li>
-<li>如果你想构建复杂应用：研究 <strong>LangChain &#x2F; LlamaIndex</strong> 等 Agent 框架，学习如何编排多步骤任务</li>
-</ul>
-<hr>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="https://platform.openai.com/tokenizer">OpenAI Tokenizer 工具</a> — 直观体验 Token 的切分方式</li>
-<li><a href="https://modelcontextprotocol.io/">Anthropic MCP 官方文档</a> — 了解 MCP 协议的细节和生态</li>
-<li><a href="https://www.promptingguide.ai/">Prompt Engineering Guide</a> — 系统学习 Prompt 工程技巧</li>
-<li><a href="https://python.langchain.com/">LangChain 官方文档</a> — Agent 开发的主流框架</li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
-    <title>FastAPI 实战（二）：依赖注入与中间件</title>
-    <url>/2026/04/15/FastAPI-%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/</url>
-    <content><![CDATA[<p>依赖注入是 FastAPI 最强大的特性之一很多人说 FastAPI 比 Flask 高级、高级在哪？答案就在这一篇文章里。依赖注入让代码的解耦变得极其简单，而且它还天然支持异步，完美契合 FastAPI 的高性能特性。</p>
-<h2 id="1-问题背景"><a href="#1-问题背景" class="headerlink" title="1. 问题背景"></a>1. 问题背景</h2><p> 先说依赖注入解决了什么问题。</p>
-<p> 假设你有一个获取当前用户的接口，在真实项目里面，你通常需要先从请求头里面拿到 Token，然后验证 Token 是否有效，再从 Token 里面解析出用户 ID，最后去数据库查用户信息。这里面，验证 Token 是通用的逻辑，每个需要用户信息的接口都要写一遍。</p>
-<p> 在 Flask 时代，你会怎么做？写一个装饰器，在每个接口上面加这个装饰器。这是常见的做法，但是问题也很明显：装饰器的写法比较繁琐，而且装饰器还不好传递参数，测试的时候也不方便 mock。</p>
-<p> FastAPI 的依赖注入从根本上解决了这个问题。它用一种极其优雅的方式，把这些通用逻辑抽取出来，在每个接口需要用的时候，悄悄注入进去。你只需要在函数参数里面声明一下，FastAPI 就会自动帮你完成所有的准备工作。</p>
-<p> 除了依赖注入，中间件也是很重要的话题。中间件可以在请求到达路由之前，或者响应返回之后，做一些统一的处理。比如统一的日志记录、统一添加响应头、统一做请求限流等等。这两个功能，就是这篇文章要讲的内容。</p>
-<h2 id="2-原理分析"><a href="#2-原理分析" class="headerlink" title="2. 原理分析"></a>2. 原理分析</h2><p> 先说依赖注入的原理。</p>
-<p> FastAPI 的依赖注入，本质上是一个「提供者-消费者」的模型。你定义一个函数，这个函数返回一个值，然后在其他路由函数里面，把这个函数名作为参数传进去，FastAPI 就会自动调用这个函数，把返回值注入到参数里面。</p>
-<p> 这个过程有几个关键点。</p>
-<p> 第一个是延迟执行。依赖函数只在有请求的时候才会执行，不会再应用启动的时候执行。而且每次请求都会执行一次，这意味着依赖函数里面可以写动态逻辑，比如每次都从数据库最新获取数据。</p>
-<p> 第二个是依赖链。一个依赖函数还可以依赖另一个依赖函数，FastAPI 会自动处理这个依赖链。比如 A 依赖 B，B 依赖 C，那么执行 A 的时候，会先执行 B，执行 B 的时候，会先执行 C。</p>
-<p> 第三个是缓存。默认情况下，同一个请求内的依赖函数只会执行一次。如果你需要每次都执行，可以设置 <code>use_cache=False</code>。</p>
-<p> 第四个是覆盖。测试的时候，你可以直接向 Depends 传递一个假的对象，替换掉原来的依赖函数，非常方便测试。</p>
-<p> 接下来是中间件的原理。</p>
-<p> FastAPI 的中间件有两种。一种是 WSGI 中间件，这种是同步的，会阻塞请求。另一种是 ASGI 中间件，这种是异步的，不会阻塞请求。FastAPI 推荐使用 ASGI 中间件，性能更好。</p>
-<p> 中间件的执行顺序是这样的：请求进来之后，会先经过所有的中间件，然后到达路由函数，路由函数处理完之后，再依次经过中间件返回。所以如果你想在请求之前做一些处理，就把逻辑写在进入路由之前；如果你想在响应返回之前做一些处理，就把逻辑写在返回响应之后。</p>
-<h2 id="3-代码实现"><a href="#3-代码实现" class="headerlink" title="3. 代码实现"></a>3. 代码实现</h2><p> 先看依赖注入的完整示例：</p>
-<pre><code class="language-python">from fastapi import FastAPI, Depends, HTTPException, Header
-from typing import Optional
-from pydantic import BaseModel
-import jwt
-
-app = FastAPI()
-
-# 模拟数据库
-users_db = {
-    1: {&quot;id&quot;: 1, &quot;username&quot;: &quot;tom&quot;, &quot;email&quot;: &quot;tom@example.com&quot;},
-    2: {&quot;id&quot;: 2, &quot;username&quot;: &quot;jerry&quot;, &quot;email&quot;: &quot;jerry@example.com&quot;},
-}
-
-SECRET_KEY = &quot;my-secret-key&quot;
-
-# JWT 解析函数
-def parse_token(token: str = Header(...)) -&gt; dict:
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[&quot;HS256&quot;])
-        return payload
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail=&quot;Token expired&quot;)
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail=&quot;Invalid token&quot;)
-
-# 获取当前用户
-def get_current_user(payload: dict = Depends(parse_token)) -&gt; dict:
-    user_id = payload.get(&quot;user_id&quot;)
-    if user_id not in users_db:
-        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
-    return users_db[user_id]
-
-# 这是一个需要登录才能访问的接口
-@app.get(&quot;/profile&quot;)
-def get_profile(user: dict = Depends(get_current_user)):
-    return {&quot;username&quot;: user[&quot;username&quot;], &quot;email&quot;: user[&quot;email&quot;]}
-
-# 这是一个可选登录的接口，不强制要求 Token
-def get_optional_user():
-    def inner(
-        authorization: Optional[str] = Header(None)
-    ) -&gt; Optional[dict]:
-        if authorization and authorization.startswith(&quot;Bearer &quot;):
-            token = authorization.replace(&quot;Bearer &quot;, &quot;&quot;)
-            try:
-                payload = jwt.decode(token, SECRET_KEY, algorithms=[&quot;HS256&quot;])
-                user_id = payload.get(&quot;user_id&quot;)
-                return users_db.get(user_id)
-            except:
-                return None
-        return None
-    return inner
-
-@app.get(&quot;/articles&quot;)
-def get_articles(user: Optional[dict] = Depends(get_optional_user())):
-    if user:
-        return {&quot;articles&quot;: [...], &quot;user&quot;: user[&quot;username&quot;]}
-    return {&quot;articles&quot;: [...], &quot;user&quot;: None}
-
-if __name__ == &quot;__main__&quot;:
-    import uvicorn
-    uvicorn.run(app, host=&quot;0.0.0.0&quot;, port=8000)
-</code></pre>
-<p> 这段代码展示了依赖注入的几种用法。parse_token 是解析 JWT Token 的依赖，get_current_user 是获取当前用户的依赖，它依赖 parse_token。在 profile 接口里面，只需要写 <code>user: dict = Depends(get_current_user)</code>，FastAPI 就会自动完成 Token 解析和用户查询。</p>
-<p> get_optional_user 展示了如何创建一个可选的依赖。这个依赖返回一个函数，这个函数会检查请求头里面有没有 Token，如果有就解析，没有就返回 None。</p>
-<p> 接下来看中间件的示例：</p>
-<pre><code class="language-python">from fastapi import FastAPI, Request
-from starlette.middleware.base import BaseHTTPMiddleware
-import time
-
-# 记录请求耗时的中间件
-class TimingMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        start_time = time.time()
-        response = await call_next(request)
-        process_time = time.time() - start_time
-        response.headers[&quot;X-Process-Time&quot;] = str(process_time)
-        return response
-
-# 添加自定义响应头的中间件
-class HeaderMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        response = await call_next(request)
-        response.headers[&quot;X-Custom-Header&quot;] = &quot;my-value&quot;
-        response.headers[&quot;X-Developer&quot;] = &quot;FastAPI&quot;
-        return response
-
-app = FastAPI()
-app.add_middleware(TimingMiddleware)
-app.add_middleware(HeaderMiddleware)
-
-@app.get(&quot;/test&quot;)
-def test():
-    return {&quot;message&quot;: &quot;ok&quot;}
-
-# 这个接口会抛异常，测试错误处理中间件
-@app.get(&quot;/error&quot;)
-def error():
-    raise ValueError(&quot;This is a test error&quot;)
-
-# 全局异常处理
-@app.exception_handler(ValueError)
-async def value_error_handler(request: Request, exc: ValueError):
-    return JSONResponse(
-        status_code=500,
-        content={&quot;detail&quot;: str(exc)}
-    )
-
-from starlette.responses import JSONResponse
-
-if __name__ == &quot;__main__&quot;:
-    import uvicorn
-    uvicorn.run(app, host=&quot;0.0.0.0&quot;, port=8000)
-</code></pre>
-<p> 中间件的定义很简单，继承 BaseHTTPMiddleware，然后实现 dispatch 方法。dispatch 方法接收 request 和 call_next，request 是请求对象，call_next 是一个函数，调用它会把请求传递给下一个中间件或者路由函数。</p>
-<p> TimingMiddleware 在请求处理前后记录时间，然后给响应头添加 X-Process-Time。HeaderMiddleware 给所有响应添加自定义的头。</p>
-<p> 还有一种特殊的中间件是异常处理器。用 @app.exception_handler 装饰器可以注册全局的异常处理逻辑，这样就不用在每个路由函数里面 try except 了。</p>
-<h2 id="4-踩坑总结"><a href="#4-踩坑总结" class="headerlink" title="4. 踩坑总结"></a>4. 踩坑总结</h2><p> 最后说几个可能踩的坑。</p>
-<p> 第一个坑是依赖注入的顺序。如果你有两个依赖 A 和 B，B 依赖 A，那么定义接口的时候，写成 <code>func(a: type = Depends(A), b: type = Depends(B))</code> 和 <code>func(b: type = Depends(B), a: type = Depends(A))</code> 效果是一样的，FastAPI 会自动解析依赖链，顺序不影响执行。</p>
-<p> 第二个坑是 Depends 和函数调用的区别。如果你写成 <code>Depends(get_current_user)</code>，这是正确的。如果你写成 <code>Depends(get_current_user())</code>，这就错了，因为 get_current_user() 会立即执行，而 Depends 期望的是一个可调用对象。</p>
-<p> 第三个坑是中间件的顺序。中间件的执行顺序是从上到下添加，从下到上执行。比如你添加了 A 和 B 两个中间件，那么请求的执行顺序是 A -&gt; B -&gt; 路由 -&gt; B -&gt; A，响应同理。所以如果你的中间件有依赖关系，一定要注意添加顺序。</p>
-<p> 第四个坑是同步和异步的混用。FastAPI 支持异步的依赖和同步的依赖混用，但是如果你在异步的路由函数里面使用同步的依赖，会有一定的性能损失。尽量保持一致，要么全是同步，要么全是异步。</p>
-<p> 避开这四个坑，依赖注入和中间件你就掌握了。这两个特性是 FastAPI 区别于 Flask 的核心优势，用好了，你的代码会变得非常简洁优雅。</p>
-]]></content>
   </entry>
   <entry>
     <title>Harness初识</title>
@@ -1074,6 +951,169 @@ if __name__ == &quot;__main__&quot;:
 <p><strong>总结一句话：</strong> </p>
 <p><strong>Harness Engineering 就是把 AI Agent 从野性的独角兽驯化成生产力工具的艺术。</strong> 🐴→🔧</p>
 ]]></content>
+      <categories>
+        <category>AI工程</category>
+      </categories>
+      <tags>
+        <tag>AI</tag>
+        <tag>Agent</tag>
+        <tag>Harness</tag>
+        <tag>工程化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>FastAPI 实战（二）：依赖注入与中间件</title>
+    <url>/2026/04/15/FastAPI-%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/</url>
+    <content><![CDATA[<p>依赖注入是 FastAPI 最强大的特性之一很多人说 FastAPI 比 Flask 高级、高级在哪？答案就在这一篇文章里。依赖注入让代码的解耦变得极其简单，而且它还天然支持异步，完美契合 FastAPI 的高性能特性。</p>
+<h2 id="1-问题背景"><a href="#1-问题背景" class="headerlink" title="1. 问题背景"></a>1. 问题背景</h2><p> 先说依赖注入解决了什么问题。</p>
+<p> 假设你有一个获取当前用户的接口，在真实项目里面，你通常需要先从请求头里面拿到 Token，然后验证 Token 是否有效，再从 Token 里面解析出用户 ID，最后去数据库查用户信息。这里面，验证 Token 是通用的逻辑，每个需要用户信息的接口都要写一遍。</p>
+<p> 在 Flask 时代，你会怎么做？写一个装饰器，在每个接口上面加这个装饰器。这是常见的做法，但是问题也很明显：装饰器的写法比较繁琐，而且装饰器还不好传递参数，测试的时候也不方便 mock。</p>
+<p> FastAPI 的依赖注入从根本上解决了这个问题。它用一种极其优雅的方式，把这些通用逻辑抽取出来，在每个接口需要用的时候，悄悄注入进去。你只需要在函数参数里面声明一下，FastAPI 就会自动帮你完成所有的准备工作。</p>
+<p> 除了依赖注入，中间件也是很重要的话题。中间件可以在请求到达路由之前，或者响应返回之后，做一些统一的处理。比如统一的日志记录、统一添加响应头、统一做请求限流等等。这两个功能，就是这篇文章要讲的内容。</p>
+<h2 id="2-原理分析"><a href="#2-原理分析" class="headerlink" title="2. 原理分析"></a>2. 原理分析</h2><p> 先说依赖注入的原理。</p>
+<p> FastAPI 的依赖注入，本质上是一个「提供者-消费者」的模型。你定义一个函数，这个函数返回一个值，然后在其他路由函数里面，把这个函数名作为参数传进去，FastAPI 就会自动调用这个函数，把返回值注入到参数里面。</p>
+<p> 这个过程有几个关键点。</p>
+<p> 第一个是延迟执行。依赖函数只在有请求的时候才会执行，不会再应用启动的时候执行。而且每次请求都会执行一次，这意味着依赖函数里面可以写动态逻辑，比如每次都从数据库最新获取数据。</p>
+<p> 第二个是依赖链。一个依赖函数还可以依赖另一个依赖函数，FastAPI 会自动处理这个依赖链。比如 A 依赖 B，B 依赖 C，那么执行 A 的时候，会先执行 B，执行 B 的时候，会先执行 C。</p>
+<p> 第三个是缓存。默认情况下，同一个请求内的依赖函数只会执行一次。如果你需要每次都执行，可以设置 <code>use_cache=False</code>。</p>
+<p> 第四个是覆盖。测试的时候，你可以直接向 Depends 传递一个假的对象，替换掉原来的依赖函数，非常方便测试。</p>
+<p> 接下来是中间件的原理。</p>
+<p> FastAPI 的中间件有两种。一种是 WSGI 中间件，这种是同步的，会阻塞请求。另一种是 ASGI 中间件，这种是异步的，不会阻塞请求。FastAPI 推荐使用 ASGI 中间件，性能更好。</p>
+<p> 中间件的执行顺序是这样的：请求进来之后，会先经过所有的中间件，然后到达路由函数，路由函数处理完之后，再依次经过中间件返回。所以如果你想在请求之前做一些处理，就把逻辑写在进入路由之前；如果你想在响应返回之前做一些处理，就把逻辑写在返回响应之后。</p>
+<h2 id="3-代码实现"><a href="#3-代码实现" class="headerlink" title="3. 代码实现"></a>3. 代码实现</h2><p> 先看依赖注入的完整示例：</p>
+<pre><code class="language-python">from fastapi import FastAPI, Depends, HTTPException, Header
+from typing import Optional
+from pydantic import BaseModel
+import jwt
+
+app = FastAPI()
+
+# 模拟数据库
+users_db = {
+    1: {&quot;id&quot;: 1, &quot;username&quot;: &quot;tom&quot;, &quot;email&quot;: &quot;tom@example.com&quot;},
+    2: {&quot;id&quot;: 2, &quot;username&quot;: &quot;jerry&quot;, &quot;email&quot;: &quot;jerry@example.com&quot;},
+}
+
+SECRET_KEY = &quot;my-secret-key&quot;
+
+# JWT 解析函数
+def parse_token(token: str = Header(...)) -&gt; dict:
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[&quot;HS256&quot;])
+        return payload
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail=&quot;Token expired&quot;)
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail=&quot;Invalid token&quot;)
+
+# 获取当前用户
+def get_current_user(payload: dict = Depends(parse_token)) -&gt; dict:
+    user_id = payload.get(&quot;user_id&quot;)
+    if user_id not in users_db:
+        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
+    return users_db[user_id]
+
+# 这是一个需要登录才能访问的接口
+@app.get(&quot;/profile&quot;)
+def get_profile(user: dict = Depends(get_current_user)):
+    return {&quot;username&quot;: user[&quot;username&quot;], &quot;email&quot;: user[&quot;email&quot;]}
+
+# 这是一个可选登录的接口，不强制要求 Token
+def get_optional_user():
+    def inner(
+        authorization: Optional[str] = Header(None)
+    ) -&gt; Optional[dict]:
+        if authorization and authorization.startswith(&quot;Bearer &quot;):
+            token = authorization.replace(&quot;Bearer &quot;, &quot;&quot;)
+            try:
+                payload = jwt.decode(token, SECRET_KEY, algorithms=[&quot;HS256&quot;])
+                user_id = payload.get(&quot;user_id&quot;)
+                return users_db.get(user_id)
+            except:
+                return None
+        return None
+    return inner
+
+@app.get(&quot;/articles&quot;)
+def get_articles(user: Optional[dict] = Depends(get_optional_user())):
+    if user:
+        return {&quot;articles&quot;: [...], &quot;user&quot;: user[&quot;username&quot;]}
+    return {&quot;articles&quot;: [...], &quot;user&quot;: None}
+
+if __name__ == &quot;__main__&quot;:
+    import uvicorn
+    uvicorn.run(app, host=&quot;0.0.0.0&quot;, port=8000)
+</code></pre>
+<p> 这段代码展示了依赖注入的几种用法。parse_token 是解析 JWT Token 的依赖，get_current_user 是获取当前用户的依赖，它依赖 parse_token。在 profile 接口里面，只需要写 <code>user: dict = Depends(get_current_user)</code>，FastAPI 就会自动完成 Token 解析和用户查询。</p>
+<p> get_optional_user 展示了如何创建一个可选的依赖。这个依赖返回一个函数，这个函数会检查请求头里面有没有 Token，如果有就解析，没有就返回 None。</p>
+<p> 接下来看中间件的示例：</p>
+<pre><code class="language-python">from fastapi import FastAPI, Request
+from starlette.middleware.base import BaseHTTPMiddleware
+import time
+
+# 记录请求耗时的中间件
+class TimingMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        start_time = time.time()
+        response = await call_next(request)
+        process_time = time.time() - start_time
+        response.headers[&quot;X-Process-Time&quot;] = str(process_time)
+        return response
+
+# 添加自定义响应头的中间件
+class HeaderMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        response.headers[&quot;X-Custom-Header&quot;] = &quot;my-value&quot;
+        response.headers[&quot;X-Developer&quot;] = &quot;FastAPI&quot;
+        return response
+
+app = FastAPI()
+app.add_middleware(TimingMiddleware)
+app.add_middleware(HeaderMiddleware)
+
+@app.get(&quot;/test&quot;)
+def test():
+    return {&quot;message&quot;: &quot;ok&quot;}
+
+# 这个接口会抛异常，测试错误处理中间件
+@app.get(&quot;/error&quot;)
+def error():
+    raise ValueError(&quot;This is a test error&quot;)
+
+# 全局异常处理
+@app.exception_handler(ValueError)
+async def value_error_handler(request: Request, exc: ValueError):
+    return JSONResponse(
+        status_code=500,
+        content={&quot;detail&quot;: str(exc)}
+    )
+
+from starlette.responses import JSONResponse
+
+if __name__ == &quot;__main__&quot;:
+    import uvicorn
+    uvicorn.run(app, host=&quot;0.0.0.0&quot;, port=8000)
+</code></pre>
+<p> 中间件的定义很简单，继承 BaseHTTPMiddleware，然后实现 dispatch 方法。dispatch 方法接收 request 和 call_next，request 是请求对象，call_next 是一个函数，调用它会把请求传递给下一个中间件或者路由函数。</p>
+<p> TimingMiddleware 在请求处理前后记录时间，然后给响应头添加 X-Process-Time。HeaderMiddleware 给所有响应添加自定义的头。</p>
+<p> 还有一种特殊的中间件是异常处理器。用 @app.exception_handler 装饰器可以注册全局的异常处理逻辑，这样就不用在每个路由函数里面 try except 了。</p>
+<h2 id="4-踩坑总结"><a href="#4-踩坑总结" class="headerlink" title="4. 踩坑总结"></a>4. 踩坑总结</h2><p> 最后说几个可能踩的坑。</p>
+<p> 第一个坑是依赖注入的顺序。如果你有两个依赖 A 和 B，B 依赖 A，那么定义接口的时候，写成 <code>func(a: type = Depends(A), b: type = Depends(B))</code> 和 <code>func(b: type = Depends(B), a: type = Depends(A))</code> 效果是一样的，FastAPI 会自动解析依赖链，顺序不影响执行。</p>
+<p> 第二个坑是 Depends 和函数调用的区别。如果你写成 <code>Depends(get_current_user)</code>，这是正确的。如果你写成 <code>Depends(get_current_user())</code>，这就错了，因为 get_current_user() 会立即执行，而 Depends 期望的是一个可调用对象。</p>
+<p> 第三个坑是中间件的顺序。中间件的执行顺序是从上到下添加，从下到上执行。比如你添加了 A 和 B 两个中间件，那么请求的执行顺序是 A -&gt; B -&gt; 路由 -&gt; B -&gt; A，响应同理。所以如果你的中间件有依赖关系，一定要注意添加顺序。</p>
+<p> 第四个坑是同步和异步的混用。FastAPI 支持异步的依赖和同步的依赖混用，但是如果你在异步的路由函数里面使用同步的依赖，会有一定的性能损失。尽量保持一致，要么全是同步，要么全是异步。</p>
+<p> 避开这四个坑，依赖注入和中间件你就掌握了。这两个特性是 FastAPI 区别于 Flask 的核心优势，用好了，你的代码会变得非常简洁优雅。</p>
+]]></content>
+      <categories>
+        <category>后端开发</category>
+      </categories>
+      <tags>
+        <tag>FastAPI</tag>
+        <tag>Python</tag>
+        <tag>后端开发</tag>
+        <tag>依赖注入</tag>
+      </tags>
   </entry>
   <entry>
     <title>JWT 双 Token 机制实战：Access Token + Refresh Token 完整实现</title>
@@ -1441,6 +1481,226 @@ async def logout(token: str = Depends(oauth2_scheme)):
         <tag>JWT</tag>
         <tag>后端</tag>
         <tag>认证</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>OpenSpec 与 Specify 入门：规范驱动开发让 AI 不再幻觉</title>
+    <url>/2026/04/21/OpenSpec-%E4%B8%8E-Specify-%E5%85%A5%E9%97%A8%EF%BC%9A%E8%A7%84%E8%8C%83%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%A9-AI-%E4%B8%8D%E5%86%8D%E5%B9%BB%E8%A7%89/</url>
+    <content><![CDATA[<blockquote>
+<p>一句话摘要：本文介绍规范驱动开发（Spec-Driven Development）的理念，对比 OpenSpec 与 Specify（GitHub Spec Kit）两款工具的差异，并给出各自的安装和使用方式，帮你让 AI 编程助手从”拍脑袋写代码”变成”按规范施工”。</p>
+</blockquote>
+<h2 id="背景与问题"><a href="#背景与问题" class="headerlink" title="背景与问题"></a>背景与问题</h2><p>用 Claude Code、Cursor 或 GitHub Copilot 写代码久了，你一定会遇到一个经典场景：</p>
+<p>你告诉 AI “给我加一个用户认证功能”，它唰唰唰生成了一堆代码。看起来没问题，但跑起来发现：</p>
+<ul>
+<li>密码用了明文存储，而不是 bcrypt</li>
+<li>JWT Token 没有设置过期时间</li>
+<li>登录接口的返回结构跟现有 API 完全不统一</li>
+</ul>
+<p>你让它改，它改了 A 又破坏了 B。三个回合下来，你的上下文窗口爆了，AI 开始”失忆”，甚至把刚才修好的地方又改回去了。</p>
+<p>这就是 <strong>AI 幻觉</strong> 在工程层面的表现：AI 没有”全局观”，它只根据你当前的提示和有限的上下文做局部最优解，而不是按照整个项目的规范来执行。</p>
+<p><strong>规范驱动开发（Spec-Driven Development）</strong> 就是来解决这个问题的。核心思路很简单：在让 AI 写代码之前，先让它（或你自己）写一份<strong>规范文档（Spec）</strong>，把要做什么、怎么做、做到什么标准说清楚。AI 后续的所有代码生成，都严格基于这份规范，而不是凭空发挥。</p>
+<h2 id="核心原理"><a href="#核心原理" class="headerlink" title="核心原理"></a>核心原理</h2><p>Spec 驱动开发借鉴了建筑行业的施工图纸逻辑：</p>
+<ul>
+<li><strong>没有图纸</strong>，工人（AI）只能凭经验搭积木，搭完发现承重墙位置不对，拆了重来。</li>
+<li><strong>有了图纸</strong>，工人按图施工，监理（你）按图验收，每一道工序都有据可查。</li>
+</ul>
+<p>在技术实现上，Spec 驱动开发引入了一个关键机制：<strong>Delta Spec（差异规范）</strong>。每一次功能变更都被显式标注为 <code>ADDED</code>（新增）、<code>MODIFIED</code>（修改）或 <code>REMOVED</code>（删除），而不是直接覆盖原有代码。这迫使 AI（和人类）在动手之前，先想清楚变更对现有系统的影响。</p>
+<h2 id="工具简介：OpenSpec-与-Specify"><a href="#工具简介：OpenSpec-与-Specify" class="headerlink" title="工具简介：OpenSpec 与 Specify"></a>工具简介：OpenSpec 与 Specify</h2><p>目前生态中最成熟的两款 Spec 驱动开发工具分别是 <strong>OpenSpec</strong> 和 <strong>Specify</strong>（GitHub Spec Kit 的命令行工具）。</p>
+<h3 id="OpenSpec"><a href="#OpenSpec" class="headerlink" title="OpenSpec"></a>OpenSpec</h3><p>OpenSpec 由 Fission AI 开源，定位是<strong>现有项目（Brownfield）的增量变更管理</strong>。它采用轻量级的三阶段工作流：<strong>提案（Proposal）→ 应用（Apply）→ 归档（Archive）</strong>。</p>
+<p>安装方式（需要 Node.js 18+）：</p>
+<pre><code class="language-bash">npm install -g @fission-ai/openspec
+</code></pre>
+<p>初始化项目：</p>
+<pre><code class="language-bash">openspec init --tools claude
+</code></pre>
+<p>执行后会在项目根目录生成 <code>openspec/</code> 文件夹：</p>
+<pre><code>openspec/
+├── specs/          # 当前系统的权威规范（Source of Truth）
+├── changes/        # 每个功能的变更提案
+│   └── {feature}/
+│       ├── proposal.md   # 变更提案
+│       ├── tasks.md      # 任务清单
+│       └── delta/        # 差异规范（ADDED/MODIFIED/REMOVED）
+└── project.md      # 项目概述
+</code></pre>
+<p>在 Claude Code 中使用 OpenSpec 的典型流程：</p>
+<pre><code class="language-bash"># 1. 创建新功能提案
+/opsx:new user-auth
+
+# 2. AI 根据 proposal.md 编写代码
+/opsx:apply
+
+# 3. 验证实现是否符合规范
+/opsx:verify
+
+# 4. 归档，将 delta 合并回主规范
+/opsx:archive
+</code></pre>
+<h3 id="Specify（GitHub-Spec-Kit）"><a href="#Specify（GitHub-Spec-Kit）" class="headerlink" title="Specify（GitHub Spec Kit）"></a>Specify（GitHub Spec Kit）</h3><p>Specify 是 GitHub 官方推出的 Spec Kit 的命令行入口，定位是<strong>从零开始的新项目（Greenfield）</strong>。它采用更严格的五阶段工作流：<strong>原则（Principles）→ 规范（Specification）→ 计划（Plan）→ 任务（Tasks）→ 实现（Implement）</strong>。</p>
+<p>安装方式（需要 uv）：</p>
+<pre><code class="language-bash">uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+</code></pre>
+<p>初始化项目：</p>
+<pre><code class="language-bash">specify init my-project --ai claude
+</code></pre>
+<p>在 Claude Code 中使用 Specify 的典型流程：</p>
+<pre><code class="language-bash"># 1. 定义系统规范
+/speckit.specify
+
+# 2. 生成实施计划
+/speckit.plan
+
+# 3. 拆解任务清单
+/speckit.tasks
+
+# 4. 按任务实现代码
+/speckit.implement
+</code></pre>
+<h2 id="核心区别对比"><a href="#核心区别对比" class="headerlink" title="核心区别对比"></a>核心区别对比</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>OpenSpec</th>
+<th>Specify（Spec Kit）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>出品方</strong></td>
+<td>Fission AI</td>
+<td>GitHub</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>现有项目迭代（Brownfield）</td>
+<td>从零开发新项目（Greenfield）</td>
+</tr>
+<tr>
+<td><strong>安装方式</strong></td>
+<td><code>npm install -g @fission-ai/openspec</code></td>
+<td><code>uv tool install specify-cli</code></td>
+</tr>
+<tr>
+<td><strong>规范体量</strong></td>
+<td>~250 行（轻量）</td>
+<td>~800 行（全面）</td>
+</tr>
+<tr>
+<td><strong>流程阶段</strong></td>
+<td>3 阶段：提案 → 应用 → 归档</td>
+<td>5 阶段：原则 → 规范 → 计划 → 任务 → 实现</td>
+</tr>
+<tr>
+<td><strong>变更追踪</strong></td>
+<td>Delta Spec + 归档历史</td>
+<td>无内置变更隔离机制</td>
+</tr>
+<tr>
+<td><strong>自由度</strong></td>
+<td>非线性，可随时回改提案</td>
+<td>线性流程，需按步骤执行</td>
+</tr>
+<tr>
+<td><strong>Token 消耗</strong></td>
+<td>较低</td>
+<td>较高</td>
+</tr>
+</tbody></table>
+<p>简单记忆法：</p>
+<ul>
+<li><strong>已有代码库，做功能迭代或 Bug 修复</strong> → 选 OpenSpec。它的 Delta Spec 机制天然适合”在现有大厦里装修”。</li>
+<li><strong>从零开始新项目，需要完整架构设计</strong> → 选 Specify。它的五阶段流程能帮你把地基打牢。</li>
+</ul>
+<h2 id="实战：用-OpenSpec-给现有项目加一个缓存层"><a href="#实战：用-OpenSpec-给现有项目加一个缓存层" class="headerlink" title="实战：用 OpenSpec 给现有项目加一个缓存层"></a>实战：用 OpenSpec 给现有项目加一个缓存层</h2><p>假设你有一个 FastAPI 项目，想用 OpenSpec 规范驱动的方式给所有列表查询接口加上 Redis 缓存。</p>
+<h3 id="步骤-1：初始化-OpenSpec"><a href="#步骤-1：初始化-OpenSpec" class="headerlink" title="步骤 1：初始化 OpenSpec"></a>步骤 1：初始化 OpenSpec</h3><pre><code class="language-bash"># 在项目根目录执行
+openspec init --tools claude
+</code></pre>
+<h3 id="步骤-2：创建变更提案"><a href="#步骤-2：创建变更提案" class="headerlink" title="步骤 2：创建变更提案"></a>步骤 2：创建变更提案</h3><pre><code class="language-bash">/opsx:new add-redis-cache
+</code></pre>
+<p>Claude Code 会在 <code>openspec/changes/add-redis-cache/</code> 下生成 <code>proposal.md</code>，内容类似：</p>
+<pre><code class="language-markdown"># Proposal: Add Redis Cache for List Endpoints
+
+## 目标
+为所有列表查询接口添加 Redis 缓存，减少数据库压力。
+
+## Delta Spec
+
+### ADDED
+- `app/core/cache.py`：Redis 连接管理与缓存装饰器
+- `app/dependencies/cache.py`：FastAPI Depends 缓存注入
+
+### MODIFIED
+- `app/api/items.py`：`list_items()` 增加缓存读取逻辑
+- `app/api/users.py`：`list_users()` 增加缓存读取逻辑
+
+### REMOVED
+- 无
+
+## 验收标准
+- 首次请求命中数据库，二次请求命中 Redis（&lt; 5ms）
+- 缓存过期时间统一为 300 秒
+- 所有缓存 key 带前缀 `fastapi:list:`
+</code></pre>
+<h3 id="步骤-3：应用规范"><a href="#步骤-3：应用规范" class="headerlink" title="步骤 3：应用规范"></a>步骤 3：应用规范</h3><pre><code class="language-bash">/opsx:apply
+</code></pre>
+<p>Claude Code 读取 <code>proposal.md</code> 和 Delta Spec，只修改 <code>MODIFIED</code> 中指定的文件，只新增 <code>ADDED</code> 中指定的文件。不会碰其他无关代码。</p>
+<h3 id="步骤-4：验证与归档"><a href="#步骤-4：验证与归档" class="headerlink" title="步骤 4：验证与归档"></a>步骤 4：验证与归档</h3><pre><code class="language-bash">/opsx:verify
+/opsck:archive
+</code></pre>
+<p>验证通过后，OpenSpec 会把这次的 Delta Spec 合并到 <code>openspec/specs/</code> 下的主规范中，变更历史永久保留。</p>
+<h2 id="实战：用-Specify-从零搭建一个任务队列服务"><a href="#实战：用-Specify-从零搭建一个任务队列服务" class="headerlink" title="实战：用 Specify 从零搭建一个任务队列服务"></a>实战：用 Specify 从零搭建一个任务队列服务</h2><p>假设你要从零开始一个 Celery + Redis 的任务队列服务。</p>
+<h3 id="步骤-1：初始化项目"><a href="#步骤-1：初始化项目" class="headerlink" title="步骤 1：初始化项目"></a>步骤 1：初始化项目</h3><pre><code class="language-bash">specify init task-service --ai claude
+cd task-service
+</code></pre>
+<h3 id="步骤-2：定义规范"><a href="#步骤-2：定义规范" class="headerlink" title="步骤 2：定义规范"></a>步骤 2：定义规范</h3><pre><code class="language-bash">/speckit.specify
+</code></pre>
+<p>你需要告诉 AI 系统的核心约束，例如：</p>
+<pre><code>- 使用 FastAPI 作为 Web 框架
+- 使用 Celery + Redis 作为任务队列
+- 所有任务必须支持重试，最大重试 3 次
+- 任务状态必须持久化到 PostgreSQL
+</code></pre>
+<p>Specify 会生成一份完整的系统规范文档（<code>specs/specification.md</code>），包含数据模型、API 接口、任务定义等。</p>
+<h3 id="步骤-3：生成计划与任务"><a href="#步骤-3：生成计划与任务" class="headerlink" title="步骤 3：生成计划与任务"></a>步骤 3：生成计划与任务</h3><pre><code class="language-bash">/speckit.plan
+/speckit.tasks
+</code></pre>
+<p>AI 会把规范拆解成可执行的任务清单（<code>tasks.md</code>），例如：</p>
+<pre><code class="language-markdown">- [ ] 搭建 FastAPI 项目骨架
+- [ ] 配置 Celery 与 Redis 连接
+- [ ] 定义任务模型与数据库表
+- [ ] 实现任务提交接口
+- [ ] 实现任务状态查询接口
+- [ ] 编写单元测试
+</code></pre>
+<h3 id="步骤-4：按任务实现"><a href="#步骤-4：按任务实现" class="headerlink" title="步骤 4：按任务实现"></a>步骤 4：按任务实现</h3><pre><code class="language-bash">/speckit.implement
+</code></pre>
+<p>AI 按照 <code>tasks.md</code> 逐项实现，每完成一项打勾。你可以随时暂停、回退或调整规范。</p>
+<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><h3 id="❌-错误做法：把-OpenSpec-和-Specify-混着用"><a href="#❌-错误做法：把-OpenSpec-和-Specify-混着用" class="headerlink" title="❌ 错误做法：把 OpenSpec 和 Specify 混着用"></a>❌ 错误做法：把 OpenSpec 和 Specify 混着用</h3><p>有人觉得 OpenSpec 的 Delta 机制好，Specify 的规范全面，于是两个都装。结果同一个项目里既有 <code>openspec/</code> 又有 <code>specs/</code> 目录，AI 完全懵掉，不知道应该遵循哪份规范。</p>
+<p>✅ <strong>正确做法</strong>：一个项目只选一个工具。Brownfield 选 OpenSpec，Greenfield 选 Specify，不要混用。</p>
+<h3 id="❌-错误做法：规范写得太细，成了”伪代码文学”"><a href="#❌-错误做法：规范写得太细，成了”伪代码文学”" class="headerlink" title="❌ 错误做法：规范写得太细，成了”伪代码文学”"></a>❌ 错误做法：规范写得太细，成了”伪代码文学”</h3><p>有人写 Spec 时把每一行代码都描述出来，比如”第 1 行 import redis，第 2 行定义函数…”，结果规范本身几百行，AI 的上下文窗口被吃光，代码生成质量反而下降。</p>
+<p>✅ <strong>正确做法</strong>：规范只描述<strong>做什么</strong>和<strong>验收标准</strong>，不描述<strong>怎么做</strong>。把实现细节留给 AI。OpenSpec 推荐的 ~250 行规范体量是经过验证的甜点。</p>
+<h3 id="❌-错误做法：归档后删掉-changes-目录"><a href="#❌-错误做法：归档后删掉-changes-目录" class="headerlink" title="❌ 错误做法：归档后删掉 changes/ 目录"></a>❌ 错误做法：归档后删掉 <code>changes/</code> 目录</h3><p>OpenSpec 的 <code>changes/</code> 目录归档后会被移动到 <code>changes/archive/</code>，这是刻意设计的。有人为了”整洁”直接删掉，结果变更历史丢失，后续排查问题无据可查。</p>
+<p>✅ <strong>正确做法</strong>：保留归档目录，它是项目的变更日志。如果确实需要清理，只删已合并到主规范且超过半年的旧归档。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>规范驱动开发不是给 AI 上枷锁，而是给它一张<strong>施工图纸</strong>。OpenSpec 和 Specify 是两张不同场景的图纸：前者轻量灵活，适合在现有项目里做增量变更；后者全面严谨，适合从零搭建新项目。</p>
+<p><strong>下一步可以学什么</strong>：</p>
+<ul>
+<li>把 OpenSpec 或 Specify 集成到你的 CI&#x2F;CD 流程中，实现”规范变更必须审批，代码实现必须匹配规范”</li>
+<li>探索 Maestro 等工具，将 Spec 驱动开发与多 Agent 协作结合</li>
+<li>在团队内推行 Spec Review（规范评审），把代码评审前移一层</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://intent-driven.dev/knowledge/openspec/">OpenSpec 官方文档</a></li>
+<li><a href="https://github.com/github/spec-kit">GitHub Spec Kit 仓库</a></li>
+<li><a href="https://intent-driven.dev/knowledge/spec-kit-vs-openspec/">Spec Kit vs OpenSpec 对比分析</a></li>
+<li><a href="https://juejin.cn/post/7603781883974385683">OpenSpec 与 Spec Kit 使用对比（掘金）</a></li>
+<li><a href="https://dev.to/newbe36524/the-hallucination-problem-of-ai-programming-assistants-how-to-implement-specification-driven-2i2j">The Hallucination Problem of AI Programming Assistants（Dev.to）</a></li>
+</ul>
+]]></content>
+      <tags>
+        <tag>AI</tag>
+        <tag>Spec-Driven Development</tag>
+        <tag>Claude Code</tag>
+        <tag>Cursor</tag>
+        <tag>工程实践</tag>
       </tags>
   </entry>
   <entry>
@@ -1898,226 +2158,6 @@ calcuate_and_print(7,calculate_times_5,print_with_vertical_bar)
         <tag>Python</tag>
         <tag>编程</tag>
         <tag>学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>OpenSpec 与 Specify 入门：规范驱动开发让 AI 不再幻觉</title>
-    <url>/2026/04/21/OpenSpec-%E4%B8%8E-Specify-%E5%85%A5%E9%97%A8%EF%BC%9A%E8%A7%84%E8%8C%83%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%A9-AI-%E4%B8%8D%E5%86%8D%E5%B9%BB%E8%A7%89/</url>
-    <content><![CDATA[<blockquote>
-<p>一句话摘要：本文介绍规范驱动开发（Spec-Driven Development）的理念，对比 OpenSpec 与 Specify（GitHub Spec Kit）两款工具的差异，并给出各自的安装和使用方式，帮你让 AI 编程助手从”拍脑袋写代码”变成”按规范施工”。</p>
-</blockquote>
-<h2 id="背景与问题"><a href="#背景与问题" class="headerlink" title="背景与问题"></a>背景与问题</h2><p>用 Claude Code、Cursor 或 GitHub Copilot 写代码久了，你一定会遇到一个经典场景：</p>
-<p>你告诉 AI “给我加一个用户认证功能”，它唰唰唰生成了一堆代码。看起来没问题，但跑起来发现：</p>
-<ul>
-<li>密码用了明文存储，而不是 bcrypt</li>
-<li>JWT Token 没有设置过期时间</li>
-<li>登录接口的返回结构跟现有 API 完全不统一</li>
-</ul>
-<p>你让它改，它改了 A 又破坏了 B。三个回合下来，你的上下文窗口爆了，AI 开始”失忆”，甚至把刚才修好的地方又改回去了。</p>
-<p>这就是 <strong>AI 幻觉</strong> 在工程层面的表现：AI 没有”全局观”，它只根据你当前的提示和有限的上下文做局部最优解，而不是按照整个项目的规范来执行。</p>
-<p><strong>规范驱动开发（Spec-Driven Development）</strong> 就是来解决这个问题的。核心思路很简单：在让 AI 写代码之前，先让它（或你自己）写一份<strong>规范文档（Spec）</strong>，把要做什么、怎么做、做到什么标准说清楚。AI 后续的所有代码生成，都严格基于这份规范，而不是凭空发挥。</p>
-<h2 id="核心原理"><a href="#核心原理" class="headerlink" title="核心原理"></a>核心原理</h2><p>Spec 驱动开发借鉴了建筑行业的施工图纸逻辑：</p>
-<ul>
-<li><strong>没有图纸</strong>，工人（AI）只能凭经验搭积木，搭完发现承重墙位置不对，拆了重来。</li>
-<li><strong>有了图纸</strong>，工人按图施工，监理（你）按图验收，每一道工序都有据可查。</li>
-</ul>
-<p>在技术实现上，Spec 驱动开发引入了一个关键机制：<strong>Delta Spec（差异规范）</strong>。每一次功能变更都被显式标注为 <code>ADDED</code>（新增）、<code>MODIFIED</code>（修改）或 <code>REMOVED</code>（删除），而不是直接覆盖原有代码。这迫使 AI（和人类）在动手之前，先想清楚变更对现有系统的影响。</p>
-<h2 id="工具简介：OpenSpec-与-Specify"><a href="#工具简介：OpenSpec-与-Specify" class="headerlink" title="工具简介：OpenSpec 与 Specify"></a>工具简介：OpenSpec 与 Specify</h2><p>目前生态中最成熟的两款 Spec 驱动开发工具分别是 <strong>OpenSpec</strong> 和 <strong>Specify</strong>（GitHub Spec Kit 的命令行工具）。</p>
-<h3 id="OpenSpec"><a href="#OpenSpec" class="headerlink" title="OpenSpec"></a>OpenSpec</h3><p>OpenSpec 由 Fission AI 开源，定位是<strong>现有项目（Brownfield）的增量变更管理</strong>。它采用轻量级的三阶段工作流：<strong>提案（Proposal）→ 应用（Apply）→ 归档（Archive）</strong>。</p>
-<p>安装方式（需要 Node.js 18+）：</p>
-<pre><code class="language-bash">npm install -g @fission-ai/openspec
-</code></pre>
-<p>初始化项目：</p>
-<pre><code class="language-bash">openspec init --tools claude
-</code></pre>
-<p>执行后会在项目根目录生成 <code>openspec/</code> 文件夹：</p>
-<pre><code>openspec/
-├── specs/          # 当前系统的权威规范（Source of Truth）
-├── changes/        # 每个功能的变更提案
-│   └── {feature}/
-│       ├── proposal.md   # 变更提案
-│       ├── tasks.md      # 任务清单
-│       └── delta/        # 差异规范（ADDED/MODIFIED/REMOVED）
-└── project.md      # 项目概述
-</code></pre>
-<p>在 Claude Code 中使用 OpenSpec 的典型流程：</p>
-<pre><code class="language-bash"># 1. 创建新功能提案
-/opsx:new user-auth
-
-# 2. AI 根据 proposal.md 编写代码
-/opsx:apply
-
-# 3. 验证实现是否符合规范
-/opsx:verify
-
-# 4. 归档，将 delta 合并回主规范
-/opsx:archive
-</code></pre>
-<h3 id="Specify（GitHub-Spec-Kit）"><a href="#Specify（GitHub-Spec-Kit）" class="headerlink" title="Specify（GitHub Spec Kit）"></a>Specify（GitHub Spec Kit）</h3><p>Specify 是 GitHub 官方推出的 Spec Kit 的命令行入口，定位是<strong>从零开始的新项目（Greenfield）</strong>。它采用更严格的五阶段工作流：<strong>原则（Principles）→ 规范（Specification）→ 计划（Plan）→ 任务（Tasks）→ 实现（Implement）</strong>。</p>
-<p>安装方式（需要 uv）：</p>
-<pre><code class="language-bash">uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
-</code></pre>
-<p>初始化项目：</p>
-<pre><code class="language-bash">specify init my-project --ai claude
-</code></pre>
-<p>在 Claude Code 中使用 Specify 的典型流程：</p>
-<pre><code class="language-bash"># 1. 定义系统规范
-/speckit.specify
-
-# 2. 生成实施计划
-/speckit.plan
-
-# 3. 拆解任务清单
-/speckit.tasks
-
-# 4. 按任务实现代码
-/speckit.implement
-</code></pre>
-<h2 id="核心区别对比"><a href="#核心区别对比" class="headerlink" title="核心区别对比"></a>核心区别对比</h2><table>
-<thead>
-<tr>
-<th>维度</th>
-<th>OpenSpec</th>
-<th>Specify（Spec Kit）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>出品方</strong></td>
-<td>Fission AI</td>
-<td>GitHub</td>
-</tr>
-<tr>
-<td><strong>适用场景</strong></td>
-<td>现有项目迭代（Brownfield）</td>
-<td>从零开发新项目（Greenfield）</td>
-</tr>
-<tr>
-<td><strong>安装方式</strong></td>
-<td><code>npm install -g @fission-ai/openspec</code></td>
-<td><code>uv tool install specify-cli</code></td>
-</tr>
-<tr>
-<td><strong>规范体量</strong></td>
-<td>~250 行（轻量）</td>
-<td>~800 行（全面）</td>
-</tr>
-<tr>
-<td><strong>流程阶段</strong></td>
-<td>3 阶段：提案 → 应用 → 归档</td>
-<td>5 阶段：原则 → 规范 → 计划 → 任务 → 实现</td>
-</tr>
-<tr>
-<td><strong>变更追踪</strong></td>
-<td>Delta Spec + 归档历史</td>
-<td>无内置变更隔离机制</td>
-</tr>
-<tr>
-<td><strong>自由度</strong></td>
-<td>非线性，可随时回改提案</td>
-<td>线性流程，需按步骤执行</td>
-</tr>
-<tr>
-<td><strong>Token 消耗</strong></td>
-<td>较低</td>
-<td>较高</td>
-</tr>
-</tbody></table>
-<p>简单记忆法：</p>
-<ul>
-<li><strong>已有代码库，做功能迭代或 Bug 修复</strong> → 选 OpenSpec。它的 Delta Spec 机制天然适合”在现有大厦里装修”。</li>
-<li><strong>从零开始新项目，需要完整架构设计</strong> → 选 Specify。它的五阶段流程能帮你把地基打牢。</li>
-</ul>
-<h2 id="实战：用-OpenSpec-给现有项目加一个缓存层"><a href="#实战：用-OpenSpec-给现有项目加一个缓存层" class="headerlink" title="实战：用 OpenSpec 给现有项目加一个缓存层"></a>实战：用 OpenSpec 给现有项目加一个缓存层</h2><p>假设你有一个 FastAPI 项目，想用 OpenSpec 规范驱动的方式给所有列表查询接口加上 Redis 缓存。</p>
-<h3 id="步骤-1：初始化-OpenSpec"><a href="#步骤-1：初始化-OpenSpec" class="headerlink" title="步骤 1：初始化 OpenSpec"></a>步骤 1：初始化 OpenSpec</h3><pre><code class="language-bash"># 在项目根目录执行
-openspec init --tools claude
-</code></pre>
-<h3 id="步骤-2：创建变更提案"><a href="#步骤-2：创建变更提案" class="headerlink" title="步骤 2：创建变更提案"></a>步骤 2：创建变更提案</h3><pre><code class="language-bash">/opsx:new add-redis-cache
-</code></pre>
-<p>Claude Code 会在 <code>openspec/changes/add-redis-cache/</code> 下生成 <code>proposal.md</code>，内容类似：</p>
-<pre><code class="language-markdown"># Proposal: Add Redis Cache for List Endpoints
-
-## 目标
-为所有列表查询接口添加 Redis 缓存，减少数据库压力。
-
-## Delta Spec
-
-### ADDED
-- `app/core/cache.py`：Redis 连接管理与缓存装饰器
-- `app/dependencies/cache.py`：FastAPI Depends 缓存注入
-
-### MODIFIED
-- `app/api/items.py`：`list_items()` 增加缓存读取逻辑
-- `app/api/users.py`：`list_users()` 增加缓存读取逻辑
-
-### REMOVED
-- 无
-
-## 验收标准
-- 首次请求命中数据库，二次请求命中 Redis（&lt; 5ms）
-- 缓存过期时间统一为 300 秒
-- 所有缓存 key 带前缀 `fastapi:list:`
-</code></pre>
-<h3 id="步骤-3：应用规范"><a href="#步骤-3：应用规范" class="headerlink" title="步骤 3：应用规范"></a>步骤 3：应用规范</h3><pre><code class="language-bash">/opsx:apply
-</code></pre>
-<p>Claude Code 读取 <code>proposal.md</code> 和 Delta Spec，只修改 <code>MODIFIED</code> 中指定的文件，只新增 <code>ADDED</code> 中指定的文件。不会碰其他无关代码。</p>
-<h3 id="步骤-4：验证与归档"><a href="#步骤-4：验证与归档" class="headerlink" title="步骤 4：验证与归档"></a>步骤 4：验证与归档</h3><pre><code class="language-bash">/opsx:verify
-/opsck:archive
-</code></pre>
-<p>验证通过后，OpenSpec 会把这次的 Delta Spec 合并到 <code>openspec/specs/</code> 下的主规范中，变更历史永久保留。</p>
-<h2 id="实战：用-Specify-从零搭建一个任务队列服务"><a href="#实战：用-Specify-从零搭建一个任务队列服务" class="headerlink" title="实战：用 Specify 从零搭建一个任务队列服务"></a>实战：用 Specify 从零搭建一个任务队列服务</h2><p>假设你要从零开始一个 Celery + Redis 的任务队列服务。</p>
-<h3 id="步骤-1：初始化项目"><a href="#步骤-1：初始化项目" class="headerlink" title="步骤 1：初始化项目"></a>步骤 1：初始化项目</h3><pre><code class="language-bash">specify init task-service --ai claude
-cd task-service
-</code></pre>
-<h3 id="步骤-2：定义规范"><a href="#步骤-2：定义规范" class="headerlink" title="步骤 2：定义规范"></a>步骤 2：定义规范</h3><pre><code class="language-bash">/speckit.specify
-</code></pre>
-<p>你需要告诉 AI 系统的核心约束，例如：</p>
-<pre><code>- 使用 FastAPI 作为 Web 框架
-- 使用 Celery + Redis 作为任务队列
-- 所有任务必须支持重试，最大重试 3 次
-- 任务状态必须持久化到 PostgreSQL
-</code></pre>
-<p>Specify 会生成一份完整的系统规范文档（<code>specs/specification.md</code>），包含数据模型、API 接口、任务定义等。</p>
-<h3 id="步骤-3：生成计划与任务"><a href="#步骤-3：生成计划与任务" class="headerlink" title="步骤 3：生成计划与任务"></a>步骤 3：生成计划与任务</h3><pre><code class="language-bash">/speckit.plan
-/speckit.tasks
-</code></pre>
-<p>AI 会把规范拆解成可执行的任务清单（<code>tasks.md</code>），例如：</p>
-<pre><code class="language-markdown">- [ ] 搭建 FastAPI 项目骨架
-- [ ] 配置 Celery 与 Redis 连接
-- [ ] 定义任务模型与数据库表
-- [ ] 实现任务提交接口
-- [ ] 实现任务状态查询接口
-- [ ] 编写单元测试
-</code></pre>
-<h3 id="步骤-4：按任务实现"><a href="#步骤-4：按任务实现" class="headerlink" title="步骤 4：按任务实现"></a>步骤 4：按任务实现</h3><pre><code class="language-bash">/speckit.implement
-</code></pre>
-<p>AI 按照 <code>tasks.md</code> 逐项实现，每完成一项打勾。你可以随时暂停、回退或调整规范。</p>
-<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><h3 id="❌-错误做法：把-OpenSpec-和-Specify-混着用"><a href="#❌-错误做法：把-OpenSpec-和-Specify-混着用" class="headerlink" title="❌ 错误做法：把 OpenSpec 和 Specify 混着用"></a>❌ 错误做法：把 OpenSpec 和 Specify 混着用</h3><p>有人觉得 OpenSpec 的 Delta 机制好，Specify 的规范全面，于是两个都装。结果同一个项目里既有 <code>openspec/</code> 又有 <code>specs/</code> 目录，AI 完全懵掉，不知道应该遵循哪份规范。</p>
-<p>✅ <strong>正确做法</strong>：一个项目只选一个工具。Brownfield 选 OpenSpec，Greenfield 选 Specify，不要混用。</p>
-<h3 id="❌-错误做法：规范写得太细，成了”伪代码文学”"><a href="#❌-错误做法：规范写得太细，成了”伪代码文学”" class="headerlink" title="❌ 错误做法：规范写得太细，成了”伪代码文学”"></a>❌ 错误做法：规范写得太细，成了”伪代码文学”</h3><p>有人写 Spec 时把每一行代码都描述出来，比如”第 1 行 import redis，第 2 行定义函数…”，结果规范本身几百行，AI 的上下文窗口被吃光，代码生成质量反而下降。</p>
-<p>✅ <strong>正确做法</strong>：规范只描述<strong>做什么</strong>和<strong>验收标准</strong>，不描述<strong>怎么做</strong>。把实现细节留给 AI。OpenSpec 推荐的 ~250 行规范体量是经过验证的甜点。</p>
-<h3 id="❌-错误做法：归档后删掉-changes-目录"><a href="#❌-错误做法：归档后删掉-changes-目录" class="headerlink" title="❌ 错误做法：归档后删掉 changes/ 目录"></a>❌ 错误做法：归档后删掉 <code>changes/</code> 目录</h3><p>OpenSpec 的 <code>changes/</code> 目录归档后会被移动到 <code>changes/archive/</code>，这是刻意设计的。有人为了”整洁”直接删掉，结果变更历史丢失，后续排查问题无据可查。</p>
-<p>✅ <strong>正确做法</strong>：保留归档目录，它是项目的变更日志。如果确实需要清理，只删已合并到主规范且超过半年的旧归档。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>规范驱动开发不是给 AI 上枷锁，而是给它一张<strong>施工图纸</strong>。OpenSpec 和 Specify 是两张不同场景的图纸：前者轻量灵活，适合在现有项目里做增量变更；后者全面严谨，适合从零搭建新项目。</p>
-<p><strong>下一步可以学什么</strong>：</p>
-<ul>
-<li>把 OpenSpec 或 Specify 集成到你的 CI&#x2F;CD 流程中，实现”规范变更必须审批，代码实现必须匹配规范”</li>
-<li>探索 Maestro 等工具，将 Spec 驱动开发与多 Agent 协作结合</li>
-<li>在团队内推行 Spec Review（规范评审），把代码评审前移一层</li>
-</ul>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="https://intent-driven.dev/knowledge/openspec/">OpenSpec 官方文档</a></li>
-<li><a href="https://github.com/github/spec-kit">GitHub Spec Kit 仓库</a></li>
-<li><a href="https://intent-driven.dev/knowledge/spec-kit-vs-openspec/">Spec Kit vs OpenSpec 对比分析</a></li>
-<li><a href="https://juejin.cn/post/7603781883974385683">OpenSpec 与 Spec Kit 使用对比（掘金）</a></li>
-<li><a href="https://dev.to/newbe36524/the-hallucination-problem-of-ai-programming-assistants-how-to-implement-specification-driven-2i2j">The Hallucination Problem of AI Programming Assistants（Dev.to）</a></li>
-</ul>
-]]></content>
-      <tags>
-        <tag>AI</tag>
-        <tag>Spec-Driven Development</tag>
-        <tag>Claude Code</tag>
-        <tag>Cursor</tag>
-        <tag>工程实践</tag>
       </tags>
   </entry>
   <entry>
@@ -2597,409 +2637,6 @@ await db.execute(update_article)    # 数据库更新
         <tag>Redis</tag>
         <tag>后端</tag>
         <tag>缓存</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SQLAlchemy 2.0 + Alembic：数据库建模与版本迁移</title>
-    <url>/2026/04/21/SQLAlchemy-2-0-Alembic%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E6%A8%A1%E4%B8%8E%E7%89%88%E6%9C%AC%E8%BF%81%E7%A7%BB/</url>
-    <content><![CDATA[<blockquote>
-<p>本文是《FastAPI 实战》系列第 3 篇。<a href="#">查看系列目录</a></p>
-</blockquote>
-<p>前两篇我们搞定了路由和依赖注入，但一个正经的后端服务离不开数据库。在 Python 生态里，SQLAlchemy 几乎是 ORM 的事实标准，而 Alembic 则是它的官方迁移工具。但网上的 SQLAlchemy 教程大多是 1.x 的老写法，你照着抄很可能会踩坑——因为 2.0 的 API 变化非常大。</p>
-<blockquote>
-<p>一句话摘要：从零搭建一套基于 SQLAlchemy 2.0 + Alembic 的异步数据库层，涵盖模型定义、关系映射、CRUD、迁移脚本和版本回滚，帮你避开新旧版本混用的坑。</p>
-</blockquote>
-<hr>
-<h2 id="背景与问题"><a href="#背景与问题" class="headerlink" title="背景与问题"></a>背景与问题</h2><p>假设你要做一个博客系统，有用户、文章、标签三张表。用户和文章是一对多关系（一个用户写多篇文章），文章和标签是多对多关系（一篇文章多个标签，一个标签下多篇文章）。</p>
-<p>不用 ORM，你得手写 <code>CREATE TABLE</code>、<code>INSERT</code>、<code>SELECT</code>、<code>JOIN</code>，还得维护字段类型变更时的表结构同步。字段加一列、改个长度，都要手动写 <code>ALTER TABLE</code> 并在各个环境执行——这在大团队协作里简直是灾难。</p>
-<p><strong>ORM（Object-Relational Mapping）</strong> 的核心价值是：用 Python 类来定义表结构，用对象操作代替手写 SQL，同时让数据库 schema 的变更可追溯、可回滚。</p>
-<p>SQLAlchemy 2.0 相比 1.x 有几个关键变化，也是很多人踩坑的原因：</p>
-<table>
-<thead>
-<tr>
-<th>变化点</th>
-<th>1.x 写法</th>
-<th>2.0 写法</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>查询语法</td>
-<td><code>session.query(User).all()</code></td>
-<td><code>session.execute(select(User)).scalars().all()</code></td>
-</tr>
-<tr>
-<td>异步支持</td>
-<td>需要 <code>asyncalchemy</code> 等第三方包</td>
-<td>原生支持 <code>AsyncSession</code></td>
-</tr>
-<tr>
-<td>模型基类</td>
-<td><code>declarative_base()</code> 返回一个基类</td>
-<td><code>DeclarativeBase</code> 作为基类，模型直接继承</td>
-</tr>
-<tr>
-<td>字段定义</td>
-<td><code>Column(Integer, primary_key=True)</code></td>
-<td><code>mapped_column(Integer, primary_key=True)</code></td>
-</tr>
-<tr>
-<td>关系定义</td>
-<td><code>relationship(&quot;Post&quot;, backref=&quot;author&quot;)</code></td>
-<td><code>relationship(&quot;Post&quot;, back_populates=&quot;author&quot;)</code></td>
-</tr>
-</tbody></table>
-<p>如果你在网上搜到的教程还在用 <code>query()</code> 和 <code>Column()</code>，那基本就是旧版——<strong>不要抄</strong>。</p>
-<hr>
-<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>你需要 Python 3.10+，安装以下依赖：</p>
-<pre><code class="language-bash">pip install sqlalchemy[asyncio] alembic asyncpg pydantic
-</code></pre>
-<ul>
-<li><code>sqlalchemy[asyncio]</code>：SQLAlchemy 2.0，带异步扩展</li>
-<li><code>alembic</code>：官方迁移工具</li>
-<li><code>asyncpg</code>：PostgreSQL 的异步驱动（推荐生产用；本地测试可用 <code>aiosqlite</code>）</li>
-<li><code>pydantic</code>：用于数据校验（FastAPI 已自带）</li>
-</ul>
-<p>本地快速测试用 SQLite：</p>
-<pre><code class="language-bash">pip install aiosqlite
-</code></pre>
-<hr>
-<h2 id="实战代码"><a href="#实战代码" class="headerlink" title="实战代码"></a>实战代码</h2><h3 id="第一步：定义数据模型"><a href="#第一步：定义数据模型" class="headerlink" title="第一步：定义数据模型"></a>第一步：定义数据模型</h3><p>我们先定义三张表，同时展示一对多和多对多关系。</p>
-<pre><code class="language-python"># app/models.py
-from datetime import datetime
-from typing import List, Optional
-
-from sqlalchemy import ForeignKey, Table, Column, String, Text, DateTime
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-
-
-class Base(DeclarativeBase):
-    pass
-
-
-# 多对多关联表
-article_tag = Table(
-    &quot;article_tag&quot;,
-    Base.metadata,
-    Column(&quot;article_id&quot;, ForeignKey(&quot;articles.id&quot;), primary_key=True),
-    Column(&quot;tag_id&quot;, ForeignKey(&quot;tags.id&quot;), primary_key=True),
-)
-
-
-class User(Base):
-    __tablename__ = &quot;users&quot;
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(50), unique=True, index=True)
-    email: Mapped[str] = mapped_column(String(120), unique=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-
-    # 一对多：一个用户有多篇文章
-    articles: Mapped[List[&quot;Article&quot;]] = relationship(
-        back_populates=&quot;author&quot;, cascade=&quot;all, delete-orphan&quot;
-    )
-
-
-class Article(Base):
-    __tablename__ = &quot;articles&quot;
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    title: Mapped[str] = mapped_column(String(200))
-    content: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    author_id: Mapped[int] = mapped_column(ForeignKey(&quot;users.id&quot;))
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-
-    # 一对多反向引用
-    author: Mapped[&quot;User&quot;] = relationship(back_populates=&quot;articles&quot;)
-
-    # 多对多：一篇文章多个标签
-    tags: Mapped[List[&quot;Tag&quot;]] = relationship(
-        secondary=article_tag, back_populates=&quot;articles&quot;
-    )
-
-
-class Tag(Base):
-    __tablename__ = &quot;tags&quot;
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(50), unique=True, index=True)
-
-    # 多对多反向引用
-    articles: Mapped[List[&quot;Article&quot;]] = relationship(
-        secondary=article_tag, back_populates=&quot;tags&quot;
-    )
-</code></pre>
-<p>几个值得注意的点：</p>
-<ul>
-<li><code>Mapped[T]</code> 是 2.0 的类型注解写法，IDE 能自动补全，也能在 <code>mypy</code> 类型检查时报错。</li>
-<li><code>mapped_column()</code> 替代了旧版的 <code>Column()</code>。</li>
-<li><code>relationship(back_populates=...)</code> 替代了 <code>backref</code>，双向关系需要两边都写，虽然啰嗦但更明确。</li>
-<li><code>cascade=&quot;all, delete-orphan&quot;</code> 表示删除用户时，他的文章也会被级联删除——<strong>谨慎使用</strong>，业务上可能不允许。</li>
-</ul>
-<h3 id="第二步：配置异步-Session"><a href="#第二步：配置异步-Session" class="headerlink" title="第二步：配置异步 Session"></a>第二步：配置异步 Session</h3><p>SQLAlchemy 2.0 原生支持异步，关键在于 <code>create_async_engine</code> + <code>async_sessionmaker</code>。</p>
-<pre><code class="language-python"># app/db.py
-import os
-from contextlib import asynccontextmanager
-
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-
-DATABASE_URL = os.getenv(&quot;DATABASE_URL&quot;, &quot;sqlite+aiosqlite:///./blog.db&quot;)
-
-engine = create_async_engine(DATABASE_URL, echo=False)
-AsyncSessionLocal = async_sessionmaker(
-    engine, class_=AsyncSession, expire_on_commit=False
-)
-
-
-async def get_db() -&gt; AsyncSession:
-    &quot;&quot;&quot;FastAPI Depends 用的 Session 生成器。&quot;&quot;&quot;
-    async with AsyncSessionLocal() as session:
-        try:
-            yield session
-        finally:
-            await session.close()
-
-
-@asynccontextmanager
-async def get_db_context():
-    &quot;&quot;&quot;上下文管理器版本，适合脚本和测试。&quot;&quot;&quot;
-    async with AsyncSessionLocal() as session:
-        yield session
-</code></pre>
-<p><code>expire_on_commit=False</code> 很重要：默认情况下 <code>commit()</code> 后对象会被”过期”，下次访问会触发懒加载。异步环境下懒加载会报错（因为对象绑定的是已关闭的 Session），关闭过期机制可以避免这个问题。</p>
-<h3 id="第三步：CRUD-操作"><a href="#第三步：CRUD-操作" class="headerlink" title="第三步：CRUD 操作"></a>第三步：CRUD 操作</h3><p>下面展示最常用的增删改查，以及关联查询。</p>
-<pre><code class="language-python"># app/crud.py
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
-
-from app.db import get_db_context
-from app.models import User, Article, Tag
-
-
-async def create_user(username: str, email: str) -&gt; User:
-    async with get_db_context() as db:
-        user = User(username=username, email=email)
-        db.add(user)
-        await db.commit()
-        await db.refresh(user)  # 获取自增 ID
-        return user
-
-
-async def get_user_with_articles(user_id: int) -&gt; User | None:
-    async with get_db_context() as db:
-        result = await db.execute(
-            select(User)
-            .where(User.id == user_id)
-            .options(selectinload(User.articles))
-        )
-        return result.scalar_one_or_none()
-
-
-async def create_article(title: str, content: str, author_id: int, tag_names: list[str]) -&gt; Article:
-    async with get_db_context() as db:
-        # 查找或创建标签
-        tags = []
-        for name in tag_names:
-            result = await db.execute(select(Tag).where(Tag.name == name))
-            tag = result.scalar_one_or_none()
-            if tag is None:
-                tag = Tag(name=name)
-                db.add(tag)
-            tags.append(tag)
-
-        article = Article(
-            title=title,
-            content=content,
-            author_id=author_id,
-            tags=tags,
-        )
-        db.add(article)
-        await db.commit()
-        await db.refresh(article)
-        return article
-
-
-async def list_articles(skip: int = 0, limit: int = 10) -&gt; list[Article]:
-    async with get_db_context() as db:
-        result = await db.execute(
-            select(Article)
-            .offset(skip)
-            .limit(limit)
-            .order_by(Article.created_at.desc())
-        )
-        return result.scalars().all()
-</code></pre>
-<p><strong>关联查询</strong>需要特别注意：如果你 <code>select(User)</code> 后直接访问 <code>user.articles</code>，异步环境下会抛 <code>MissingGreenlet</code> 错误。解决办法是在查询时用 <code>options(selectinload(User.articles))</code> 预加载关联数据。</p>
-<h3 id="第四步：在-FastAPI-中集成"><a href="#第四步：在-FastAPI-中集成" class="headerlink" title="第四步：在 FastAPI 中集成"></a>第四步：在 FastAPI 中集成</h3><pre><code class="language-python"># main.py
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.db import get_db
-from app.crud import create_user, get_user_with_articles
-from app.schemas import UserCreate, UserResponse
-
-app = FastAPI()
-
-
-@app.post(&quot;/users&quot;, response_model=UserResponse, status_code=201)
-async def register_user(payload: UserCreate, db: AsyncSession = Depends(get_db)):
-    &quot;&quot;&quot;注册新用户。&quot;&quot;&quot;
-    user = await create_user(payload.username, payload.email)
-    return user
-
-
-@app.get(&quot;/users/{user_id}&quot;, response_model=UserResponse)
-async def read_user(user_id: int, db: AsyncSession = Depends(get_db)):
-    &quot;&quot;&quot;获取用户信息及文章列表。&quot;&quot;&quot;
-    user = await get_user_with_articles(user_id)
-    if user is None:
-        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
-    return user
-</code></pre>
-<p>注意 <code>create_user</code> 内部用了 <code>get_db_context()</code>（自己开 Session），而接口层用 <code>Depends(get_db)</code>（FastAPI 注入 Session）。两者不要混用——否则会出现”Session 嵌套”的诡异问题。</p>
-<h3 id="第五步：Alembic-迁移"><a href="#第五步：Alembic-迁移" class="headerlink" title="第五步：Alembic 迁移"></a>第五步：Alembic 迁移</h3><p>初始化 Alembic：</p>
-<pre><code class="language-bash">alembic init alembic
-</code></pre>
-<p>这会生成 <code>alembic/</code> 目录和 <code>alembic.ini</code>。接下来修改两个关键文件。</p>
-<p><strong>修改 <code>alembic/env.py</code></strong>，让它知道你的异步引擎：</p>
-<pre><code class="language-python"># alembic/env.py
-import asyncio
-from sqlalchemy.ext.asyncio import create_async_engine
-
-from app.models import Base  # 导入你的模型基类
-from app.db import DATABASE_URL
-
-config = context.config
-config.set_main_option(&quot;sqlalchemy.url&quot;, DATABASE_URL)
-
-target_metadata = Base.metadata
-
-
-def run_migrations_offline():
-    url = config.get_main_option(&quot;sqlalchemy.url&quot;)
-    context.configure(
-        url=url,
-        target_metadata=target_metadata,
-        literal_binds=True,
-        dialect_opts={&quot;paramstyle&quot;: &quot;named&quot;},
-    )
-    with context.begin_transaction():
-        context.run_migrations()
-
-
-async def run_migrations_online():
-    connectable = create_async_engine(DATABASE_URL)
-    async with connectable.connect() as connection:
-        await connection.run_sync(do_run_migrations)
-    await connectable.dispose()
-
-
-def do_run_migrations(connection):
-    context.configure(connection=connection, target_metadata=target_metadata)
-    with context.begin_transaction():
-        context.run_migrations()
-
-
-if context.is_offline_mode():
-    run_migrations_offline()
-else:
-    asyncio.run(run_migrations_online())
-</code></pre>
-<p><strong>生成迁移脚本</strong>：</p>
-<pre><code class="language-bash">alembic revision --autogenerate -m &quot;init_models&quot;
-</code></pre>
-<p>这条命令会对比当前数据库 schema 和 <code>Base.metadata</code>，自动生成 <code>CREATE TABLE</code> 语句。</p>
-<p><strong>执行迁移</strong>：</p>
-<pre><code class="language-bash">alembic upgrade head
-</code></pre>
-<p><strong>回滚到上一个版本</strong>：</p>
-<pre><code class="language-bash">alembic downgrade -1
-</code></pre>
-<p><strong>回滚到特定版本</strong>：</p>
-<pre><code class="language-bash">alembic downgrade 8f3a2b1c4d5e  # revision ID
-</code></pre>
-<h3 id="第六步：多环境配置"><a href="#第六步：多环境配置" class="headerlink" title="第六步：多环境配置"></a>第六步：多环境配置</h3><p>实际项目里，开发、测试、生产用的数据库地址不同。不要在 <code>env.py</code> 里硬编码，用环境变量：</p>
-<pre><code class="language-bash"># .env
-DATABASE_URL=postgresql+asyncpg://user:pass@localhost/blog_dev
-</code></pre>
-<p>在 <code>alembic.ini</code> 中，把 <code>sqlalchemy.url</code> 留空或写占位符，然后在 <code>env.py</code> 中读取环境变量：</p>
-<pre><code class="language-python">import os
-DATABASE_URL = os.getenv(&quot;DATABASE_URL&quot;, &quot;sqlite+aiosqlite:///./blog.db&quot;)
-config.set_main_option(&quot;sqlalchemy.url&quot;, DATABASE_URL)
-</code></pre>
-<p>如果你需要同时支持<strong>异步驱动</strong>（<code>asyncpg</code>）和<strong>同步驱动</strong>（<code>psycopg2</code>），可以在 <code>.env</code> 里定义两个 URL，迁移时 Alembic 需要同步引擎，运行时用异步引擎。</p>
-<h3 id="第七步：推荐的项目目录结构"><a href="#第七步：推荐的项目目录结构" class="headerlink" title="第七步：推荐的项目目录结构"></a>第七步：推荐的项目目录结构</h3><pre><code>project/
-├── alembic/                  # Alembic 迁移目录
-│   ├── env.py
-│   ├── script.py.mako
-│   └── versions/             # 迁移脚本
-├── app/
-│   ├── __init__.py
-│   ├── main.py               # FastAPI 入口
-│   ├── models.py             # SQLAlchemy 模型
-│   ├── schemas.py            # Pydantic 模型
-│   ├── crud.py               # 数据库操作封装
-│   ├── db.py                 # 引擎和 Session 工厂
-│   └── api/
-│       └── users.py          # 路由拆分
-├── .env                      # 环境变量（勿提交到 Git）
-├── alembic.ini
-├── requirements.txt
-└── pyproject.toml
-</code></pre>
-<hr>
-<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><p><strong>❌ 错误：混用 <code>query()</code> 和 <code>execute()</code>，或者旧版 <code>Column()</code> 和新版 <code>mapped_column()</code></strong></p>
-<p>有些教程写 <code>session.query(User).filter(...)</code>，但 2.0 的异步 Session 没有 <code>query()</code> 方法。你应该用 <code>session.execute(select(...))</code>。</p>
-<p>同样，<code>Column(Integer, primary_key=True)</code> 在 2.0 的 <code>Mapped</code> 类型系统下不会被类型检查器正确识别，必须用 <code>mapped_column(Integer, primary_key=True)</code>。</p>
-<p>✅ <strong>正确做法</strong>：全项目统一使用 SQLAlchemy 2.0 的 <code>select()</code> + <code>execute()</code> + <code>mapped_column()</code> + <code>Mapped[T]</code> 写法。</p>
-<hr>
-<p><strong>❌ 错误：异步环境下访问未预加载的关联属性</strong></p>
-<pre><code class="language-python"># 错误示范
-user = await db.get(User, 1)
-for article in user.articles:  # 这里会抛 MissingGreenlet！
-    print(article.title)
-</code></pre>
-<p>异步引擎不支持懒加载（lazy loading），因为关联查询需要一次新的数据库请求，但原 Session 已经关闭了。</p>
-<p>✅ <strong>正确做法</strong>：查询时显式预加载关联数据。</p>
-<pre><code class="language-python">result = await db.execute(
-    select(User).options(selectinload(User.articles))
-)
-user = result.scalar_one()
-</code></pre>
-<p>或者如果你只需要一两个关联字段，用 <code>joinedload()</code> 做 <code>JOIN</code> 查询，比 <code>selectinload()</code> 的二次查询更高效。</p>
-<hr>
-<p><strong>❌ 错误：忘记 <code>await db.commit()</code>，以为 <code>add()</code> 会自动提交</strong></p>
-<pre><code class="language-python"># 错误示范
-db.add(user)
-# 没有 commit，数据根本没写进去！
-</code></pre>
-<p>SQLAlchemy 的 <code>add()</code> 只是把对象放入 Session 的”待处理队列”，真正的 INSERT 发生在 <code>commit()</code> 时。</p>
-<p>✅ <strong>正确做法</strong>：增删改后必须 <code>await db.commit()</code>，需要自增 ID 时再加 <code>await db.refresh(obj)</code>。</p>
-<hr>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>SQLAlchemy 2.0 的 <code>Mapped</code> 类型系统和原生异步支持，让 Python ORM 终于跟上了现代类型安全编程的潮流。配合 Alembic，你可以用一套代码同时管理模型定义和 schema 迁移，团队协同时不再需要手动同步 <code>ALTER TABLE</code>。</p>
-<p>下一步可以学什么：</p>
-<ul>
-<li>学习 <strong>Pydantic v2</strong> 的 <code>model_validator</code> 和 <code>computed_field</code>，在 schemas 层做更复杂的业务校验</li>
-<li>了解 <strong>数据库连接池</strong> 调优（<code>pool_size</code>、<code>max_overflow</code>），为高并发做准备</li>
-<li>为 CRUD 层写 <strong>pytest-asyncio</strong> 测试，用 <code>aiosqlite</code> 做内存数据库测试</li>
-</ul>
-<hr>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="https://docs.sqlalchemy.org/en/20/">SQLAlchemy 2.0 官方文档</a></li>
-<li><a href="https://alembic.sqlalchemy.org/en/latest/tutorial.html">Alembic 官方教程</a></li>
-<li><a href="https://fastapi.tiangolo.com/tutorial/sql-databases/">FastAPI SQLAlchemy 官方示例</a></li>
-<li>上一篇：<a href="/2026/04/15/FastAPI-%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/">FastAPI 实战（二）：依赖注入与中间件</a></li>
-<li>下一篇：JWT 认证系统完整实现（持续更新中）</li>
-</ul>
-]]></content>
-      <categories>
-        <category>FastAPI 实战</category>
-      </categories>
-      <tags>
-        <tag>FastAPI</tag>
-        <tag>Python</tag>
-        <tag>SQLAlchemy</tag>
-        <tag>Alembic</tag>
-        <tag>数据库</tag>
       </tags>
   </entry>
   <entry>
@@ -3628,8 +3265,8 @@ WHERE TABLE_SCHEMA = &#39;mydb&#39;;
         <category>MySQL</category>
       </categories>
       <tags>
-        <tag>数据库</tag>
         <tag>MySQL</tag>
+        <tag>数据库</tag>
         <tag>SQL</tag>
         <tag>速查表</tag>
       </tags>
@@ -3718,6 +3355,16 @@ print(response.json()[&quot;response&quot;])
 <p> 第三是 Windows 的支持。llama.cpp 对 Windows 的支持不如 Mac 和 Linux 好，编译和运行都可能遇到各种奇怪的问题。如果你是 Windows 用户，建议直接用 ollama，它对 Windows 的支持比较完善。</p>
 <p> 第四是交互体验。纯 CPU 运行的模型，响应速度是硬伤。你需要耐心等待模型输出，体验远远不如云端模型。如果你想追求更好的体验，可以考虑买一块大显存显卡，比如 RTX 5080 或者 5090，这能让本地大模型的体验提升一个档次。</p>
 ]]></content>
+      <categories>
+        <category>AI工程</category>
+      </categories>
+      <tags>
+        <tag>AI</tag>
+        <tag>LLM</tag>
+        <tag>llama.cpp</tag>
+        <tag>ollama</tag>
+        <tag>本地部署</tag>
+      </tags>
   </entry>
   <entry>
     <title>为什么有些项目使用多种编程语言</title>
@@ -5910,6 +5557,409 @@ SELECT * FROM v$version;
         <tag>速查表</tag>
         <tag>Oracle</tag>
         <tag>PL/SQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SQLAlchemy 2.0 + Alembic：数据库建模与版本迁移</title>
+    <url>/2026/04/21/SQLAlchemy-2-0-Alembic%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E6%A8%A1%E4%B8%8E%E7%89%88%E6%9C%AC%E8%BF%81%E7%A7%BB/</url>
+    <content><![CDATA[<blockquote>
+<p>本文是《FastAPI 实战》系列第 3 篇。<a href="#">查看系列目录</a></p>
+</blockquote>
+<p>前两篇我们搞定了路由和依赖注入，但一个正经的后端服务离不开数据库。在 Python 生态里，SQLAlchemy 几乎是 ORM 的事实标准，而 Alembic 则是它的官方迁移工具。但网上的 SQLAlchemy 教程大多是 1.x 的老写法，你照着抄很可能会踩坑——因为 2.0 的 API 变化非常大。</p>
+<blockquote>
+<p>一句话摘要：从零搭建一套基于 SQLAlchemy 2.0 + Alembic 的异步数据库层，涵盖模型定义、关系映射、CRUD、迁移脚本和版本回滚，帮你避开新旧版本混用的坑。</p>
+</blockquote>
+<hr>
+<h2 id="背景与问题"><a href="#背景与问题" class="headerlink" title="背景与问题"></a>背景与问题</h2><p>假设你要做一个博客系统，有用户、文章、标签三张表。用户和文章是一对多关系（一个用户写多篇文章），文章和标签是多对多关系（一篇文章多个标签，一个标签下多篇文章）。</p>
+<p>不用 ORM，你得手写 <code>CREATE TABLE</code>、<code>INSERT</code>、<code>SELECT</code>、<code>JOIN</code>，还得维护字段类型变更时的表结构同步。字段加一列、改个长度，都要手动写 <code>ALTER TABLE</code> 并在各个环境执行——这在大团队协作里简直是灾难。</p>
+<p><strong>ORM（Object-Relational Mapping）</strong> 的核心价值是：用 Python 类来定义表结构，用对象操作代替手写 SQL，同时让数据库 schema 的变更可追溯、可回滚。</p>
+<p>SQLAlchemy 2.0 相比 1.x 有几个关键变化，也是很多人踩坑的原因：</p>
+<table>
+<thead>
+<tr>
+<th>变化点</th>
+<th>1.x 写法</th>
+<th>2.0 写法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>查询语法</td>
+<td><code>session.query(User).all()</code></td>
+<td><code>session.execute(select(User)).scalars().all()</code></td>
+</tr>
+<tr>
+<td>异步支持</td>
+<td>需要 <code>asyncalchemy</code> 等第三方包</td>
+<td>原生支持 <code>AsyncSession</code></td>
+</tr>
+<tr>
+<td>模型基类</td>
+<td><code>declarative_base()</code> 返回一个基类</td>
+<td><code>DeclarativeBase</code> 作为基类，模型直接继承</td>
+</tr>
+<tr>
+<td>字段定义</td>
+<td><code>Column(Integer, primary_key=True)</code></td>
+<td><code>mapped_column(Integer, primary_key=True)</code></td>
+</tr>
+<tr>
+<td>关系定义</td>
+<td><code>relationship(&quot;Post&quot;, backref=&quot;author&quot;)</code></td>
+<td><code>relationship(&quot;Post&quot;, back_populates=&quot;author&quot;)</code></td>
+</tr>
+</tbody></table>
+<p>如果你在网上搜到的教程还在用 <code>query()</code> 和 <code>Column()</code>，那基本就是旧版——<strong>不要抄</strong>。</p>
+<hr>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>你需要 Python 3.10+，安装以下依赖：</p>
+<pre><code class="language-bash">pip install sqlalchemy[asyncio] alembic asyncpg pydantic
+</code></pre>
+<ul>
+<li><code>sqlalchemy[asyncio]</code>：SQLAlchemy 2.0，带异步扩展</li>
+<li><code>alembic</code>：官方迁移工具</li>
+<li><code>asyncpg</code>：PostgreSQL 的异步驱动（推荐生产用；本地测试可用 <code>aiosqlite</code>）</li>
+<li><code>pydantic</code>：用于数据校验（FastAPI 已自带）</li>
+</ul>
+<p>本地快速测试用 SQLite：</p>
+<pre><code class="language-bash">pip install aiosqlite
+</code></pre>
+<hr>
+<h2 id="实战代码"><a href="#实战代码" class="headerlink" title="实战代码"></a>实战代码</h2><h3 id="第一步：定义数据模型"><a href="#第一步：定义数据模型" class="headerlink" title="第一步：定义数据模型"></a>第一步：定义数据模型</h3><p>我们先定义三张表，同时展示一对多和多对多关系。</p>
+<pre><code class="language-python"># app/models.py
+from datetime import datetime
+from typing import List, Optional
+
+from sqlalchemy import ForeignKey, Table, Column, String, Text, DateTime
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+
+
+class Base(DeclarativeBase):
+    pass
+
+
+# 多对多关联表
+article_tag = Table(
+    &quot;article_tag&quot;,
+    Base.metadata,
+    Column(&quot;article_id&quot;, ForeignKey(&quot;articles.id&quot;), primary_key=True),
+    Column(&quot;tag_id&quot;, ForeignKey(&quot;tags.id&quot;), primary_key=True),
+)
+
+
+class User(Base):
+    __tablename__ = &quot;users&quot;
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(String(50), unique=True, index=True)
+    email: Mapped[str] = mapped_column(String(120), unique=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    # 一对多：一个用户有多篇文章
+    articles: Mapped[List[&quot;Article&quot;]] = relationship(
+        back_populates=&quot;author&quot;, cascade=&quot;all, delete-orphan&quot;
+    )
+
+
+class Article(Base):
+    __tablename__ = &quot;articles&quot;
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(200))
+    content: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    author_id: Mapped[int] = mapped_column(ForeignKey(&quot;users.id&quot;))
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    # 一对多反向引用
+    author: Mapped[&quot;User&quot;] = relationship(back_populates=&quot;articles&quot;)
+
+    # 多对多：一篇文章多个标签
+    tags: Mapped[List[&quot;Tag&quot;]] = relationship(
+        secondary=article_tag, back_populates=&quot;articles&quot;
+    )
+
+
+class Tag(Base):
+    __tablename__ = &quot;tags&quot;
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(50), unique=True, index=True)
+
+    # 多对多反向引用
+    articles: Mapped[List[&quot;Article&quot;]] = relationship(
+        secondary=article_tag, back_populates=&quot;tags&quot;
+    )
+</code></pre>
+<p>几个值得注意的点：</p>
+<ul>
+<li><code>Mapped[T]</code> 是 2.0 的类型注解写法，IDE 能自动补全，也能在 <code>mypy</code> 类型检查时报错。</li>
+<li><code>mapped_column()</code> 替代了旧版的 <code>Column()</code>。</li>
+<li><code>relationship(back_populates=...)</code> 替代了 <code>backref</code>，双向关系需要两边都写，虽然啰嗦但更明确。</li>
+<li><code>cascade=&quot;all, delete-orphan&quot;</code> 表示删除用户时，他的文章也会被级联删除——<strong>谨慎使用</strong>，业务上可能不允许。</li>
+</ul>
+<h3 id="第二步：配置异步-Session"><a href="#第二步：配置异步-Session" class="headerlink" title="第二步：配置异步 Session"></a>第二步：配置异步 Session</h3><p>SQLAlchemy 2.0 原生支持异步，关键在于 <code>create_async_engine</code> + <code>async_sessionmaker</code>。</p>
+<pre><code class="language-python"># app/db.py
+import os
+from contextlib import asynccontextmanager
+
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+
+DATABASE_URL = os.getenv(&quot;DATABASE_URL&quot;, &quot;sqlite+aiosqlite:///./blog.db&quot;)
+
+engine = create_async_engine(DATABASE_URL, echo=False)
+AsyncSessionLocal = async_sessionmaker(
+    engine, class_=AsyncSession, expire_on_commit=False
+)
+
+
+async def get_db() -&gt; AsyncSession:
+    &quot;&quot;&quot;FastAPI Depends 用的 Session 生成器。&quot;&quot;&quot;
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+        finally:
+            await session.close()
+
+
+@asynccontextmanager
+async def get_db_context():
+    &quot;&quot;&quot;上下文管理器版本，适合脚本和测试。&quot;&quot;&quot;
+    async with AsyncSessionLocal() as session:
+        yield session
+</code></pre>
+<p><code>expire_on_commit=False</code> 很重要：默认情况下 <code>commit()</code> 后对象会被”过期”，下次访问会触发懒加载。异步环境下懒加载会报错（因为对象绑定的是已关闭的 Session），关闭过期机制可以避免这个问题。</p>
+<h3 id="第三步：CRUD-操作"><a href="#第三步：CRUD-操作" class="headerlink" title="第三步：CRUD 操作"></a>第三步：CRUD 操作</h3><p>下面展示最常用的增删改查，以及关联查询。</p>
+<pre><code class="language-python"># app/crud.py
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
+
+from app.db import get_db_context
+from app.models import User, Article, Tag
+
+
+async def create_user(username: str, email: str) -&gt; User:
+    async with get_db_context() as db:
+        user = User(username=username, email=email)
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)  # 获取自增 ID
+        return user
+
+
+async def get_user_with_articles(user_id: int) -&gt; User | None:
+    async with get_db_context() as db:
+        result = await db.execute(
+            select(User)
+            .where(User.id == user_id)
+            .options(selectinload(User.articles))
+        )
+        return result.scalar_one_or_none()
+
+
+async def create_article(title: str, content: str, author_id: int, tag_names: list[str]) -&gt; Article:
+    async with get_db_context() as db:
+        # 查找或创建标签
+        tags = []
+        for name in tag_names:
+            result = await db.execute(select(Tag).where(Tag.name == name))
+            tag = result.scalar_one_or_none()
+            if tag is None:
+                tag = Tag(name=name)
+                db.add(tag)
+            tags.append(tag)
+
+        article = Article(
+            title=title,
+            content=content,
+            author_id=author_id,
+            tags=tags,
+        )
+        db.add(article)
+        await db.commit()
+        await db.refresh(article)
+        return article
+
+
+async def list_articles(skip: int = 0, limit: int = 10) -&gt; list[Article]:
+    async with get_db_context() as db:
+        result = await db.execute(
+            select(Article)
+            .offset(skip)
+            .limit(limit)
+            .order_by(Article.created_at.desc())
+        )
+        return result.scalars().all()
+</code></pre>
+<p><strong>关联查询</strong>需要特别注意：如果你 <code>select(User)</code> 后直接访问 <code>user.articles</code>，异步环境下会抛 <code>MissingGreenlet</code> 错误。解决办法是在查询时用 <code>options(selectinload(User.articles))</code> 预加载关联数据。</p>
+<h3 id="第四步：在-FastAPI-中集成"><a href="#第四步：在-FastAPI-中集成" class="headerlink" title="第四步：在 FastAPI 中集成"></a>第四步：在 FastAPI 中集成</h3><pre><code class="language-python"># main.py
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.db import get_db
+from app.crud import create_user, get_user_with_articles
+from app.schemas import UserCreate, UserResponse
+
+app = FastAPI()
+
+
+@app.post(&quot;/users&quot;, response_model=UserResponse, status_code=201)
+async def register_user(payload: UserCreate, db: AsyncSession = Depends(get_db)):
+    &quot;&quot;&quot;注册新用户。&quot;&quot;&quot;
+    user = await create_user(payload.username, payload.email)
+    return user
+
+
+@app.get(&quot;/users/{user_id}&quot;, response_model=UserResponse)
+async def read_user(user_id: int, db: AsyncSession = Depends(get_db)):
+    &quot;&quot;&quot;获取用户信息及文章列表。&quot;&quot;&quot;
+    user = await get_user_with_articles(user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail=&quot;User not found&quot;)
+    return user
+</code></pre>
+<p>注意 <code>create_user</code> 内部用了 <code>get_db_context()</code>（自己开 Session），而接口层用 <code>Depends(get_db)</code>（FastAPI 注入 Session）。两者不要混用——否则会出现”Session 嵌套”的诡异问题。</p>
+<h3 id="第五步：Alembic-迁移"><a href="#第五步：Alembic-迁移" class="headerlink" title="第五步：Alembic 迁移"></a>第五步：Alembic 迁移</h3><p>初始化 Alembic：</p>
+<pre><code class="language-bash">alembic init alembic
+</code></pre>
+<p>这会生成 <code>alembic/</code> 目录和 <code>alembic.ini</code>。接下来修改两个关键文件。</p>
+<p><strong>修改 <code>alembic/env.py</code></strong>，让它知道你的异步引擎：</p>
+<pre><code class="language-python"># alembic/env.py
+import asyncio
+from sqlalchemy.ext.asyncio import create_async_engine
+
+from app.models import Base  # 导入你的模型基类
+from app.db import DATABASE_URL
+
+config = context.config
+config.set_main_option(&quot;sqlalchemy.url&quot;, DATABASE_URL)
+
+target_metadata = Base.metadata
+
+
+def run_migrations_offline():
+    url = config.get_main_option(&quot;sqlalchemy.url&quot;)
+    context.configure(
+        url=url,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        dialect_opts={&quot;paramstyle&quot;: &quot;named&quot;},
+    )
+    with context.begin_transaction():
+        context.run_migrations()
+
+
+async def run_migrations_online():
+    connectable = create_async_engine(DATABASE_URL)
+    async with connectable.connect() as connection:
+        await connection.run_sync(do_run_migrations)
+    await connectable.dispose()
+
+
+def do_run_migrations(connection):
+    context.configure(connection=connection, target_metadata=target_metadata)
+    with context.begin_transaction():
+        context.run_migrations()
+
+
+if context.is_offline_mode():
+    run_migrations_offline()
+else:
+    asyncio.run(run_migrations_online())
+</code></pre>
+<p><strong>生成迁移脚本</strong>：</p>
+<pre><code class="language-bash">alembic revision --autogenerate -m &quot;init_models&quot;
+</code></pre>
+<p>这条命令会对比当前数据库 schema 和 <code>Base.metadata</code>，自动生成 <code>CREATE TABLE</code> 语句。</p>
+<p><strong>执行迁移</strong>：</p>
+<pre><code class="language-bash">alembic upgrade head
+</code></pre>
+<p><strong>回滚到上一个版本</strong>：</p>
+<pre><code class="language-bash">alembic downgrade -1
+</code></pre>
+<p><strong>回滚到特定版本</strong>：</p>
+<pre><code class="language-bash">alembic downgrade 8f3a2b1c4d5e  # revision ID
+</code></pre>
+<h3 id="第六步：多环境配置"><a href="#第六步：多环境配置" class="headerlink" title="第六步：多环境配置"></a>第六步：多环境配置</h3><p>实际项目里，开发、测试、生产用的数据库地址不同。不要在 <code>env.py</code> 里硬编码，用环境变量：</p>
+<pre><code class="language-bash"># .env
+DATABASE_URL=postgresql+asyncpg://user:pass@localhost/blog_dev
+</code></pre>
+<p>在 <code>alembic.ini</code> 中，把 <code>sqlalchemy.url</code> 留空或写占位符，然后在 <code>env.py</code> 中读取环境变量：</p>
+<pre><code class="language-python">import os
+DATABASE_URL = os.getenv(&quot;DATABASE_URL&quot;, &quot;sqlite+aiosqlite:///./blog.db&quot;)
+config.set_main_option(&quot;sqlalchemy.url&quot;, DATABASE_URL)
+</code></pre>
+<p>如果你需要同时支持<strong>异步驱动</strong>（<code>asyncpg</code>）和<strong>同步驱动</strong>（<code>psycopg2</code>），可以在 <code>.env</code> 里定义两个 URL，迁移时 Alembic 需要同步引擎，运行时用异步引擎。</p>
+<h3 id="第七步：推荐的项目目录结构"><a href="#第七步：推荐的项目目录结构" class="headerlink" title="第七步：推荐的项目目录结构"></a>第七步：推荐的项目目录结构</h3><pre><code>project/
+├── alembic/                  # Alembic 迁移目录
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions/             # 迁移脚本
+├── app/
+│   ├── __init__.py
+│   ├── main.py               # FastAPI 入口
+│   ├── models.py             # SQLAlchemy 模型
+│   ├── schemas.py            # Pydantic 模型
+│   ├── crud.py               # 数据库操作封装
+│   ├── db.py                 # 引擎和 Session 工厂
+│   └── api/
+│       └── users.py          # 路由拆分
+├── .env                      # 环境变量（勿提交到 Git）
+├── alembic.ini
+├── requirements.txt
+└── pyproject.toml
+</code></pre>
+<hr>
+<h2 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h2><p><strong>❌ 错误：混用 <code>query()</code> 和 <code>execute()</code>，或者旧版 <code>Column()</code> 和新版 <code>mapped_column()</code></strong></p>
+<p>有些教程写 <code>session.query(User).filter(...)</code>，但 2.0 的异步 Session 没有 <code>query()</code> 方法。你应该用 <code>session.execute(select(...))</code>。</p>
+<p>同样，<code>Column(Integer, primary_key=True)</code> 在 2.0 的 <code>Mapped</code> 类型系统下不会被类型检查器正确识别，必须用 <code>mapped_column(Integer, primary_key=True)</code>。</p>
+<p>✅ <strong>正确做法</strong>：全项目统一使用 SQLAlchemy 2.0 的 <code>select()</code> + <code>execute()</code> + <code>mapped_column()</code> + <code>Mapped[T]</code> 写法。</p>
+<hr>
+<p><strong>❌ 错误：异步环境下访问未预加载的关联属性</strong></p>
+<pre><code class="language-python"># 错误示范
+user = await db.get(User, 1)
+for article in user.articles:  # 这里会抛 MissingGreenlet！
+    print(article.title)
+</code></pre>
+<p>异步引擎不支持懒加载（lazy loading），因为关联查询需要一次新的数据库请求，但原 Session 已经关闭了。</p>
+<p>✅ <strong>正确做法</strong>：查询时显式预加载关联数据。</p>
+<pre><code class="language-python">result = await db.execute(
+    select(User).options(selectinload(User.articles))
+)
+user = result.scalar_one()
+</code></pre>
+<p>或者如果你只需要一两个关联字段，用 <code>joinedload()</code> 做 <code>JOIN</code> 查询，比 <code>selectinload()</code> 的二次查询更高效。</p>
+<hr>
+<p><strong>❌ 错误：忘记 <code>await db.commit()</code>，以为 <code>add()</code> 会自动提交</strong></p>
+<pre><code class="language-python"># 错误示范
+db.add(user)
+# 没有 commit，数据根本没写进去！
+</code></pre>
+<p>SQLAlchemy 的 <code>add()</code> 只是把对象放入 Session 的”待处理队列”，真正的 INSERT 发生在 <code>commit()</code> 时。</p>
+<p>✅ <strong>正确做法</strong>：增删改后必须 <code>await db.commit()</code>，需要自增 ID 时再加 <code>await db.refresh(obj)</code>。</p>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>SQLAlchemy 2.0 的 <code>Mapped</code> 类型系统和原生异步支持，让 Python ORM 终于跟上了现代类型安全编程的潮流。配合 Alembic，你可以用一套代码同时管理模型定义和 schema 迁移，团队协同时不再需要手动同步 <code>ALTER TABLE</code>。</p>
+<p>下一步可以学什么：</p>
+<ul>
+<li>学习 <strong>Pydantic v2</strong> 的 <code>model_validator</code> 和 <code>computed_field</code>，在 schemas 层做更复杂的业务校验</li>
+<li>了解 <strong>数据库连接池</strong> 调优（<code>pool_size</code>、<code>max_overflow</code>），为高并发做准备</li>
+<li>为 CRUD 层写 <strong>pytest-asyncio</strong> 测试，用 <code>aiosqlite</code> 做内存数据库测试</li>
+</ul>
+<hr>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://docs.sqlalchemy.org/en/20/">SQLAlchemy 2.0 官方文档</a></li>
+<li><a href="https://alembic.sqlalchemy.org/en/latest/tutorial.html">Alembic 官方教程</a></li>
+<li><a href="https://fastapi.tiangolo.com/tutorial/sql-databases/">FastAPI SQLAlchemy 官方示例</a></li>
+<li>上一篇：<a href="/2026/04/15/FastAPI-%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/">FastAPI 实战（二）：依赖注入与中间件</a></li>
+<li>下一篇：JWT 认证系统完整实现（持续更新中）</li>
+</ul>
+]]></content>
+      <categories>
+        <category>FastAPI 实战</category>
+      </categories>
+      <tags>
+        <tag>FastAPI</tag>
+        <tag>Python</tag>
+        <tag>数据库</tag>
+        <tag>SQLAlchemy</tag>
+        <tag>Alembic</tag>
       </tags>
   </entry>
 </search>

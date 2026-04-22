@@ -36,9 +36,9 @@
     <category term="FastAPI 实战" scheme="https://baymax0101.github.io/categories/FastAPI-%E5%AE%9E%E6%88%98/"/>
     <category term="FastAPI" scheme="https://baymax0101.github.io/tags/FastAPI/"/>
     <category term="Python" scheme="https://baymax0101.github.io/tags/Python/"/>
+    <category term="数据库" scheme="https://baymax0101.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     <category term="SQLAlchemy" scheme="https://baymax0101.github.io/tags/SQLAlchemy/"/>
     <category term="Alembic" scheme="https://baymax0101.github.io/tags/Alembic/"/>
-    <category term="数据库" scheme="https://baymax0101.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     <id>https://baymax0101.github.io/2026/04/21/SQLAlchemy-2-0-Alembic%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E6%A8%A1%E4%B8%8E%E7%89%88%E6%9C%AC%E8%BF%81%E7%A7%BB/</id>
     <link href="https://baymax0101.github.io/2026/04/21/SQLAlchemy-2-0-Alembic%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BB%BA%E6%A8%A1%E4%B8%8E%E7%89%88%E6%9C%AC%E8%BF%81%E7%A7%BB/"/>
     <published>2026-04-21T02:25:47.000Z</published>
@@ -56,9 +56,9 @@
       <name>baymax0101</name>
     </author>
     <category term="FastAPI 实战" scheme="https://baymax0101.github.io/categories/FastAPI-%E5%AE%9E%E6%88%98/"/>
-    <category term="Celery" scheme="https://baymax0101.github.io/tags/Celery/"/>
     <category term="FastAPI" scheme="https://baymax0101.github.io/tags/FastAPI/"/>
     <category term="Python" scheme="https://baymax0101.github.io/tags/Python/"/>
+    <category term="Celery" scheme="https://baymax0101.github.io/tags/Celery/"/>
     <category term="异步任务" scheme="https://baymax0101.github.io/tags/%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1/"/>
     <category term="Redis" scheme="https://baymax0101.github.io/tags/Redis/"/>
     <id>https://baymax0101.github.io/2026/04/21/Celery-%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1%E9%98%9F%E5%88%97%EF%BC%9A%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E4%B8%8E%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81%E8%BF%BD%E8%B8%AA/</id>
@@ -115,6 +115,15 @@
     <author>
       <name>baymax0101</name>
     </author>
+    <category term="AI工程" scheme="https://baymax0101.github.io/categories/AI%E5%B7%A5%E7%A8%8B/"/>
+    <category term="AI" scheme="https://baymax0101.github.io/tags/AI/"/>
+    <category term="LLM" scheme="https://baymax0101.github.io/tags/LLM/"/>
+    <category term="Prompt" scheme="https://baymax0101.github.io/tags/Prompt/"/>
+    <category term="Agent" scheme="https://baymax0101.github.io/tags/Agent/"/>
+    <category term="RAG" scheme="https://baymax0101.github.io/tags/RAG/"/>
+    <category term="MCP" scheme="https://baymax0101.github.io/tags/MCP/"/>
+    <category term="Token" scheme="https://baymax0101.github.io/tags/Token/"/>
+    <category term="大模型" scheme="https://baymax0101.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     <id>https://baymax0101.github.io/2026/04/21/AI-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%B2%E8%AE%B2/</id>
     <link href="https://baymax0101.github.io/2026/04/21/AI-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%B2%E8%AE%B2/"/>
     <published>2026-04-21T01:45:20.244Z</published>
@@ -125,7 +134,7 @@
 <h2 id="背景与问题"><a href="#背景与问题]]>
     </summary>
     <title>AI 核心概念串讲：从 Token 到 Agent，一篇文章讲清大模型生态</title>
-    <updated>2026-04-21T01:47:57.598Z</updated>
+    <updated>2026-04-22T02:37:33.155Z</updated>
   </entry>
   <entry>
     <author>
@@ -148,6 +157,11 @@
     <author>
       <name>baymax0101</name>
     </author>
+    <category term="后端开发" scheme="https://baymax0101.github.io/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/"/>
+    <category term="FastAPI" scheme="https://baymax0101.github.io/tags/FastAPI/"/>
+    <category term="Python" scheme="https://baymax0101.github.io/tags/Python/"/>
+    <category term="后端开发" scheme="https://baymax0101.github.io/tags/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/"/>
+    <category term="依赖注入" scheme="https://baymax0101.github.io/tags/%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/"/>
     <id>https://baymax0101.github.io/2026/04/15/FastAPI-%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/</id>
     <link href="https://baymax0101.github.io/2026/04/15/FastAPI-%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E4%B8%8E%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
     <published>2026-04-15T10:14:00.000Z</published>
@@ -156,12 +170,18 @@
 <h2 id="1-问题背景"><a hre]]>
     </summary>
     <title>FastAPI 实战（二）：依赖注入与中间件</title>
-    <updated>2026-04-15T10:15:27.712Z</updated>
+    <updated>2026-04-22T02:41:30.359Z</updated>
   </entry>
   <entry>
     <author>
       <name>baymax0101</name>
     </author>
+    <category term="AI工程" scheme="https://baymax0101.github.io/categories/AI%E5%B7%A5%E7%A8%8B/"/>
+    <category term="AI" scheme="https://baymax0101.github.io/tags/AI/"/>
+    <category term="LLM" scheme="https://baymax0101.github.io/tags/LLM/"/>
+    <category term="llama.cpp" scheme="https://baymax0101.github.io/tags/llama-cpp/"/>
+    <category term="ollama" scheme="https://baymax0101.github.io/tags/ollama/"/>
+    <category term="本地部署" scheme="https://baymax0101.github.io/tags/%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2/"/>
     <id>https://baymax0101.github.io/2026/04/12/llama-cpp%E4%B8%8Eollama/</id>
     <link href="https://baymax0101.github.io/2026/04/12/llama-cpp%E4%B8%8Eollama/"/>
     <published>2026-04-12T14:47:35.000Z</published>
@@ -169,12 +189,17 @@
       <![CDATA[<p>这两年大模型火得一塌糊涂，但是调用 OpenAI 的 API 要钱，而且还有隐私风险。越来越多的人开始研究本地部署大模型，而 llama.cpp 和 ollama 就是两个最流行的开源工具。这篇文章，我会用最通俗的方式，帮你彻底搞懂这两个东西到底是什么、有什么区别、怎么选。]]>
     </summary>
     <title>llama.cpp与ollama</title>
-    <updated>2026-04-15T10:23:31.581Z</updated>
+    <updated>2026-04-22T02:42:24.577Z</updated>
   </entry>
   <entry>
     <author>
       <name>baymax0101</name>
     </author>
+    <category term="AI工程" scheme="https://baymax0101.github.io/categories/AI%E5%B7%A5%E7%A8%8B/"/>
+    <category term="AI" scheme="https://baymax0101.github.io/tags/AI/"/>
+    <category term="Agent" scheme="https://baymax0101.github.io/tags/Agent/"/>
+    <category term="Harness" scheme="https://baymax0101.github.io/tags/Harness/"/>
+    <category term="工程化" scheme="https://baymax0101.github.io/tags/%E5%B7%A5%E7%A8%8B%E5%8C%96/"/>
     <id>https://baymax0101.github.io/2026/04/12/Harness%E5%88%9D%E8%AF%86/</id>
     <link href="https://baymax0101.github.io/2026/04/12/Harness%E5%88%9D%E8%AF%86/"/>
     <published>2026-04-12T01:28:38.000Z</published>
@@ -182,12 +207,17 @@
       <![CDATA[<h2 id="Harness-Engineering-是什么？"><a href="#Harness-Engineering-是什么？" class="headerlink" title="Harness Engineering 是什么？"></a>Harness Engine]]>
     </summary>
     <title>Harness初识</title>
-    <updated>2026-04-21T01:49:36.150Z</updated>
+    <updated>2026-04-22T02:41:44.305Z</updated>
   </entry>
   <entry>
     <author>
       <name>baymax0101</name>
     </author>
+    <category term="后端开发" scheme="https://baymax0101.github.io/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/"/>
+    <category term="FastAPI" scheme="https://baymax0101.github.io/tags/FastAPI/"/>
+    <category term="Python" scheme="https://baymax0101.github.io/tags/Python/"/>
+    <category term="后端开发" scheme="https://baymax0101.github.io/tags/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/"/>
+    <category term="REST" scheme="https://baymax0101.github.io/tags/REST/"/>
     <id>https://baymax0101.github.io/2026/04/11/FASTAPI%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7%E5%AE%9E%E6%88%98%EF%BC%9A%E8%B7%AF%E7%94%B1%E4%B8%8E%E8%AF%B7%E6%B1%82%E5%A4%84%E7%90%86/</id>
     <link href="https://baymax0101.github.io/2026/04/11/FASTAPI%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7%E5%AE%9E%E6%88%98%EF%BC%9A%E8%B7%AF%E7%94%B1%E4%B8%8E%E8%AF%B7%E6%B1%82%E5%A4%84%E7%90%86/"/>
     <published>2026-04-11T09:22:47.000Z</published>
@@ -196,7 +226,7 @@
 <h2 id="1-问题背景"]]>
     </summary>
     <title>FASTAPI实战（一）：路由与请求处理</title>
-    <updated>2026-04-21T01:31:15.215Z</updated>
+    <updated>2026-04-22T02:37:44.372Z</updated>
   </entry>
   <entry>
     <author>
@@ -247,8 +277,8 @@
     </author>
     <category term="数据库" scheme="https://baymax0101.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     <category term="MySQL" scheme="https://baymax0101.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/"/>
-    <category term="数据库" scheme="https://baymax0101.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     <category term="MySQL" scheme="https://baymax0101.github.io/tags/MySQL/"/>
+    <category term="数据库" scheme="https://baymax0101.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     <category term="SQL" scheme="https://baymax0101.github.io/tags/SQL/"/>
     <category term="速查表" scheme="https://baymax0101.github.io/tags/%E9%80%9F%E6%9F%A5%E8%A1%A8/"/>
     <id>https://baymax0101.github.io/2026/03/25/Y%E5%88%86%E9%92%9F%E9%80%9F%E6%88%90MYSQL/</id>
